@@ -108,7 +108,7 @@ const handleChange = (field, value) => {
             <input value={currentmachine.kunde || ""} onChange={(e) => handleChange("kunde", e.target.value)} type="text" placeholder="Kunde" />
             <input value={currentmachine.kNummer || ""} onChange={(e) => handleChange("kNummer", e.target.value)} type="text" placeholder="K-Nummer" />
             <input value={currentmachine.date || ""} onChange={(e) => handleChange("date", e.target.value)} type="date" />
-            <p>Current Position{currentmachine.area} - {currentmachine.position}</p>
+            
             <label>Switch to:</label>
             
             <select value={selectedSlot} onChange={handleSwitch}>

@@ -1,0 +1,51 @@
+.PPM2 {
+    display: grid;
+    grid-template-columns: 3fr 4fr 1fr;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.ppm2-pool {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto auto;
+  gap: 15px;
+  width: 100%;
+  padding: 10px;
+
+  /* transparent + schwarze Kontur */
+  background-color: transparent;
+  border: 2px solid black;
+  border-radius: 15px; /* abgerundete Ecken */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.ppm2-line {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-template-rows: auto auto;
+  gap: 15px;
+  width: 100%;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-sizing: border-box;
+}
+
+.ppm2_end {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto auto;
+  gap: 15px;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-sizing: border-box;
+  
+}
