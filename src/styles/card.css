@@ -1,25 +1,22 @@
 .card {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background-color: #6a0dad; /* schöner violetter Grundton */
+  gap: 3px;
+  background-color: rgb(243, 243, 243); /* schöner violetter Grundton */
   margin: 10px;
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   cursor: pointer;
   border-radius: 15px;         /* abgerundete Ecken */
   box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* leichter Schatten */
   transition: all 0.3s ease;   /* sanfte Animation für Hover */
-  position: relative;
-  overflow: hidden;
 }
 
 /* Hover-Effekt */
 .card:hover {
   transform: scale(1.1); /* leichte Vergrößerung */
   box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-  background-color: #ff6f00; /* knalliges Orange */
   color: white;
 }
 
@@ -31,7 +28,7 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,140,0,0.3) 0%, transparent 70%);
+  
   transform: rotate(45deg);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -40,4 +37,59 @@
 
 .card:hover::before {
   opacity: 1;
+}
+
+
+
+
+
+.kundeundk{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+.kunde{
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  padding: 5px;
+  width: 100%;
+  height: 100%;
+}
+
+.k{
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  padding: 5px;
+  width: 100%;
+  height: 100%;
+}
+
+.TypundWLW{
+  display: flex;
+  align-items: center;
+}
+
+.Typ{
+  width: 75px;
+}
+
+.WLW{
+  width: 75px;
+}
+
+.StartundEnde{
+  display: flex;
+  align-items: center;
+}
+
+.Start{
+  width: 75px;
+}
+
+.Ende{
+  width: 75px;
 }

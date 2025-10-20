@@ -2,6 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 
 //components
+import Operatingbar from './Operatingbar';
+
 import PPM1_Pool from './PPM1_Pool';
 import PPM1_Line from './PPM1_Line';
 import PPM1_NAorWait from './PPM1_NAorWait';
@@ -14,10 +16,13 @@ import PPM2_Pool from './PPM2_Pool';
 import PPM2_Line from './PPM2_Line';
 import PPM2_NAorWait from './PPM2_NAorWait';
 
+
+
 //CSS
 import '../styles/ppm1.css'
 import '../styles/mainboard.css'
 import '../styles/pumi.css'
+
 
 
 
@@ -137,21 +142,20 @@ const MainBoard = () => {
     
     //dummy data
     const [machinelist, setmachinelist] = useState([
-        {id:1, machine:"Machine 1", position:"Pos 2", kunde: "Firma A", kNummer: "K123", date: "2023-10-01", area: "PPM1-Pool"},
-        {id:2, machine:"Machine 2", position:"Pos 4", kunde: "Firma B", kNummer: "K456", date: "2023-11-15", area: "PPM1-Pool"},
-        {id:3, machine:"Machine 3", position:"Pos 5" ,kunde: "Firma C", kNummer: "K789", date: "2023-12-20", area: "PPM1-Pool"},
-        {id:4, machine:"Machine 4", position:"Pos 7", kunde: "Firma D", kNummer: "K012", date: "2024-01-10", area: "PPM1-Pool"},])
+        {id:1, machine:"Machine 1", position:"Pos 2", kunde: "Firma A", kNummer: "K123", Start: "2023-10-01", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"BSF 24er", WLW:24, Tags:[""], Leerslot:false},
+        {id:2, machine:"Machine 2", position:"Pos 4", kunde: "Firma B", kNummer: "K456", Start: "2023-11-15", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"BSF 38er", WLW:12, Tags:[""], Leerslot:false},
+        {id:3, machine:"Machine 3", position:"Pos 5" ,kunde: "Firma C", kNummer: "K789", Start: "2023-12-20", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"PUMI", WLW:28, Tags:[""], Leerslot:false},
+        {id:4, machine:"Machine 4", position:"Pos 7", kunde: "Firma D", kNummer: "K012", Start: "2024-01-10", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"iONTRON", WLW:32, Tags:[""], Leerslot:false}])
 
 
 
     return ( 
+        <div className='page'>
+            <Operatingbar></Operatingbar>
         <div className='MainBoard'>
 
     
             <div className='PPM1'> 
-                <div>
-                <div className='headingppm1pool'>PPM1 Pool
-                </div>
                 <PPM1_Pool
                     machinelist={machinelist} 
                     setmachinelist={setmachinelist}
@@ -159,18 +163,13 @@ const MainBoard = () => {
                     thisarea={areas[0]}
                     setAreas={setAreas}> 
                 </PPM1_Pool>
-                </div>
-                <div>
-                <div className='headingppm1pool'>PPM1 Line
-                </div>
                 <PPM1_Line 
                     machinelist={machinelist} 
                     setmachinelist={setmachinelist}
                     areas={areas}
                     thisarea={areas[1]}
                     setAreas={setAreas}
-                />
-                </div>
+                ></PPM1_Line>
                 <PPM1_NAorWait 
                     machinelist={machinelist} 
                     setmachinelist={setmachinelist}
@@ -236,6 +235,7 @@ const MainBoard = () => {
                 >
                 </PUMI_NAorWait>
             </div>
+        </div>
         </div>
         
      )

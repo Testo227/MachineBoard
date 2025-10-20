@@ -4,15 +4,10 @@ html, body, #root {
   width: 100% !important;
   max-height: none !important;
   max-width: none !important;;        /* mindestens Fensterhöhe */
-  background-color: orange;
+  background-color: rgb(144, 143, 143);
   display: block;          /* flex entfernen, sonst wird scrollen geblockt */
-  overflow-y: auto;        /* erlaubt vertikales Scrollen */
-  overflow-x: auto;
-  background-image: url('/background.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  
+  
 }
 
 
