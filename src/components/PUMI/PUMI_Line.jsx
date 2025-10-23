@@ -2,17 +2,17 @@ import React, { use } from 'react';
 import { useState } from 'react';
 
 //components
-import Slot from './Slot';
+import Slot from '../Slot';
 
 //CSS
-import '../styles/ppm2.css'
 
 
-const PPM2_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+
+const PUMI_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
 
    
     return ( 
-        <div className="ppm2_end">
+        <div className="PUMI-line">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -30,4 +30,4 @@ const PPM2_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist})
      );
 }
  
-export default PPM2_NAorWait;
+export default PUMI_Line;

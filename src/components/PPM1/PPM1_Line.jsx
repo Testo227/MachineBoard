@@ -2,17 +2,17 @@ import React, { use } from 'react';
 import { useState } from 'react';
 
 //components
-import Slot from './Slot';
+import Slot from '../Slot';
 
 //CSS
-import '../styles/ppm2.css'
+import '../../styles/style.css'
 
 
-const PPM2_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const PPM1_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
 
    
     return ( 
-        <div className="ppm2-line">
+        <div className="grid grid-cols-4 grid-rows-2 gap-4">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -30,4 +30,4 @@ const PPM2_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => 
      );
 }
  
-export default PPM2_Line;
+export default PPM1_Line;

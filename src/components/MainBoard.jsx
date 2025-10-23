@@ -2,26 +2,23 @@ import React from 'react';
 import { useState } from 'react';
 
 //components
-import Operatingbar from './Operatingbar';
 
-import PPM1_Pool from './PPM1_Pool';
-import PPM1_Line from './PPM1_Line';
-import PPM1_NAorWait from './PPM1_NAorWait';
+import PPM1_Pool from './PPM1/PPM1_Pool';
+import PPM1_Line from './PPM1/PPM1_Line';
+import PPM1_NAorWait from './PPM1/PPM1_NAorWait';
 
-import PUMI_Pool from './PUMI_Pool';
-import PUMI_Line from './PUMI_Line';
-import PUMI_NAorWait from './PUMI_NAorWait';
+import PUMI_Pool from './PUMI/PUMI_Pool';
+import PUMI_Line from './PUMI/PUMI_Line';
+import PUMI_NAorWait from './PUMI/PUMI_NAorWait';
 
-import PPM2_Pool from './PPM2_Pool';
-import PPM2_Line from './PPM2_Line';
-import PPM2_NAorWait from './PPM2_NAorWait';
+import PPM2_Pool from './PPM2/PPM2_Pool';
+import PPM2_Line from './PPM2/PPM2_Line';
+import PPM2_NAorWait from './PPM2/PPM2_NAorWait';
 
 
 
 //CSS
-import '../styles/ppm1.css'
-import '../styles/mainboard.css'
-import '../styles/pumi.css'
+import '../styles/style.css'
 
 
 
@@ -142,71 +139,96 @@ const MainBoard = () => {
     
     //dummy data
     const [machinelist, setmachinelist] = useState([
-        {id:1, machine:"Machine 1", position:"Pos 2", kunde: "Firma A", kNummer: "K123", Start: "2023-10-01", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"BSF 24er", WLW:24, Tags:[""], Leerslot:false},
-        {id:2, machine:"Machine 2", position:"Pos 4", kunde: "Firma B", kNummer: "K456", Start: "2023-11-15", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"BSF 38er", WLW:12, Tags:[""], Leerslot:false},
-        {id:3, machine:"Machine 3", position:"Pos 5" ,kunde: "Firma C", kNummer: "K789", Start: "2023-12-20", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"PUMI", WLW:28, Tags:[""], Leerslot:false},
-        {id:4, machine:"Machine 4", position:"Pos 7", kunde: "Firma D", kNummer: "K012", Start: "2024-01-10", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"iONTRON", WLW:32, Tags:[""], Leerslot:false}])
+        {id:1, machine:"Machine 1", position:"Pos 2", kunde: "Firma A", kNummer: "K123", Start: "2023-10-01", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"BSF", WLW:24, Tags:[""], Leerslot:false, },
+        ])
 
 
 
     return ( 
-        <div className='page'>
-            <Operatingbar></Operatingbar>
         <div className='MainBoard'>
 
     
-            <div className='PPM1'> 
-                <PPM1_Pool
-                    machinelist={machinelist} 
-                    setmachinelist={setmachinelist}
-                    areas={areas}
-                    thisarea={areas[0]}
-                    setAreas={setAreas}> 
-                </PPM1_Pool>
-                <PPM1_Line 
-                    machinelist={machinelist} 
-                    setmachinelist={setmachinelist}
-                    areas={areas}
-                    thisarea={areas[1]}
-                    setAreas={setAreas}
-                ></PPM1_Line>
-                <PPM1_NAorWait 
-                    machinelist={machinelist} 
-                    setmachinelist={setmachinelist}
-                    areas={areas}
-                    thisarea={areas[2]}
-                    setAreas={setAreas}
-                />
+            <div className='flex gap-4'> 
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[0].name}</h2>
+                    </div>
+                        <PPM1_Pool
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[0]}
+                            setAreas={setAreas}> 
+                        </PPM1_Pool>
+                </div>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[1].name}</h2>
+                    </div>
+                        <PPM1_Line 
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[1]}
+                            setAreas={setAreas}
+                        ></PPM1_Line>
+                </div>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[2].name}</h2>
+                    </div>
+                        <PPM1_NAorWait 
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[2]}
+                            setAreas={setAreas}
+                        ></PPM1_NAorWait>
+                </div>
             </div>
-            <div className='PPM2'>
-                <PPM2_Pool
-                    machinelist={machinelist} 
-                    setmachinelist={setmachinelist}
-                    areas={areas}
-                    thisarea={areas[6]}
-                    setAreas={setAreas} 
-                >
-                </PPM2_Pool>
-
-                <PPM2_Line
-                    machinelist={machinelist} 
-                    setmachinelist={setmachinelist}
-                    areas={areas}
-                    thisarea={areas[7]}
-                    setAreas={setAreas}
-                >
-                </PPM2_Line>
-
-                <PPM2_NAorWait
-                    machinelist={machinelist} 
-                    setmachinelist={setmachinelist}
-                    areas={areas}
-                    thisarea={areas[8]}
-                    setAreas={setAreas}
-                >
-                </PPM2_NAorWait>
-
+            <div className='flex gap-4'>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[6].name}</h2>
+                    </div>
+                    
+                        <PPM2_Pool
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[6]}
+                            setAreas={setAreas} 
+                        >
+                        </PPM2_Pool>
+                </div>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[7].name}</h2>
+                    </div>
+                        <PPM2_Line
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[7]}
+                            setAreas={setAreas}
+                        >
+                        </PPM2_Line>
+                </div>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[8].name}</h2>
+                    </div>
+                        <PPM2_NAorWait
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[8]}
+                            setAreas={setAreas}
+                        >
+                        </PPM2_NAorWait>
+                </div>
             </div>
+            <h2>{areas[3].name}</h2>
             <div className='PUMI'>
                 <PUMI_Pool
                     machinelist={machinelist} 
@@ -216,7 +238,7 @@ const MainBoard = () => {
                     setAreas={setAreas} 
                 >
                 </PUMI_Pool>
-                
+                <h2>{areas[4].name}</h2>
                 <PUMI_Line
                     machinelist={machinelist} 
                     setmachinelist={setmachinelist}
@@ -225,7 +247,7 @@ const MainBoard = () => {
                     setAreas={setAreas}
                 >
                 </PUMI_Line>
-
+                <h2>{areas[5].name}</h2>
                 <PUMI_NAorWait
                     machinelist={machinelist} 
                     setmachinelist={setmachinelist}
@@ -236,7 +258,7 @@ const MainBoard = () => {
                 </PUMI_NAorWait>
             </div>
         </div>
-        </div>
+        
         
      )
 }

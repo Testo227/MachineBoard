@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 
 //CSS
-import '../styles/card.css'
+
 
 //Components
 import Modal from './Modal';
@@ -23,6 +23,17 @@ const Card = ({
     const handleClick = () => {
         setShowModal(!showModal)
     }
+    
+
+    const handleTypeSwitch = (e) => {
+    const newType = e.target.value;
+    setmachinelist(prev =>
+      prev.map(m =>
+      m.id === currentmachine.id ? { ...m, Typ: newType } : m
+        )
+      );
+    };
+
 
     const [selectedSlot, setSelectedSlot] = useState("");
     
@@ -101,15 +112,25 @@ const Card = ({
     
 
     return (
-        <div className="card">
+        <div className={currentmachine.Typ}>
+          
             
             <div className='kundeundk'>
                 <input className='kunde' value={currentmachine.kunde || ""} onChange={(e) => handleChange("kunde", e.target.value)} type="text" placeholder="Kunde" />
                 <input className='k' value={currentmachine.kNummer || ""} onChange={(e) => handleChange("kNummer", e.target.value)} type="text" placeholder="K-Nummer" />
             </div>
             <div className='TypundWLW'>
-                <input className='Typ' value={currentmachine.Typ || ""} onChange={(e) => handleChange("Typ", e.target.value)} type="text" placeholder="Typ" />
-                <input className='WLW' value={currentmachine.WLW || ""} onChange={(e) => handleChange("WLW", e.target.value)} type="number" placeholder="WLW" />
+                <input className='WLW' value={currentmachine.WLW || ""} onChange={(e) => handleChange("WLW", e.target.value)} type="text" placeholder="WLW" />
+                 <select value={currentmachine.Typ} onChange={handleTypeSwitch}>
+                  <option key={0} value={"waehlen"}>waehlen...</option>
+                  <option key={1} value={"BSF"}>BSF</option>
+                  <option key={2} value={"PUMI"}>PUMI</option>
+                  <option key={3} value={"Prototype"}>Prototype</option>
+                  <option key={4} value={"BSA"}>BSA</option>
+                  <option key={5} value={"E-Mischer"}>E-Mischer</option>
+                  <option key={6} value={"Leerslot"}>Leerslot</option>
+
+                 </select>
             </div>
             <div className='StartundEnde'>
                 <input className='Start' value={currentmachine.Start || ""} onChange={(e) => handleChange("Start", e.target.value)} type="date"/>

@@ -2,17 +2,17 @@ import React, { use } from 'react';
 import { useState } from 'react';
 
 //components
-import Slot from './Slot';
+import Slot from '../Slot';
 
 //CSS
-import '../styles/ppm1_end.css'
+import '../../styles/style.css'
 
 
-const PPM1_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const PPM2_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
 
    
     return ( 
-        <div className="ppm1_end">
+        <div className="grid grid-cols-4 grid-rows-2 gap-4">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -30,4 +30,4 @@ const PPM1_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist})
      );
 }
  
-export default PPM1_NAorWait;
+export default PPM2_Line;

@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
  
 //CSS
-import '../styles/slot.css'
+import '../styles/style.css'
 
 //Components
 import Card from './Card';
@@ -18,7 +18,8 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
                 id: machinelist.length + 1,
                 machine: `Machine ${machinelist.length + 1}`,
                 position: slotName,
-                area: thisarea.name
+                area: thisarea.name,
+                Typ: "waehlen"
             };
             setmachinelist([...machinelist, newMachine])
             setSlotList(slotList.map(s => s.slotName === slotName ? {...s, occupied: true} : s))
@@ -27,8 +28,8 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
             }
 
     return ( 
-        <div className='slot' onClick={handleCreateMachine}>
-            <h3>{slotName}</h3>
+        <div className='w-50 h-50' onClick={handleCreateMachine}>
+            <h3 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{slotName}</h3>
             {currentMachine ? (
                 <Card 
                     machineid={currentMachine.id} 

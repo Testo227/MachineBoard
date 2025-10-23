@@ -2,17 +2,17 @@ import React, { use } from 'react';
 import { useState } from 'react';
 
 //components
-import Slot from './Slot';
+import Slot from '../Slot';
 
 //CSS
-import '../styles/pumi.css'
 
 
-const PUMI_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+
+const PUMI_Pool = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
 
    
     return ( 
-        <div className="PUMI-end">
+        <div className="pumi-pool">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -30,4 +30,4 @@ const PUMI_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist})
      );
 }
  
-export default PUMI_NAorWait;
+export default PUMI_Pool;

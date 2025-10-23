@@ -2,17 +2,17 @@ import React, { use } from 'react';
 import { useState } from 'react';
 
 //components
-import Slot from './Slot';
+import Slot from '../Slot';
 
 //CSS
-import '../styles/pumi.css'
+import '../../styles/style.css'
 
 
-const PUMI_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const PPM1_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
 
    
     return ( 
-        <div className="PUMI-line">
+        <div className="flex flex-col">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -30,4 +30,4 @@ const PUMI_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => 
      );
 }
  
-export default PUMI_Line;
+export default PPM1_NAorWait;

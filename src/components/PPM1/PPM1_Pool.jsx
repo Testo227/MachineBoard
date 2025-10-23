@@ -2,17 +2,17 @@ import React, { use } from 'react';
 import { useState } from 'react';
 
 //components
-import Slot from './Slot';
+import Slot from '../Slot';
 
 //CSS
-import '../styles/pumi.css'
+import '../../styles/style.css'
 
 
-const PUMI_Pool = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const PPM1_Pool = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
 
    
     return ( 
-        <div className="pumi-pool">
+        <div className='grid grid-cols-3 grid-rows-3 gap-4'>
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -30,4 +30,4 @@ const PUMI_Pool = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => 
      );
 }
  
-export default PUMI_Pool;
+export default PPM1_Pool;
