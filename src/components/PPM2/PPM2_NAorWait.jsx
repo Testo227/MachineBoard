@@ -12,7 +12,7 @@ const PPM2_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist})
 
    
     return ( 
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-4">
 
                 {thisarea.slots.map(slot => (
                     <Slot 

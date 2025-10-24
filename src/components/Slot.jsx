@@ -28,8 +28,8 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
             }
 
     return ( 
-        <div className='w-50 h-50 flex flex-col bg-[rgb(222,222,222)]' onClick={handleCreateMachine}>
-            <h3 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{slotName}</h3>
+        <div className='w-35 h-25 flex flex-col bg-[rgb(222,222,222)]' onClick={handleCreateMachine}>
+            <h3 className='text-center font-extrabold text-[9px] text-[rgb(85,90,90)]'>{slotName}</h3>
             {currentMachine ? (
                 <Card 
                     machineid={currentMachine.id} 

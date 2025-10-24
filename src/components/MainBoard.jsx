@@ -22,6 +22,29 @@ import BSA_Pool from './BSA/BSA_Pool';
 import BSA_Line from './BSA/BSA_Line';
 import BSA_Dock from './BSA/BSA_Dock';
 
+import Pumpe_Arbeit from './P_Pumpe/Pumpe_Arbeit';
+import Pumpe_Puffer from './P_Pumpe/Pumpe_Puffer';
+import Pumpe_Nacharbeit from './P_Pumpe/Pumpe_Nacharbeit';
+
+import Mast_Arbeit from './P_Mast/Mast_Arbeit';
+import Mast_Puffer from './P_Mast/Mast_Puffer';
+import Mast_Nacharbeit from './P_Mast/Mast_Nacharbeit';
+
+import Lackierung_Arbeit from './Lackierung/Lackierung_Arbeit';
+import Lackierung_Puffer from './Lackierung/Lackierung_Puffer';
+import Lackierung_Nacharbeit from './Lackierung/Lackierung_Nacharbeit';
+
+import Endmontage_Arbeit from './Endmontage/Endmontage_Arbeit';
+import Endmontage_Puffer from './Endmontage/Endmontage_Puffer';
+import Endmontage_Nacharbeit from './Endmontage/Endmontage_Puffer';
+
+import PDI_Arbeit from './PDI/PDI_Arbeit';
+import PDI_Puffer from './PDI/PDI_Puffer';
+import PDI_Nacharbeit from './PDI/PDI_Nacharbeit';
+
+import Konservieren_Arbeit from './Konservieren/Konservieren_Arbeit';
+import Konservieren_Puffer from './Konservieren/Konservieren_Puffer';
+import Konservieren_Nacharbeit from './Konservieren/Konservieren_Nacharbeit';
 
 //CSS
 import '../styles/style.css'
@@ -209,9 +232,215 @@ const MainBoard = () => {
             { id: 91, slotName: "Pos 4", occupied: false },
             { id: 92, slotName: "Pos 5", occupied: false },
             { id: 93, slotName: "Pos 6", occupied: false }
+            ],
+        },
+        {
+            id: 15,
+            name: "Pumpe-inArbeit",
+            slots: [
+            { id: 94, slotName: "Pos 1", occupied: false },
+            { id: 95, slotName: "Pos 2", occupied: false },
+            { id: 96, slotName: "Pos 3", occupied: false },
+            { id: 97, slotName: "Pos 4", occupied: false },
+            { id: 98, slotName: "Pos 5", occupied: false },
+            { id: 99, slotName: "Pos 6", occupied: false },
+            { id: 94, slotName: "Pos 7", occupied: false },
+            { id: 95, slotName: "Pos 8", occupied: false },
+            { id: 96, slotName: "Pos 9", occupied: false },
+            { id: 97, slotName: "Pos 10", occupied: false },
+            { id: 98, slotName: "Pos 11", occupied: false },
+            { id: 99, slotName: "Pos 12", occupied: false }
+            ]
+        },
+        {
+            id: 16,
+            name: "Pumpe-Puffer",
+            slots: [
+            { id: 100, slotName: "Pos 1", occupied: false },
+            { id: 101, slotName: "Pos 2", occupied: false },
+            { id: 102, slotName: "Pos 3", occupied: false },
+            { id: 103, slotName: "Pos 4", occupied: false },
+            { id: 104, slotName: "Pos 5", occupied: false },
+            { id: 105, slotName: "Pos 6", occupied: false },
+            { id: 106, slotName: "Pos 7", occupied: false },
+            { id: 107, slotName: "Pos 8", occupied: false },
+            { id: 108, slotName: "Pos 9", occupied: false },
+            { id: 109, slotName: "Pos 10", occupied: false }
+            ]
+        },
+        {
+            id: 17,
+            name: "Pumpe-Nacharbeit",
+            slots: [
+            { id: 110, slotName: "Pos 1", occupied: false },
+            { id: 111, slotName: "Pos 2", occupied: false },
+            { id: 112, slotName: "Pos 3", occupied: false },
+            { id: 113, slotName: "Pos 4", occupied: false },
+            { id: 114, slotName: "Pos 5", occupied: false },
+            { id: 115, slotName: "Pos 6", occupied: false },
+            ]
+        },
+        {
+            id: 18,
+            name: "Mast-inArbeit",
+            slots: [
+            { id: 116, slotName: "Pos 1", occupied: false },
+            { id: 117, slotName: "Pos 2", occupied: false },
+            { id: 118, slotName: "Pos 3", occupied: false },
+            { id: 119, slotName: "Pos 4", occupied: false },
+            { id: 120, slotName: "Pos 5", occupied: false },
+            { id: 121, slotName: "Pos 6", occupied: false },
+            ]
+        },
+        {
+            id: 19,
+            name: "Mast-Puffer",
+            slots: [
+            { id: 122, slotName: "Pos 1", occupied: false },
+            { id: 123, slotName: "Pos 2", occupied: false },
+            { id: 124, slotName: "Pos 3", occupied: false },
+            { id: 125, slotName: "Pos 4", occupied: false },
+            { id: 126, slotName: "Pos 5", occupied: false }
+            ]
+        },
+        {
+            id: 20,
+            name: "Mast-Nacharbeit",
+            slots: [
+            { id: 122, slotName: "Pos 1", occupied: false },
+            { id: 123, slotName: "Pos 2", occupied: false },
+            { id: 124, slotName: "Pos 3", occupied: false }
+            ]
+        },
+        {
+            id: 21,
+            name: "Lack-inArbeit",
+            slots: [
+            { id: 125, slotName: "Pos 1", occupied: false },
+            { id: 126, slotName: "Pos 2", occupied: false },
+            { id: 127, slotName: "Pos 3", occupied: false },
+            { id: 128, slotName: "Pos 4", occupied: false },
+            { id: 129, slotName: "Pos 5", occupied: false },
+            { id: 130, slotName: "Pos 6", occupied: false },
+            ]
+        },
+        {
+            id: 22,
+            name: "Lack-Puffer",
+            slots: [
+            { id: 131, slotName: "Pos 1", occupied: false },
+            { id: 132, slotName: "Pos 2", occupied: false },
+            { id: 133, slotName: "Pos 3", occupied: false },
+            { id: 134, slotName: "Pos 4", occupied: false },
+            { id: 135, slotName: "Pos 5", occupied: false }
+            ]
+        },
+        {
+            id: 23,
+            name: "Lack-Nacharbeit",
+            slots: [
+            { id: 136, slotName: "Pos 1", occupied: false },
+            { id: 137, slotName: "Pos 2", occupied: false },
+            { id: 138, slotName: "Pos 3", occupied: false }
+            ]
+        },
+        {
+            id: 24,
+            name: "Endm.-inArbeit",
+            slots: [
+            { id: 139, slotName: "Pos 1", occupied: false },
+            { id: 140, slotName: "Pos 2", occupied: false },
+            { id: 141, slotName: "Pos 3", occupied: false },
+            { id: 142, slotName: "Pos 4", occupied: false },
+            { id: 143, slotName: "Pos 5", occupied: false },
+            { id: 144, slotName: "Pos 6", occupied: false },
+            ]
+        },
+        {
+            id: 25,
+            name: "Endm.-Puffer",
+            slots: [
+            { id: 145, slotName: "Pos 1", occupied: false },
+            { id: 146, slotName: "Pos 2", occupied: false },
+            { id: 147, slotName: "Pos 3", occupied: false },
+            { id: 148, slotName: "Pos 4", occupied: false },
+            { id: 149, slotName: "Pos 5", occupied: false }
+            ]
+        },
+        {
+            id: 26,
+            name: "Endm.-Nacharbeit",
+            slots: [
+            { id: 150, slotName: "Pos 1", occupied: false },
+            { id: 151, slotName: "Pos 2", occupied: false },
+            { id: 152, slotName: "Pos 3", occupied: false }
+            ]
+        },
+        {
+            id: 27,
+            name: "PDI-inArbeit",
+            slots: [
+            { id: 153, slotName: "Pos 1", occupied: false },
+            { id: 154, slotName: "Pos 2", occupied: false },
+            { id: 155, slotName: "Pos 3", occupied: false },
+            { id: 156, slotName: "Pos 4", occupied: false },
+            { id: 157, slotName: "Pos 5", occupied: false },
+            { id: 158, slotName: "Pos 6", occupied: false },
+            ]
+        },
+        {
+            id: 28,
+            name: "PDI-Puffer",
+            slots: [
+            { id: 159, slotName: "Pos 1", occupied: false },
+            { id: 160, slotName: "Pos 2", occupied: false },
+            { id: 161, slotName: "Pos 3", occupied: false },
+            { id: 162, slotName: "Pos 4", occupied: false },
+            { id: 163, slotName: "Pos 5", occupied: false }
+            ]
+        },
+        {
+            id: 29,
+            name: "PDI-Nacharbeit",
+            slots: [
+            { id: 164, slotName: "Pos 1", occupied: false },
+            { id: 165, slotName: "Pos 2", occupied: false },
+            { id: 166, slotName: "Pos 3", occupied: false }
+            ]
+        },
+        {
+            id: 30,
+            name: "Kons.-inArbeit",
+            slots: [
+            { id: 167, slotName: "Pos 1", occupied: false },
+            { id: 168, slotName: "Pos 2", occupied: false },
+            { id: 169, slotName: "Pos 3", occupied: false },
+            { id: 170, slotName: "Pos 4", occupied: false },
+            { id: 171, slotName: "Pos 5", occupied: false },
+            { id: 172, slotName: "Pos 6", occupied: false },
+            ]
+        },
+        {
+            id: 31,
+            name: "Kons.-Puffer",
+            slots: [
+            { id: 173, slotName: "Pos 1", occupied: false },
+            { id: 174, slotName: "Pos 2", occupied: false },
+            { id: 175, slotName: "Pos 3", occupied: false },
+            { id: 176, slotName: "Pos 4", occupied: false },
+            { id: 177, slotName: "Pos 5", occupied: false }
+            ]
+        },
+        {
+            id: 32,
+            name: "Kons.-Nacharbeit",
+            slots: [
+            { id: 178, slotName: "Pos 1", occupied: false },
+            { id: 179, slotName: "Pos 2", occupied: false },
+            { id: 180, slotName: "Pos 3", occupied: false }
             ]
         }
-]);
+    ]);
 
     
     //dummy data
@@ -222,197 +451,447 @@ const MainBoard = () => {
 
 
     return ( 
-        <div className='MainBoard'>
-
-    
-            <div className='flex gap-4'> 
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[0].name}</h2>
+        <div className='MainBoard flex gap-4'>
+            <div className='flex flex-col gap-4'>
+        
+                <div className='flex gap-4'> 
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[0].name}</h2>
+                        </div>
+                            <PPM1_Pool
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[0]}
+                                setAreas={setAreas}> 
+                            </PPM1_Pool>
                     </div>
-                        <PPM1_Pool
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[0]}
-                            setAreas={setAreas}> 
-                        </PPM1_Pool>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[1].name}</h2>
+                        </div>
+                            <PPM1_Line 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[1]}
+                                setAreas={setAreas}
+                            ></PPM1_Line>
+                    </div>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[2].name}</h2>
+                        </div>
+                            <PPM1_NAorWait 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[2]}
+                                setAreas={setAreas}
+                            ></PPM1_NAorWait>
+                    </div>
                 </div>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[1].name}</h2>
+                <div className='flex gap-4'>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[6].name}</h2>
+                        </div>
+                        
+                            <PPM2_Pool
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[6]}
+                                setAreas={setAreas} 
+                            >
+                            </PPM2_Pool>
                     </div>
-                        <PPM1_Line 
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[1]}
-                            setAreas={setAreas}
-                        ></PPM1_Line>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[7].name}</h2>
+                        </div>
+                            <PPM2_Line
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[7]}
+                                setAreas={setAreas}
+                            >
+                            </PPM2_Line>
+                    </div>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[8].name}</h2>
+                        </div>
+                            <PPM2_NAorWait
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[8]}
+                                setAreas={setAreas}
+                            >
+                            </PPM2_NAorWait>
+                    </div>
                 </div>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[2].name}</h2>
+                <div className='flex gap-4'>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[3].name}</h2>
+                        </div>
+                            <PUMI_Pool
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[3]}
+                                setAreas={setAreas} 
+                            >
+                            </PUMI_Pool>
                     </div>
-                        <PPM1_NAorWait 
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[2]}
-                            setAreas={setAreas}
-                        ></PPM1_NAorWait>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[4].name}</h2>
+                        </div>
+                            <PUMI_Line
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[4]}
+                                setAreas={setAreas}
+                            >
+                            </PUMI_Line>
+                    </div>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[5].name}</h2>
+                        </div>
+                            <PUMI_NAorWait
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[5]}
+                                setAreas={setAreas}
+                            >
+                            </PUMI_NAorWait>
+                    </div>
                 </div>
-            </div>
-            <div className='flex gap-4'>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[6].name}</h2>
-                    </div>
+                <div className='flex gap-4'>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[9].name}</h2>
+                        </div>
                     
-                        <PPM2_Pool
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[6]}
-                            setAreas={setAreas} 
-                        >
-                        </PPM2_Pool>
-                </div>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[7].name}</h2>
+                        <Dock_Pool
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[9]}
+                                setAreas={setAreas}>
+                        </Dock_Pool>
                     </div>
-                        <PPM2_Line
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[7]}
-                            setAreas={setAreas}
-                        >
-                        </PPM2_Line>
-                </div>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[8].name}</h2>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[10].name}</h2>
+                        </div>
+
+                        <Dock_Places
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[9]}
+                                setAreas={setAreas}>
+
+                        </Dock_Places>
                     </div>
-                        <PPM2_NAorWait
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[8]}
-                            setAreas={setAreas}
-                        >
-                        </PPM2_NAorWait>
                 </div>
-            </div>
-            <div className='flex gap-4'>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[3].name}</h2>
+                <div className='flex gap-4'>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[11].name}</h2>
+                        </div>
+                        <BSA_Pool 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[11]}
+                                setAreas={setAreas}>
+
+                        </BSA_Pool>
                     </div>
-                        <PUMI_Pool
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[3]}
-                            setAreas={setAreas} 
-                        >
-                        </PUMI_Pool>
-                </div>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[4].name}</h2>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[12].name}</h2>
+                        </div>
+                        <BSA_Line 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[12]}
+                                setAreas={setAreas}>
+                        </BSA_Line>
                     </div>
-                        <PUMI_Line
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[4]}
-                            setAreas={setAreas}
-                        >
-                        </PUMI_Line>
-                </div>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[5].name}</h2>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[13].name}</h2>
+                        </div>
+                        <BSA_Dock
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[13]}
+                                setAreas={setAreas}>
+
+                        </BSA_Dock>
                     </div>
-                        <PUMI_NAorWait
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[5]}
-                            setAreas={setAreas}
-                        >
-                        </PUMI_NAorWait>
                 </div>
             </div>
+            <div className='flex flex-col gap-4'>
+                <div className='text-xl font-extrabold text-[rgb(85,90,90)] bg-[rgb(166,202,236)] w-8 h-[770px] flex items-center justify-center [writing-mode:vertical-rl] rotate-180 text-center'>↓ in Arbeit ↓</div>
+                <div className='text-xl font-extrabold text-[rgb(85,90,90)] bg-[rgb(242,207,238)] w-8 h-[630px] flex items-center justify-center [writing-mode:vertical-rl] rotate-180 text-center'>↓ Puffer ↓</div>
+                <div className='text-xl font-extrabold text-[rgb(85,90,90)] bg-[rgb(246,198,173)] w-8 h-[358px] flex items-center justify-center [writing-mode:vertical-rl] rotate-180 text-center'>↓ Nacharbeit ↓</div>
+            </div>
             <div className='flex gap-4'>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[9].name}</h2>
+                <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[14].name}</h2>
+                        </div>
+                        <Pumpe_Arbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[14]}
+                                setAreas={setAreas}>
+                            
+                        </Pumpe_Arbeit>
                     </div>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[15].name}</h2>
+                        </div>
+                        <Pumpe_Puffer
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[15]}
+                                setAreas={setAreas}>
+                        </Pumpe_Puffer>
+
+                    </div>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[16].name}</h2>
+                        </div>
+                        <Pumpe_Nacharbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[16]}
+                                setAreas={setAreas}>
+                        </Pumpe_Nacharbeit>
+                    </div>
+                </div>
                 
-                    <Dock_Pool
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[9]}
-                            setAreas={setAreas}>
-                    </Dock_Pool>
-                </div>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[10].name}</h2>
+            </div>
+            <div className='flex gap-4'>
+                <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[17].name}</h2>
+                        </div>
+                        <Mast_Arbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[17]}
+                                setAreas={setAreas}>
+                        </Mast_Arbeit>
                     </div>
-
-                    <Dock_Places
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[9]}
-                            setAreas={setAreas}>
-
-                    </Dock_Places>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[18].name}</h2>
+                        </div>
+                        <Mast_Puffer 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[18]}
+                                setAreas={setAreas}>
+                        </Mast_Puffer>
+                    </div>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[19].name}</h2>
+                        </div>
+                        <Mast_Nacharbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[19]}
+                                setAreas={setAreas}>
+                        </Mast_Nacharbeit>
+                    </div>
                 </div>
             </div>
             <div className='flex gap-4'>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[11].name}</h2>
-                    </div>
-                    <BSA_Pool 
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[11]}
-                            setAreas={setAreas}>
+                <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[20].name}</h2>
+                        </div>
+                        <Lackierung_Arbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[20]}
+                                setAreas={setAreas}>
 
-                    </BSA_Pool>
-                </div>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[12].name}</h2>
+                        </Lackierung_Arbeit>
                     </div>
-                    <BSA_Line 
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[12]}
-                            setAreas={setAreas}>
-                    </BSA_Line>
-                </div>
-                <div className='flex flex-col'>
-                    <div className='mb-4 bg-[rgb(255,204,0)]'>
-                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[13].name}</h2>
-                    </div>
-                    <BSA_Dock
-                            machinelist={machinelist} 
-                            setmachinelist={setmachinelist}
-                            areas={areas}
-                            thisarea={areas[12]}
-                            setAreas={setAreas}>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[21].name}</h2>
+                        </div>
+                        <Lackierung_Puffer 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[21]}
+                                setAreas={setAreas}>
 
-                    </BSA_Dock>
+                        </Lackierung_Puffer>
+                    </div>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[22].name}</h2>
+                        </div>
+                        <Lackierung_Nacharbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[22]}
+                                setAreas={setAreas}>
+                        </Lackierung_Nacharbeit>
+                    </div>
+                </div>
+            </div>
+            <div className='flex gap-4'>
+                <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[23].name}</h2>
+                        </div>
+                        <Endmontage_Arbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[23]}
+                                setAreas={setAreas}>
+                        </Endmontage_Arbeit>
+                    </div>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[24].name}</h2>
+                        </div>
+                        <Endmontage_Puffer 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[24]}
+                                setAreas={setAreas}>
+                        </Endmontage_Puffer>
+                    </div>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[25].name}</h2>
+                        </div>
+                        <Endmontage_Nacharbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[25]}
+                                setAreas={setAreas}>
+                        </Endmontage_Nacharbeit>
+                    </div>
+                </div>
+            </div>
+            <div className='flex gap-4'>
+                <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[26].name}</h2>
+                        </div>
+                        <PDI_Arbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[26]}
+                                setAreas={setAreas}>
+                        </PDI_Arbeit>
+                    </div>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[27].name}</h2>
+                        </div>
+                        <PDI_Puffer 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[27]}
+                                setAreas={setAreas}>
+                        </PDI_Puffer>
+                    </div>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[28].name}</h2>
+                        </div>
+                        <PDI_Nacharbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[28]}
+                                setAreas={setAreas}>
+                        </PDI_Nacharbeit>
+                    </div>
+                </div>
+            </div>
+            <div className='flex gap-4'>
+                <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[29].name}</h2>
+                        </div>
+                        <Konservieren_Arbeit machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[29]}
+                                setAreas={setAreas}>
+                        </Konservieren_Arbeit>
+                    </div>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[30].name}</h2>
+                        </div>
+                        <Konservieren_Puffer 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[30]}
+                                setAreas={setAreas}>
+                        </Konservieren_Puffer>
+                    </div>
+                    <div className='flex flex-col mt-9'>
+                        <div className='mb-4 bg-[rgb(255,204,0)]'>
+                            <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[31].name}</h2>
+                        </div>
+                        <Konservieren_Nacharbeit 
+                                machinelist={machinelist} 
+                                setmachinelist={setmachinelist}
+                                areas={areas}
+                                thisarea={areas[31]}
+                                setAreas={setAreas}>
+                        </Konservieren_Nacharbeit>
+                    </div>
                 </div>
             </div>
         </div>

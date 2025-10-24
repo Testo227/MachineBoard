@@ -26,8 +26,7 @@ const PUMI_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => 
                         thisarea={thisarea}
                     />
                 ))}
-                    <DummySlot></DummySlot>
-                    <DummySlot></DummySlot>
+                    
 
 
         </div>
