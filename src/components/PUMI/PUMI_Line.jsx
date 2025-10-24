@@ -3,16 +3,17 @@ import { useState } from 'react';
 
 //components
 import Slot from '../Slot';
+import DummySlot from '../DummySlot';
 
 //CSS
-
+import '../../styles/style.css'
 
 
 const PUMI_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
 
    
     return ( 
-        <div className="PUMI-line">
+        <div className="grid grid-cols-4 grid-rows-2 gap-4">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -25,6 +26,9 @@ const PUMI_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => 
                         thisarea={thisarea}
                     />
                 ))}
+                    <DummySlot></DummySlot>
+                    <DummySlot></DummySlot>
+
 
         </div>
      );

@@ -5,14 +5,14 @@ import { useState } from 'react';
 import Slot from '../Slot';
 
 //CSS
-
+import '../../styles/style.css'
 
 
 const PUMI_Pool = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
 
    
     return ( 
-        <div className="pumi-pool">
+        <div className="grid grid-cols-3 grid-rows-2 gap-4">
 
                 {thisarea.slots.map(slot => (
                     <Slot 

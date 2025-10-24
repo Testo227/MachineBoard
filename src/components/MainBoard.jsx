@@ -15,6 +15,12 @@ import PPM2_Pool from './PPM2/PPM2_Pool';
 import PPM2_Line from './PPM2/PPM2_Line';
 import PPM2_NAorWait from './PPM2/PPM2_NAorWait';
 
+import Dock_Pool from './Dock/Dock_Pool';
+import Dock_Places from './Dock/Dock_Places';
+
+import BSA_Pool from './BSA/BSA_Pool';
+import BSA_Line from './BSA/BSA_Line';
+import BSA_Dock from './BSA/BSA_Dock';
 
 
 //CSS
@@ -133,13 +139,84 @@ const MainBoard = () => {
             { id: 52, slotName: "Pos 2", occupied: false },
             { id: 53, slotName: "Pos 3", occupied: false }
             ]
+        },
+        {
+            id: 10,
+            name: "Dock-Pool",
+            slots: [
+            { id: 54, slotName: "Pos 1", occupied: false },
+            { id: 55, slotName: "Pos 2", occupied: false },
+            { id: 56, slotName: "Pos 3", occupied: false },
+            { id: 57, slotName: "Pos 4", occupied: false },
+            { id: 58, slotName: "Pos 5", occupied: false },
+            { id: 59, slotName: "Pos 6", occupied: false },
+            { id: 60, slotName: "Pos 7", occupied: false },
+            { id: 61, slotName: "Pos 8", occupied: false },
+            { id: 62, slotName: "Pos 9", occupied: false }
+            ]
+        }
+        ,
+        {
+            id: 11,
+            name: "Dock-Plätze",
+            slots: [
+            { id: 63, slotName: "Pos 1", occupied: false },
+            { id: 64, slotName: "Pos 2", occupied: false },
+            { id: 65, slotName: "Pos 3", occupied: false },
+            { id: 66, slotName: "Pos 4", occupied: false },
+            { id: 67, slotName: "Pos 5", occupied: false },
+            { id: 68, slotName: "Pos 6", occupied: false },
+            { id: 69, slotName: "Pos 7", occupied: false },
+            { id: 70, slotName: "Pos 8", occupied: false },
+            { id: 71, slotName: "Pos 9", occupied: false },
+            { id: 72, slotName: "Pos 10", occupied: false }
+            ]
+        },
+        {
+            id: 12,
+            name: "BSA-Pool",
+            slots: [
+            { id: 73, slotName: "Pos 1", occupied: false },
+            { id: 74, slotName: "Pos 2", occupied: false },
+            { id: 75, slotName: "Pos 3", occupied: false },
+            { id: 76, slotName: "Pos 4", occupied: false },
+            { id: 77, slotName: "Pos 5", occupied: false },
+            { id: 78, slotName: "Pos 6", occupied: false },
+            { id: 79, slotName: "Pos 7", occupied: false },
+            { id: 80, slotName: "Pos 8", occupied: false },
+            { id: 81, slotName: "Pos 9", occupied: false }
+            ]
+        },
+        {
+            id: 13,
+            name: "BSA-Linie",
+            slots: [
+            { id: 82, slotName: "Pos 1", occupied: false },
+            { id: 83, slotName: "Pos 2", occupied: false },
+            { id: 84, slotName: "Pos 3", occupied: false },
+            { id: 85, slotName: "Pos 4", occupied: false },
+            { id: 86, slotName: "Pos 5", occupied: false },
+            { id: 87, slotName: "Pos 6", occupied: false }
+            ]
+        },
+        {
+            id: 14,
+            name: "BSA-Dock",
+            slots: [
+            { id: 88, slotName: "Pos 1", occupied: false },
+            { id: 89, slotName: "Pos 2", occupied: false },
+            { id: 90, slotName: "Pos 3", occupied: false },
+            { id: 91, slotName: "Pos 4", occupied: false },
+            { id: 92, slotName: "Pos 5", occupied: false },
+            { id: 93, slotName: "Pos 6", occupied: false }
+            ]
         }
 ]);
 
     
     //dummy data
     const [machinelist, setmachinelist] = useState([
-        {id:1, machine:"Machine 1", position:"Pos 2", kunde: "Firma A", kNummer: "K123", Start: "2023-10-01", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"BSF", WLW:24, Tags:[""], Leerslot:false, },
+        {id:1, machine:"Machine 1", position:"Pos 2", kunde: "Firma A", kNummer: "K123", Start: "2023-10-01", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"BSF", WLW:24, Tags:["PL"], Leerslot:false, },
         ])
 
 
@@ -228,34 +305,115 @@ const MainBoard = () => {
                         </PPM2_NAorWait>
                 </div>
             </div>
-            <h2>{areas[3].name}</h2>
-            <div className='PUMI'>
-                <PUMI_Pool
-                    machinelist={machinelist} 
-                    setmachinelist={setmachinelist}
-                    areas={areas}
-                    thisarea={areas[3]}
-                    setAreas={setAreas} 
-                >
-                </PUMI_Pool>
-                <h2>{areas[4].name}</h2>
-                <PUMI_Line
-                    machinelist={machinelist} 
-                    setmachinelist={setmachinelist}
-                    areas={areas}
-                    thisarea={areas[4]}
-                    setAreas={setAreas}
-                >
-                </PUMI_Line>
-                <h2>{areas[5].name}</h2>
-                <PUMI_NAorWait
-                    machinelist={machinelist} 
-                    setmachinelist={setmachinelist}
-                    areas={areas}
-                    thisarea={areas[5]}
-                    setAreas={setAreas}
-                >
-                </PUMI_NAorWait>
+            <div className='flex gap-4'>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[3].name}</h2>
+                    </div>
+                        <PUMI_Pool
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[3]}
+                            setAreas={setAreas} 
+                        >
+                        </PUMI_Pool>
+                </div>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[4].name}</h2>
+                    </div>
+                        <PUMI_Line
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[4]}
+                            setAreas={setAreas}
+                        >
+                        </PUMI_Line>
+                </div>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[5].name}</h2>
+                    </div>
+                        <PUMI_NAorWait
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[5]}
+                            setAreas={setAreas}
+                        >
+                        </PUMI_NAorWait>
+                </div>
+            </div>
+            <div className='flex gap-4'>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[9].name}</h2>
+                    </div>
+                
+                    <Dock_Pool
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[9]}
+                            setAreas={setAreas}>
+                    </Dock_Pool>
+                </div>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[10].name}</h2>
+                    </div>
+
+                    <Dock_Places
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[9]}
+                            setAreas={setAreas}>
+
+                    </Dock_Places>
+                </div>
+            </div>
+            <div className='flex gap-4'>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[11].name}</h2>
+                    </div>
+                    <BSA_Pool 
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[11]}
+                            setAreas={setAreas}>
+
+                    </BSA_Pool>
+                </div>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[12].name}</h2>
+                    </div>
+                    <BSA_Line 
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[12]}
+                            setAreas={setAreas}>
+                    </BSA_Line>
+                </div>
+                <div className='flex flex-col'>
+                    <div className='mb-4 bg-[rgb(255,204,0)]'>
+                        <h2 className='text-center font-extrabold text-sm text-[rgb(85,90,90)]'>{areas[13].name}</h2>
+                    </div>
+                    <BSA_Dock
+                            machinelist={machinelist} 
+                            setmachinelist={setmachinelist}
+                            areas={areas}
+                            thisarea={areas[12]}
+                            setAreas={setAreas}>
+
+                    </BSA_Dock>
+                </div>
             </div>
         </div>
         

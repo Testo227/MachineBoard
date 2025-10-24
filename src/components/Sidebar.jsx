@@ -27,7 +27,7 @@ const Sidebar = ({foldSidebar, setFoldSidebar}) => {
 
       {/* Menü */}
       {foldSidebar && (
-        <ul className="flex-1 text-white text-2xl space-y-2">
+        <ul className="flex-1  text-2xl space-y-2">
           <li>Prozesse</li>
           <li>Shopfloor</li>
           <li>Fehler</li>

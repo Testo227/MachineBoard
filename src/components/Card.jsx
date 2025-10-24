@@ -1,169 +1,68 @@
-import React from 'react';
-import { useState } from 'react';
-
-//CSS
-
-
-//Components
+import React, { useState } from 'react';
+import '../styles/style.css';
 import Modal from './Modal';
 
-
 const Card = ({
-    areas,
-    setAreas,
-    slotName,
-    thisarea,
-    machineid,    
-    machineposition,
-    currentmachine, 
-    machinelist,
-    setmachinelist}) => {
+  areas,
+  setAreas,
+  currentmachine,
+  machinelist,
+  setmachinelist
+}) => {
 
-    const [showModal,setShowModal] = useState(true);
-    const handleClick = () => {
-        setShowModal(!showModal)
-    }
-    
+  const [isOpen, setIsOpen] = useState(false);
 
-    const handleTypeSwitch = (e) => {
-    const newType = e.target.value;
-    setmachinelist(prev =>
-      prev.map(m =>
-      m.id === currentmachine.id ? { ...m, Typ: newType } : m
-        )
-      );
-    };
+  return (
+    <div>
+      {isOpen && (
+        <Modal 
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          areas={areas}
+          setAreas={setAreas}
+          currentmachine={currentmachine}
+          machinelist={machinelist}
+          setmachinelist={setmachinelist}
+        />
+      )}
 
-
-    const [selectedSlot, setSelectedSlot] = useState("");
-    
-        const handleSwitch = (e) => {
-        const [newAreaName, newSlotName] = e.target.value.split(":");
-        setSelectedSlot(e.target.value);
-    
-        const targetMachine = machinelist.find(
-          m => m.area === newAreaName && m.position === newSlotName
-        );
-    
-        if (!targetMachine) {
-          // 🟩 Slot ist frei → einfach verschieben
-          setmachinelist(prev =>
-            prev.map(m =>
-              m.id === currentmachine.id
-                ? { ...m, area: newAreaName, position: newSlotName }
-                : m
-            )
-          );
-    
-          // 🟨 Slots updaten: alter Slot leer, neuer belegt
-          setAreas(prev =>
-            prev.map(area => {
-              // alter Bereich → Slot frei
-              if (area.name === currentmachine.area) {
-                return {
-                  ...area,
-                  slots: area.slots.map(slot =>
-                    slot.name === currentmachine.position
-                      ? { ...slot, occupied: false }
-                      : slot
-                  )
-                };
-              }
-              // neuer Bereich → Slot belegt
-              if (area.name === newAreaName) {
-                return {
-                  ...area,
-                  slots: area.slots.map(slot =>
-                    slot.name === newSlotName
-                      ? { ...slot, occupied: true }
-                      : slot
-                  )
-                };
-              }
-              return area;
-            })
-          );
-    
-        } else {
-          // 🟦 Slot belegt → Maschinen tauschen
-          setmachinelist(prev =>
-            prev.map(m => {
-              if (m.id === currentmachine.id) {
-                return { ...m, area: newAreaName, position: newSlotName };
-              }
-              if (m.id === targetMachine.id) {
-                return { ...m, area: currentmachine.area, position: currentmachine.position };
-              }
-              return m;
-            })
-          );
-    
-          // 🔄 Beide Slots bleiben belegt → keine Änderung im occupied-Status nötig
-        }
-      
-        setTimeout(() => handleClick(), 0); // Modal schließen nach dem Wechsel
-    };
-    
-    const handleChange = (field, value) => {
-        setmachinelist(prev =>
-          prev.map(m => m.id === machineid ? { ...m, [field]: value } : m)
-        );
-      }
-    
-
-    return (
-        <div className={currentmachine.Typ}>
-          
-            
-            <div className='kundeundk'>
-                <input className='kunde' value={currentmachine.kunde || ""} onChange={(e) => handleChange("kunde", e.target.value)} type="text" placeholder="Kunde" />
-                <input className='k' value={currentmachine.kNummer || ""} onChange={(e) => handleChange("kNummer", e.target.value)} type="text" placeholder="K-Nummer" />
-            </div>
-            <div className='TypundWLW'>
-                <input className='WLW' value={currentmachine.WLW || ""} onChange={(e) => handleChange("WLW", e.target.value)} type="text" placeholder="WLW" />
-                 <select value={currentmachine.Typ} onChange={handleTypeSwitch}>
-                  <option key={0} value={"waehlen"}>waehlen...</option>
-                  <option key={1} value={"BSF"}>BSF</option>
-                  <option key={2} value={"PUMI"}>PUMI</option>
-                  <option key={3} value={"Prototype"}>Prototype</option>
-                  <option key={4} value={"BSA"}>BSA</option>
-                  <option key={5} value={"E-Mischer"}>E-Mischer</option>
-                  <option key={6} value={"Leerslot"}>Leerslot</option>
-
-                 </select>
-            </div>
-            <div className='StartundEnde'>
-                <input className='Start' value={currentmachine.Start || ""} onChange={(e) => handleChange("Start", e.target.value)} type="date"/>
-                <input className='Ende' value={currentmachine.Ende || ""} onChange={(e) => handleChange("Ende", e.target.value)} type="date"/>
-            </div>
-            
-            
-    
-            
-            <select value={selectedSlot} onChange={handleSwitch}>
-              <option value="" disabled>Bitte Slot auswählen...</option>
-              {areas.map(area => (
-              <optgroup key={area.id} label={area.name}>
-                {area.slots.map(slot => (
-                  <option
-                    key={slot.id}
-                    value={`${area.name}:${slot.slotName}`}
-                  >
-                    {slot.slotName}
-                  </option>
-                ))}
-              </optgroup>
-                ))}
-            </select>
-
-
-
-            <button onClick={handleClick} >⤢</button>
-        
+      <div className="bg-[rgb(85,90,90)] rounded-lg text-[rgb(85,90,90)] flex flex-col gap-2 p-2">
+        <div className="flex gap-3 bg-white items-center">
+          <div className="w-40">{currentmachine.Typ}</div>
+          <button 
+            onClick={() => setIsOpen(true)} 
+            className="bg-white text-[rgb(85,90,90)] font-extrabold rounded w-6 h-6"
+          >
+            ⤢
+          </button>
         </div>
-        
-        
-     );
-}
- 
+
+        <div>
+          <div className="bg-white">{currentmachine.kunde}</div>
+          <div className="bg-white">{currentmachine.kNummer}</div>
+        </div>
+
+        <div className="text-xs">
+          <div className="bg-white flex">
+            <div>Start</div>
+            <div>{currentmachine.Start}</div>
+          </div>
+          <div className="bg-white flex">
+            <div>Ende</div>
+            <div>{currentmachine.Ende}</div>
+          </div>
+          <div className="bg-white flex">
+            <div>Tags</div>
+            <div className="text-right">{currentmachine.Tags}</div>
+          </div>
+          <div className="bg-white flex">
+            <div>Fehler</div>
+            <div>{17}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default Card;

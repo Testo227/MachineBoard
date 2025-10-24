@@ -8,11 +8,11 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const PUMI_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const Dock_Places = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
 
    
     return ( 
-        <div className="flex flex-col">
+        <div className="grid grid-cols-5 grid-rows-2 gap-4">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -30,4 +30,4 @@ const PUMI_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist})
      );
 }
  
-export default PUMI_NAorWait;
+export default Dock_Places;
