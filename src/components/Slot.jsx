@@ -19,7 +19,14 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
                 machine: `Machine ${machinelist.length + 1}`,
                 position: slotName,
                 area: thisarea.name,
-                Typ: "waehlen"
+                Typ: "",
+                Typ_Bezeichnung:"",
+                WLW: "",
+                Tags: [{name:"", color:""}],
+                Start: "",
+                Ende: "",
+                Mängel: [""],
+                Kommentare: [""]
             };
             setmachinelist([...machinelist, newMachine])
             setSlotList(slotList.map(s => s.slotName === slotName ? {...s, occupied: true} : s))

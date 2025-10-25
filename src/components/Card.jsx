@@ -51,10 +51,7 @@ const Card = ({
             <div>Ende</div>
             <div>{currentmachine.Ende}</div>
           </div>
-          <div className="bg-white flex">
-            <div>Tags</div>
-            <div className="text-right">{currentmachine.Tags}</div>
-          </div>
+          
           <div className="bg-white flex">
             <div>Fehler</div>
             <div>{17}</div>

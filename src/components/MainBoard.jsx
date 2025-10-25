@@ -445,7 +445,21 @@ const MainBoard = () => {
     
     //dummy data
     const [machinelist, setmachinelist] = useState([
-        {id:1, machine:"Machine 1", position:"Pos 2", kunde: "Firma A", kNummer: "K123", Start: "2023-10-01", Ende: "2023-10-01", area: "PPM1-Pool", Typ:"BSF", WLW:24, Tags:["PL"], Leerslot:false, },
+        {id:1, 
+            machine:"Machine 1", 
+            position:"Pos 2", 
+            kunde: "Firma A", 
+            kNummer: "K123", 
+            Start: "2023-10-01", 
+            Ende: "2023-10-01", 
+            area: "PPM1-Pool", 
+            Typ:"BSF",
+            area:"PUMI-Pool" ,
+            Typ_Bezeichnung:"", 
+            WLW:24, 
+            Tags:[{name:"Prototyp", color: "red"}], 
+            Mängel: [""],
+            Kommentare: [""]},
         ])
 
 

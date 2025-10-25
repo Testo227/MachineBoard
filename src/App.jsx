@@ -26,8 +26,10 @@ const App = () => {
           <div className={`fixed top-0 right-0 z-10 transition-all duration-300 ${foldSidebar ? "left-[220px]" : "left-[80px]"}`}>
             <Topbar></Topbar>
           </div>
+          <div>
           <div className="mt-10 overflow-y-auto overflow-x-auto h-[calc(100vh-2.5rem)] bg-white-300 p-4">
           <MainBoard></MainBoard>
+          </div>
           </div>
       </div>
     </div>
