@@ -37,9 +37,9 @@ const TagInput = ({ tags = [], onChange }) => {
   };
 
   return (
-    <div className="flex flex-col gap-1 w-full">
+    <div className="flex flex-col gap-4 w-full">
       {/* Tags anzeigen */}
-      <div className="flex flex-wrap gap-2 border border-[rgb(222,222,222)] rounded-lg p-2 bg-white">
+      <div className="overflow-y-auto flex flex-wrap items-start gap-1 border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none  focus:ring-[rgb(222,222,222)] w-142 h-30">
         {tags.length === 0 && (
           <span className="text-gray-400 italic">Keine Tags vorhanden...</span>
         )}
@@ -68,7 +68,7 @@ const TagInput = ({ tags = [], onChange }) => {
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addTag()}
           placeholder="Neuer Tag..."
-          className="kunde border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
+          className="w-81 kunde border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
         />
 
         <select

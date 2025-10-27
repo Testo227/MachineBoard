@@ -243,12 +243,12 @@ const MainBoard = () => {
             { id: 96, slotName: "Pos 3", occupied: false },
             { id: 97, slotName: "Pos 4", occupied: false },
             { id: 98, slotName: "Pos 5", occupied: false },
-            { id: 99, slotName: "Pos 6", occupied: false },
-            { id: 94, slotName: "Pos 7", occupied: false },
-            { id: 95, slotName: "Pos 8", occupied: false },
-            { id: 96, slotName: "Pos 9", occupied: false },
-            { id: 97, slotName: "Pos 10", occupied: false },
-            { id: 98, slotName: "Pos 11", occupied: false },
+            { id: 999, slotName: "Pos 6", occupied: false },
+            { id: 998, slotName: "Pos 7", occupied: false },
+            { id: 997, slotName: "Pos 8", occupied: false },
+            { id: 996, slotName: "Pos 9", occupied: false },
+            { id: 995, slotName: "Pos 10", occupied: false },
+            { id: 994, slotName: "Pos 11", occupied: false },
             { id: 99, slotName: "Pos 12", occupied: false }
             ]
         },
@@ -465,7 +465,7 @@ const MainBoard = () => {
 
 
     return ( 
-        <div className='MainBoard flex gap-4'>
+        <div className='MainBoard flex gap-4 overflow-x-scroll'>
             <div className='flex flex-col gap-4'>
         
                 <div className='flex gap-4'> 
@@ -612,7 +612,7 @@ const MainBoard = () => {
                                 machinelist={machinelist} 
                                 setmachinelist={setmachinelist}
                                 areas={areas}
-                                thisarea={areas[9]}
+                                thisarea={areas[10]}
                                 setAreas={setAreas}>
 
                         </Dock_Places>

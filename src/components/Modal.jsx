@@ -289,10 +289,8 @@ const Modal = ({
                   >
                   </TagInput>
             </div>
-            
-          </div>
-          <div className='flex gap-4'>
-            <div className='flex flex-col space-y-1 w-500'>
+            <div className='flex gap-4'>
+            <div className='flex flex-col space-y-1 w-142'>
                  <label
                     htmlFor="Kommentare"
                     className="text-[rgb(85,90,90)] text-sm font-medium"
@@ -301,7 +299,7 @@ const Modal = ({
                   </label> 
                   <textarea
                   id="Kommentare"
-                  className="Kommentare border border-[rgb(222,222,222)]  h-30 border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
+                  className=" resize-none border border-[rgb(222,222,222)]  !h-[200px] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
                   value={localMachine.Kommentare || ""}
                   onChange={(e) => handleLocalChange("Kommentare", e.target.value)}
                   type="text"
@@ -310,6 +308,8 @@ const Modal = ({
             </div>
             
           </div>
+          </div>
+          
 
 
           
