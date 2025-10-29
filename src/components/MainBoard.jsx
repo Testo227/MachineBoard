@@ -459,8 +459,20 @@ const MainBoard = () => {
             WLW:24, 
             Tags:[{name:"Prototyp", color: "red"}], 
             Mängel: [""],
-            Kommentare: [""]},
-        ])
+            Kommentare: [""],
+            sequenzen: [
+                {
+                    id: 1,
+                    sequenz:1,
+                    bereich: "Hauptmontage",
+                    planStart: "",
+                    planEnde: "",
+                    istStart: "",
+                    istEnde: "",
+                    status: "Offen"
+                }
+            ]
+        }])
 
 
 

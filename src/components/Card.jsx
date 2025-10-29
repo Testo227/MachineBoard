@@ -52,7 +52,6 @@ const Card = ({
           setmachinelist={setmachinelist}
         />
       )}
-
       <div className="bg-[rgb(85,90,90)] rounded-lg text-[rgb(85,90,90)] flex flex-col p-2 gap-0.5">
          <div className='flex gap-0.5'>
           <div className="flex items-center w-38 h-4">
@@ -84,7 +83,7 @@ const Card = ({
               : "Leer"}</div>
         </div>
           <div className="bg-white flex gap-0.5 text-xs">
-            <div>Fehler</div>
+            <div>Tags</div>
             <div>{17}</div>
           </div>
       </div>

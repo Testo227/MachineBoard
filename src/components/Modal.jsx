@@ -4,6 +4,7 @@ import '../styles/style.css';
 
 //Components
 import TagInput from './TagInput';
+import SequenzTable from './SequenzTable';
 
 const Modal = ({ 
   areas,
@@ -14,7 +15,17 @@ const Modal = ({
   isOpen,
   setIsOpen
 }) => {
-  const [localMachine, setLocalMachine] = useState(currentmachine);
+  const [localMachine, setLocalMachine] = useState({
+  ...currentmachine,
+  sequenzen: currentmachine.sequenzen || [
+    { id: 1, sequenz: 1, bereich: "Hauptmontage", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
+    { id: 2, sequenz: 2, bereich: "Prueffeld Pumpe", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
+    { id: 3, sequenz: 3, bereich: "Prueffeld Mast", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
+    { id: 4, sequenz: 4, bereich: "Lackierung", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
+    { id: 5, sequenz: 5, bereich: "Endmontage", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
+    { id: 6, sequenz: 6, bereich: "PDI", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
+  ]
+});
   const [localSlot, setLocalSlot] = useState(`${currentmachine.area}:${currentmachine.position}`);
 
   useEffect(() => {
@@ -197,7 +208,7 @@ const Modal = ({
           </div>
           <div className='flex gap-4'>
             <div className='flex gap-4'>
-                <div className="flex flex-col space-y-1 w-142">
+                <div className="flex flex-col space-y-1 w-69">
                   <label
                   htmlFor="Start-Datum"
                   className="text-[rgb(85,90,90)] text-sm font-medium"
@@ -215,7 +226,7 @@ const Modal = ({
                 </div>
               </div>
               <div className='flex gap-4'>
-                <div className="flex flex-col space-y-1 w-142">
+                <div className="flex flex-col space-y-1 w-69">
                   <label
                   htmlFor="End-Datum"
                   className="text-[rgb(85,90,90)] text-sm font-medium"
@@ -232,11 +243,9 @@ const Modal = ({
                 />
                 </div>
               </div>
-          </div>
-          <div className='flex gap-4'>
-            <div className='flex gap-4'>
               <div className='flex gap-4'>
-                <div className="flex flex-col space-y-1 w-142">
+              <div className='flex gap-4'>
+                <div className="flex flex-col space-y-1 w-69">
                     <label
                     htmlFor="Aktuelle Position"
                     className="text-[rgb(85,90,90)] text-sm font-medium"
@@ -249,8 +258,8 @@ const Modal = ({
               </div>
             </div>
             </div>
-              <div className='flex gap-4'>
-                <div className="flex flex-col space-y-1 w-142">
+            <div className='flex gap-4'>
+                <div className="flex flex-col space-y-1 w-69">
                     <label
                     htmlFor="Verschieben"
                     className="text-[rgb(85,90,90)] text-sm font-medium"
@@ -308,6 +317,12 @@ const Modal = ({
             </div>
             
           </div>
+          </div>
+          <div className="mt-6">
+            <SequenzTable
+              sequenzen={localMachine.sequenzen}
+              onChange={(updated) => handleLocalChange("sequenzen", updated)}
+            />
           </div>
           
 
