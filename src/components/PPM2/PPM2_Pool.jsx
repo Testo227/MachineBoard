@@ -8,7 +8,7 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const PPM2_Pool = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const PPM2_Pool = ({thisarea, areas, setAreas, machinelist, setmachinelist , finishedMachines ,setFinishedMachines}) => {
 
    
     return ( 
@@ -23,6 +23,8 @@ const PPM2_Pool = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => 
                         areas={areas}
                         setAreas={setAreas}
                         thisarea={thisarea}
+                        finishedMachines={finishedMachines}
+                        setFinishedMachines={setFinishedMachines}
                     />
                 ))}
 

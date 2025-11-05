@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
 import '../styles/style.css';
 
-const defaultBereiche = [
-  "Hauptmontage",
-  "Prueffeld Pumpe",
-  "Prueffeld Mast",
-  "Lackierung",
-  "Endmontage",
-  "PDI"
-];
+
 
 const statusOptions = ["Offen", "Laufend", "Abgeschlossen", "Abweichung"];
 
@@ -17,7 +10,7 @@ const SequenzTable = ({ sequenzen, onChange }) => {
 
   useEffect(() => {
     // Immer nach Sequenz sortieren (aufsteigend oder absteigend)
-    const sorted = [...rows].sort((a, b) => b.sequenz - a.sequenz);
+    const sorted = [...rows].sort((a, b) => a.sequenz - b.sequenz);
     setRows(sorted);
   }, [sequenzen]);
 
@@ -50,21 +43,21 @@ const SequenzTable = ({ sequenzen, onChange }) => {
   };
 
   return (
-    <div className="flex flex-col space-y-2">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-[rgb(85,90,90)]">
+    <div className="flex flex-col h-[500px] rounded overflow-hidden">
+      <div className="flex justify-between items-center bg-white px-2 py-2 border-b border-gray-300 flex-shrink-0 sticky top-0 z-20">
+        <h3 className="text-[rgb(85,90,90)] text-sm font-medium">
           Sequenz-Planung
         </h3>
         <button
           onClick={handleAddRow}
-          className="bg-[rgb(255,204,0)] text-[rgb(85,90,90)] px-3 py-1 rounded font-bold hover:bg-yellow-400 transition"
+          className="cursor-pointer bg-[rgb(255,204,0)] text-[rgb(85,90,90)] px-3 py-1 rounded font-bold hover:bg-yellow-400 transition"
         >
           + Zeile
         </button>
       </div>
-
-      <table className="w-full border border-gray-300 text-sm">
-        <thead className="bg-[rgb(222,222,222)] text-[rgb(85,90,90)] font-bold">
+      <div className="overflow-y-auto flex-1">
+      <table className="w-full text-sm border-collapse">
+        <thead className="bg-[rgb(222,222,222)] text-[rgb(85,90,90)] font-bold sticky top-0 z-10">
           <tr>
             <th className="p-2 border">Sequenz</th>
             <th className="p-2 border">Bereich</th>
@@ -79,14 +72,20 @@ const SequenzTable = ({ sequenzen, onChange }) => {
         <tbody>
           {rows.map(row => (
             <tr key={row.id} className="hover:bg-gray-100">
-              <td className="p-2 border text-center">{row.sequenz}</td>
+              <td className="p-2 border text-center">
+                <input 
+                  type="text"
+                  className="w-full border border-gray-200 px-2 py-1"
+                  value={row.sequenz}
+                  onChange={(e) => handleFieldChange(row.id, "sequenz", e.target.value)}
+                ></input>
+              </td>
               <td className="p-2 border">
                 <input
                   type="text"
                   className="w-full border border-gray-200 px-2 py-1"
                   value={row.bereich}
                   onChange={(e) => handleFieldChange(row.id, "bereich", e.target.value)}
-                  list="bereiche"
                 />
               </td>
               <td className="p-2 border">
@@ -144,12 +143,7 @@ const SequenzTable = ({ sequenzen, onChange }) => {
           ))}
         </tbody>
       </table>
-
-      <datalist id="bereiche">
-        {defaultBereiche.map((b, i) => (
-          <option key={i} value={b} />
-        ))}
-      </datalist>
+      </div>
     </div>
   );
 };

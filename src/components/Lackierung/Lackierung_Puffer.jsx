@@ -8,7 +8,7 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const Lackierung_Puffer = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const Lackierung_Puffer = ({thisarea, areas, setAreas, machinelist, setmachinelist , finishedMachines ,setFinishedMachines}) => {
 
    
     return ( 
@@ -23,6 +23,8 @@ const Lackierung_Puffer = ({thisarea, areas, setAreas, machinelist, setmachineli
                         areas={areas}
                         setAreas={setAreas}
                         thisarea={thisarea}
+                        finishedMachines={finishedMachines}
+                        setFinishedMachines={setFinishedMachines}
                     />
                 ))}
 

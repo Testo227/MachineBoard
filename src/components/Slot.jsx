@@ -7,7 +7,7 @@ import '../styles/style.css'
 //Components
 import Card from './Card';
 
-const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, areas, thisarea}) => {
+const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, areas, thisarea, finishedMachines, setFinishedMachines}) => {
     
     const currentMachine = machinelist.find(
         m => m.position === slotName && m.area === thisarea.name);
@@ -26,7 +26,8 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
                 Start: "",
                 Ende: "",
                 Mängel: [""],
-                Kommentare: [""]
+                Kommentare: [""],
+                Fertigstellung: ""
             };
             setmachinelist([...machinelist, newMachine])
             setSlotList(slotList.map(s => s.slotName === slotName ? {...s, occupied: true} : s))
@@ -35,7 +36,7 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
             }
 
     return ( 
-        <div className='w-35 h-38 flex flex-col bg-[rgb(222,222,222)]' onClick={handleCreateMachine}>
+        <div className='w-40 h-40 flex flex-col bg-[rgb(222,222,222)] flex-shrink-0' >
             <h3 className='text-center font-extrabold text-[9px] text-[rgb(85,90,90)]'>{slotName}</h3>
             {currentMachine ? (
                 <Card 
@@ -46,10 +47,15 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
                     slotList={slotList}
                     setmachinelist={setmachinelist}
                     machinelist={machinelist}
-                    areas={areas}/>
+                    areas={areas}
+                    finishedMachines={finishedMachines}
+                    setFinishedMachines={setFinishedMachines}
+                    />
 
             ) : (
-                <h1>+</h1>  
+                <div onClick={handleCreateMachine} className='flex items-center justify-center my-[30px] mx-[60px] hover:cursor-pointer w-10 h-10 '>
+                    <h1 className='text-[16px] font-bold'>+</h1>
+                </div>
             )}
         </div>
         

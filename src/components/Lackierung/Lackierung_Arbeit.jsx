@@ -8,11 +8,11 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const Lackierung_Arbeit = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const Lackierung_Arbeit = ({thisarea, areas, setAreas, machinelist, setmachinelist , finishedMachines ,setFinishedMachines}) => {
 
    
     return ( 
-        <div className="grid grid-cols-1 grid-rows-6 gap-4">
+        <div className="grid grid-cols-1 grid-rows-6 gap-4 w-max h-max">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -23,6 +23,8 @@ const Lackierung_Arbeit = ({thisarea, areas, setAreas, machinelist, setmachineli
                         areas={areas}
                         setAreas={setAreas}
                         thisarea={thisarea}
+                        finishedMachines={finishedMachines}
+                        setFinishedMachines={setFinishedMachines}
                     />
                 ))}
 

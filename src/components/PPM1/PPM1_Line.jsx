@@ -8,11 +8,11 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const PPM1_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const PPM1_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist , finishedMachines ,setFinishedMachines}) => {
 
    
     return ( 
-        <div className="grid grid-cols-4 grid-rows-2 gap-4">
+        <div className="grid grid-cols-4 grid-rows-2 gap-4 w-max h-max">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -23,6 +23,8 @@ const PPM1_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => 
                         areas={areas}
                         setAreas={setAreas}
                         thisarea={thisarea}
+                        finishedMachines={finishedMachines}
+                        setFinishedMachines={setFinishedMachines}
                     />
                 ))}
 

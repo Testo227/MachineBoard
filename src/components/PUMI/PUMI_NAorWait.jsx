@@ -8,7 +8,7 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const PUMI_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const PUMI_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist , finishedMachines ,setFinishedMachines}) => {
 
    
     return ( 
@@ -23,6 +23,8 @@ const PUMI_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist})
                         areas={areas}
                         setAreas={setAreas}
                         thisarea={thisarea}
+                        finishedMachines={finishedMachines}
+                        setFinishedMachines={setFinishedMachines}
                     />
                 ))}
 

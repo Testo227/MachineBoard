@@ -16,7 +16,7 @@ const App = () => {
 
 
   return ( 
-    <div className='flex h-screen overflow-hidden'>
+    <div className='flex'>
 
       <div className="fixed top-0 left-0 h-full z-20">
         <Sidebar foldSidebar={foldSidebar} setFoldSidebar={setFoldSidebar}></Sidebar>
@@ -27,7 +27,7 @@ const App = () => {
             <Topbar></Topbar>
           </div>
           <div>
-          <div className="mt-10 overflow-y-auto overflow-x-auto h-[calc(100vh-2.5rem)] bg-white-300 p-4">
+          <div className="mt-10 h-[calc(100vh-2.5rem)] bg-white-300 p-4">
           <MainBoard></MainBoard>
           </div>
           </div>

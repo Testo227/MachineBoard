@@ -8,11 +8,12 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const PPM1_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const PPM1_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist , finishedMachines ,setFinishedMachines}) => {
 
    
     return ( 
-        <div className="flex flex-col gap-4">
+        <div className="flex-shrink-0">
+        <div className="flex flex-col gap-4 w-max h-max">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -23,9 +24,12 @@ const PPM1_NAorWait = ({thisarea, areas, setAreas, machinelist, setmachinelist})
                         areas={areas}
                         setAreas={setAreas}
                         thisarea={thisarea}
+                        finishedMachines={finishedMachines}
+                        setFinishedMachines={setFinishedMachines}
                     />
                 ))}
 
+        </div>
         </div>
      );
 }

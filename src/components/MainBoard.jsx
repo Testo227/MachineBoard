@@ -442,8 +442,9 @@ const MainBoard = () => {
         }
     ]);
 
+    const [finishedMachines, setFinishedMachines] = useState([])
     
-    //dummy data
+    //dummy machine data
     const [machinelist, setmachinelist] = useState([
         {id:1, 
             machine:"Machine 1", 
@@ -471,13 +472,14 @@ const MainBoard = () => {
                     istEnde: "",
                     status: "Offen"
                 }
-            ]
+            ],
+            Fertigstellung: ""
         }])
 
 
 
     return ( 
-        <div className='MainBoard flex gap-4 overflow-x-scroll'>
+        <div className='MainBoard flex gap-4  w-full h-full overflow-x-scroll overflow-y-auto'>
             <div className='flex flex-col gap-4'>
         
                 <div className='flex gap-4'> 
@@ -490,7 +492,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[0]}
-                                setAreas={setAreas}> 
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}> 
                             </PPM1_Pool>
                     </div>
                     <div className='flex flex-col'>
@@ -503,6 +507,8 @@ const MainBoard = () => {
                                 areas={areas}
                                 thisarea={areas[1]}
                                 setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}
                             ></PPM1_Line>
                     </div>
                     <div className='flex flex-col'>
@@ -515,6 +521,8 @@ const MainBoard = () => {
                                 areas={areas}
                                 thisarea={areas[2]}
                                 setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}
                             ></PPM1_NAorWait>
                     </div>
                 </div>
@@ -529,7 +537,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[6]}
-                                setAreas={setAreas} 
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}
                             >
                             </PPM2_Pool>
                     </div>
@@ -543,6 +553,8 @@ const MainBoard = () => {
                                 areas={areas}
                                 thisarea={areas[7]}
                                 setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}
                             >
                             </PPM2_Line>
                     </div>
@@ -556,6 +568,8 @@ const MainBoard = () => {
                                 areas={areas}
                                 thisarea={areas[8]}
                                 setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}
                             >
                             </PPM2_NAorWait>
                     </div>
@@ -570,7 +584,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[3]}
-                                setAreas={setAreas} 
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}
                             >
                             </PUMI_Pool>
                     </div>
@@ -584,6 +600,8 @@ const MainBoard = () => {
                                 areas={areas}
                                 thisarea={areas[4]}
                                 setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}
                             >
                             </PUMI_Line>
                     </div>
@@ -597,6 +615,8 @@ const MainBoard = () => {
                                 areas={areas}
                                 thisarea={areas[5]}
                                 setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}
                             >
                             </PUMI_NAorWait>
                     </div>
@@ -612,7 +632,10 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[9]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}
+                                >
                         </Dock_Pool>
                     </div>
                     <div className='flex flex-col'>
@@ -625,7 +648,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[10]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
 
                         </Dock_Places>
                     </div>
@@ -640,7 +665,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[11]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
 
                         </BSA_Pool>
                     </div>
@@ -653,7 +680,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[12]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </BSA_Line>
                     </div>
                     <div className='flex flex-col'>
@@ -665,7 +694,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[13]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
 
                         </BSA_Dock>
                     </div>
@@ -687,7 +718,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[14]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                             
                         </Pumpe_Arbeit>
                     </div>
@@ -700,7 +733,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[15]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Pumpe_Puffer>
 
                     </div>
@@ -713,7 +748,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[16]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Pumpe_Nacharbeit>
                     </div>
                 </div>
@@ -730,7 +767,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[17]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Mast_Arbeit>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -742,7 +781,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[18]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Mast_Puffer>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -754,7 +795,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[19]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Mast_Nacharbeit>
                     </div>
                 </div>
@@ -770,7 +813,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[20]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
 
                         </Lackierung_Arbeit>
                     </div>
@@ -783,7 +828,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[21]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
 
                         </Lackierung_Puffer>
                     </div>
@@ -796,7 +843,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[22]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Lackierung_Nacharbeit>
                     </div>
                 </div>
@@ -812,7 +861,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[23]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Endmontage_Arbeit>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -824,7 +875,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[24]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Endmontage_Puffer>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -836,7 +889,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[25]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Endmontage_Nacharbeit>
                     </div>
                 </div>
@@ -852,7 +907,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[26]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </PDI_Arbeit>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -864,7 +921,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[27]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </PDI_Puffer>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -876,7 +935,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[28]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </PDI_Nacharbeit>
                     </div>
                 </div>
@@ -891,7 +952,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[29]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Konservieren_Arbeit>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -903,7 +966,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[30]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Konservieren_Puffer>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -915,7 +980,9 @@ const MainBoard = () => {
                                 setmachinelist={setmachinelist}
                                 areas={areas}
                                 thisarea={areas[31]}
-                                setAreas={setAreas}>
+                                setAreas={setAreas}
+                                finishedMachines={finishedMachines}
+                                setFinishedMachines={setFinishedMachines}>
                         </Konservieren_Nacharbeit>
                     </div>
                 </div>

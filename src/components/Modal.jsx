@@ -13,7 +13,9 @@ const Modal = ({
   machinelist,
   setmachinelist,
   isOpen,
-  setIsOpen
+  setIsOpen,
+  setFinishedMachines,
+  finishedMachines
 }) => {
   const [localMachine, setLocalMachine] = useState({
   ...currentmachine,
@@ -109,7 +111,76 @@ const Modal = ({
   }
 
   setIsOpen(false);
-};
+  };
+
+  //Loeschen von Maschinen
+  const handleDeleteMachine = () => {
+  if (!window.confirm("Willst du diese Maschine wirklich löschen?")) return;
+
+  setmachinelist(prev => prev.filter(m => m.id !== currentmachine.id));
+  setAreas(prev =>
+    prev.map(area => {
+      if (area.name === currentmachine.area) {
+        return {
+          ...area,
+          slots: area.slots.map(slot =>
+            slot.slotName === currentmachine.position
+              ? { ...slot, occupied: false }
+              : slot
+          ),
+        };
+      }
+      return area;
+    })
+  );
+  setIsOpen(false);
+  };
+
+
+  //Fertigmelden von Maschinen
+  const handleFertigmelden = () => {
+  if (!window.confirm("Willst du diese Maschine wirklich als fertig melden?")) return;
+
+  const today = new Date().toISOString().split("T")[0]; // aktuelles Datum yyyy-mm-dd
+
+  // Maschine mit Fertigstellungsdatum versehen
+  const finishedMachine = {
+    ...localMachine,
+    Fertigstellung: today,
+  };
+
+  // Maschine aus machinelist entfernen
+  setmachinelist(prev => prev.filter(m => m.id !== currentmachine.id));
+
+  // Maschine in finishedMachines hinzufügen
+  setFinishedMachines(prev => {
+    const updated = [...prev, finishedMachine];
+    console.log("🏁 Aktueller finishedMachines State:", updated);
+    return updated;
+  });
+
+  // Slot als frei markieren
+  setAreas(prev =>
+    prev.map(area => {
+      if (area.name === currentmachine.area) {
+        return {
+          ...area,
+          slots: area.slots.map(slot =>
+            slot.slotName === currentmachine.position
+              ? { ...slot, occupied: false }
+              : slot
+          ),
+        };
+      }
+      return area ;
+    })
+  );
+
+  // Modal schließen
+  setIsOpen(false);
+  };
+
+
 
   if (!isOpen) return null;
 
@@ -330,21 +401,37 @@ const Modal = ({
           
           
         </div>
+        <div className="flex justify-between items-center mt-6">
+            <button
+              onClick={handleDeleteMachine}
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition cursor-pointer"
+            >
+              Maschine Löschen
+            </button>
 
-        <div className="flex justify-end gap-4 mt-6">
-          <button
-            onClick={() => setIsOpen(false)}
-            className="bg-[rgb(85,90,90)] text-white px-4 py-2 rounded hover:bg-gray-400 transition"
-          >
-            Schließen
-          </button>
-          <button
-            onClick={handleSave}
-            className="bg-[rgb(255,204,0)] text-[rgb(85,90,90)] px-4 py-2 rounded font-bold hover:bg-yellow-400 transition"
-          >
-            Speichern
-          </button>
+            <button
+              onClick={handleFertigmelden}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition cursor-pointer"
+            >
+              Maschine fertig melden
+            </button>
+
+            <div className="flex gap-4">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="bg-[rgb(85,90,90)] text-white px-4 py-2 rounded hover:bg-gray-400 transition cursor-pointer"
+              >
+                Schließen
+              </button>
+              <button
+                onClick={handleSave}
+                className="bg-[rgb(255,204,0)] text-[rgb(85,90,90)] px-4 py-2 rounded font-bold hover:bg-yellow-500 transition cursor-pointer"
+              >
+                Speichern
+              </button>
+            </div>
         </div>
+        
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const PDI_Nacharbeit = ({thisarea, areas, setAreas, machinelist, setmachinelist}) => {
+const PDI_Nacharbeit = ({thisarea, areas, setAreas, machinelist, setmachinelist , finishedMachines ,setFinishedMachines}) => {
 
    
     return ( 
@@ -23,6 +23,8 @@ const PDI_Nacharbeit = ({thisarea, areas, setAreas, machinelist, setmachinelist}
                         areas={areas}
                         setAreas={setAreas}
                         thisarea={thisarea}
+                        finishedMachines={finishedMachines}
+                        setFinishedMachines={setFinishedMachines}
                     />
                 ))}
 

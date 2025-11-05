@@ -86,7 +86,7 @@ const TagInput = ({ tags = [], onChange }) => {
         <button
           type="button"
           onClick={addTag}
-          className="bg-[rgb(85,90,90)] text-white px-4 py-2 rounded-lg hover:bg-[rgb(65,70,70)]"
+          className="cursor-pointer bg-[rgb(85,90,90)] text-white px-4 py-2 rounded-lg hover:bg-[rgb(65,70,70)]"
         >
           Hinzufügen
         </button>
