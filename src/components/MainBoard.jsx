@@ -470,16 +470,18 @@ const MainBoard = () => {
                     planEnde: "",
                     istStart: "",
                     istEnde: "",
-                    status: "Offen"
+                    status: "Offen", 
+                    DLZIst: "",
+                    DLZPlan: ""
                 }
             ],
-            Fertigstellung: ""
+            
         }])
 
 
 
     return ( 
-        <div className='MainBoard flex gap-4  w-full h-full overflow-x-scroll overflow-y-auto'>
+        <div className='MainBoard flex gap-4  w-full h-full overflow-x-auto overflow-y-auto'>
             <div className='flex flex-col gap-4'>
         
                 <div className='flex gap-4'> 

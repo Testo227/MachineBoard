@@ -17,17 +17,7 @@ const Modal = ({
   setFinishedMachines,
   finishedMachines
 }) => {
-  const [localMachine, setLocalMachine] = useState({
-  ...currentmachine,
-  sequenzen: currentmachine.sequenzen || [
-    { id: 1, sequenz: 1, bereich: "Hauptmontage", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
-    { id: 2, sequenz: 2, bereich: "Prueffeld Pumpe", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
-    { id: 3, sequenz: 3, bereich: "Prueffeld Mast", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
-    { id: 4, sequenz: 4, bereich: "Lackierung", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
-    { id: 5, sequenz: 5, bereich: "Endmontage", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
-    { id: 6, sequenz: 6, bereich: "PDI", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen" },
-  ]
-});
+  const [localMachine, setLocalMachine] = useState({...currentmachine});
   const [localSlot, setLocalSlot] = useState(`${currentmachine.area}:${currentmachine.position}`);
 
   useEffect(() => {
@@ -278,42 +268,7 @@ const Modal = ({
           </div>
           </div>
           <div className='flex gap-4'>
-            <div className='flex gap-4'>
-                <div className="flex flex-col space-y-1 w-69">
-                  <label
-                  htmlFor="Start-Datum"
-                  className="text-[rgb(85,90,90)] text-sm font-medium"
-                >
-                  Start-Datum
-                </label>
-                <input
-                  id="Start"
-                  className="Ende border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
-                  value={localMachine.Start || ""}
-                  onChange={(e) => handleLocalChange("Start", e.target.value)}
-                  type="date"
-                  placeholder="..."
-                />
-                </div>
-              </div>
-              <div className='flex gap-4'>
-                <div className="flex flex-col space-y-1 w-69">
-                  <label
-                  htmlFor="End-Datum"
-                  className="text-[rgb(85,90,90)] text-sm font-medium"
-                >
-                  End-Datum
-                </label>
-                <input
-                  id="Ende"
-                  className="Ende border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
-                  value={localMachine.Ende || ""}
-                  onChange={(e) => handleLocalChange("Ende", e.target.value)}
-                  type="date"
-                  placeholder="..."
-                />
-                </div>
-              </div>
+              
               <div className='flex gap-4'>
               <div className='flex gap-4'>
                 <div className="flex flex-col space-y-1 w-69">

@@ -27,7 +27,7 @@ const App = () => {
             <Topbar></Topbar>
           </div>
           <div>
-          <div className="mt-10 h-[calc(100vh-2.5rem)] bg-white-300 p-4">
+          <div className="mt-10  bg-white-300 p-4 ">
           <MainBoard></MainBoard>
           </div>
           </div>

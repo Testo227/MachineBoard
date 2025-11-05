@@ -27,7 +27,15 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
                 Ende: "",
                 Mängel: [""],
                 Kommentare: [""],
-                Fertigstellung: ""
+                Fertigstellung: "",
+                sequenzen: [
+                    { id: 1, sequenz: 1, bereich: "Hauptmontage", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen", DLZPlan: "", DLZIst: "" },
+                    { id: 2, sequenz: 2, bereich: "Prüffeld Pumpe", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen", DLZPlan: "", DLZIst: ""},
+                    { id: 3, sequenz: 3, bereich: "Prüffeld Mast", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen", DLZPlan: "", DLZIst: "" },
+                    { id: 4, sequenz: 4, bereich: "Lackierung", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen", DLZPlan: "", DLZIst: "" },
+                    { id: 5, sequenz: 5, bereich: "Endmontage", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen", DLZPlan: "", DLZIst: "" },
+                    { id: 6, sequenz: 6, bereich: "PDI", planStart: "", planEnde: "", istStart: "", istEnde: "", status: "Offen", DLZPlan: "", DLZIst: "" },
+                ]
             };
             setmachinelist([...machinelist, newMachine])
             setSlotList(slotList.map(s => s.slotName === slotName ? {...s, occupied: true} : s))
@@ -36,7 +44,7 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
             }
 
     return ( 
-        <div className='w-40 h-40 flex flex-col bg-[rgb(222,222,222)] flex-shrink-0' >
+        <div className='w-40 h-50 flex flex-col bg-[rgb(222,222,222)] flex-shrink-0' >
             <h3 className='text-center font-extrabold text-[9px] text-[rgb(85,90,90)]'>{slotName}</h3>
             {currentMachine ? (
                 <Card 
