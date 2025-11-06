@@ -16,7 +16,8 @@ const Dock_Places = ({thisarea,
     finishedMachines ,
     setFinishedMachines,
     globalTags,
-    setGlobalTags}) => {
+    setGlobalTags,
+    filteredMachines}) => {
 
    
     return ( 
@@ -35,6 +36,7 @@ const Dock_Places = ({thisarea,
                         setFinishedMachines={setFinishedMachines}
                         globalTags={globalTags}
                         setGlobalTags={setGlobalTags}
+                        filteredMachines={filteredMachines}
                     />
                 ))}
 

@@ -16,7 +16,8 @@ const Konservieren_Puffer = ({thisarea,
     finishedMachines ,
     setFinishedMachines,
     globalTags,
-    setGlobalTags}) => {
+    setGlobalTags,
+    filteredMachines}) => {
 
    
     return ( 
@@ -35,6 +36,7 @@ const Konservieren_Puffer = ({thisarea,
                         setFinishedMachines={setFinishedMachines}
                         globalTags={globalTags}
                         setGlobalTags={setGlobalTags}
+                        filteredMachines={filteredMachines}
                     />
                 ))}
 

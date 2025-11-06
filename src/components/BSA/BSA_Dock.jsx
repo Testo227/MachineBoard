@@ -16,7 +16,8 @@ const BSA_Dock = ({thisarea,
     finishedMachines ,
     setFinishedMachines,
     globalTags,
-    setGlobalTags}) => {
+    setGlobalTags,
+    filteredMachines}) => {
 
    
     return ( 
@@ -35,6 +36,7 @@ const BSA_Dock = ({thisarea,
                         setFinishedMachines={setFinishedMachines}
                         globalTags={globalTags}
                         setGlobalTags={setGlobalTags}
+                        filteredMachines={filteredMachines}
                     />
                 ))}
 

@@ -12,7 +12,8 @@ const Card = ({
   setFinishedMachines,
   finishedMachines,
   globalTags,
-  setGlobalTags
+  setGlobalTags,
+  dimmed
 }) => {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -64,7 +65,7 @@ const Card = ({
 
       
       {currentMachine.Typ !== "Leerslot" &&( 
-      <div className="bg-[rgb(85,90,90)] rounded-lg text-[rgb(85,90,90)] flex flex-col p-2 gap-0.5 my-[2px] mx-[4px]">
+      <div  style={{opacity: dimmed ? 0.3 : 1, pointerEvents: dimmed ? 'none' : 'auto'}} className="bg-[rgb(85,90,90)] rounded-lg text-[rgb(85,90,90)] flex flex-col p-2 gap-0.5 my-[2px] mx-[4px]">
          <div className='flex gap-0.5'>
           <div className="flex items-center w-38 h-4">
             <div className="w-27 text-xs h-4" style={{backgroundColor: typeColor}}>
@@ -129,7 +130,7 @@ const Card = ({
       )}
       
       {currentMachine.Typ === "Leerslot" &&( 
-      <div className="flex flex-row-reverse bg-[rgb(85,90,90)] rounded-lg text-[rgb(85,90,90)] flex flex-col p-2 gap-0.5 my-[2px] mx-[4px] w-38 h-34">
+      <div style={{opacity: dimmed ? 0.3 : 1, pointerEvents: dimmed ? 'none' : 'auto'}} className="flex flex-row-reverse bg-[rgb(85,90,90)] rounded-lg text-[rgb(85,90,90)] flex flex-col p-2 gap-0.5 my-[2px] mx-[4px] w-38 h-34">
           <button 
               onClick={() => setIsOpen(true)} 
               className="bg-[rgb(255,204,0)] text-[rgb(85,90,90)] font-extrabold rounded w-5 h-4 hover:cursor-pointer hover:rgba(92, 80, 33, 1)"

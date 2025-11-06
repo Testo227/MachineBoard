@@ -17,10 +17,15 @@ const Slot = ({slotName,
     finishedMachines, 
     setFinishedMachines,
     globalTags,
-    setGlobalTags}) => {
+    setGlobalTags,
+    filteredMachines}) => {
     
     const currentMachine = machinelist.find(
         m => m.position === slotName && m.area === thisarea.name);
+
+    const isFilteredIn = filteredMachines?.some(
+    m => m.id === currentMachine?.id
+  );
 
     const handleCreateMachine = () => {
         if(!currentMachine) {
@@ -54,7 +59,7 @@ const Slot = ({slotName,
             }
 
     return ( 
-        <div className='w-40 h-50 flex flex-col bg-[rgb(222,222,222)] flex-shrink-0' >
+        <div className='w-40 h-43 flex flex-col bg-[rgb(222,222,222)] flex-shrink-0' >
             <h3 className='text-center font-extrabold text-[9px] text-[rgb(85,90,90)]'>{slotName}</h3>
             {currentMachine ? (
                 <Card 
@@ -70,6 +75,7 @@ const Slot = ({slotName,
                     setFinishedMachines={setFinishedMachines}
                     globalTags={globalTags}
                     setGlobalTags={setGlobalTags}
+                    dimmed={!isFilteredIn}
                     />
 
             ) : (
