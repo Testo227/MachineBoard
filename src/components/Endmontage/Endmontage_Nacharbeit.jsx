@@ -8,7 +8,15 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const Endmontage_Nacharbeit = ({thisarea, areas, setAreas, machinelist, setmachinelist , finishedMachines ,setFinishedMachines}) => {
+const Endmontage_Nacharbeit = ({thisarea, 
+    areas, 
+    setAreas, 
+    machinelist, 
+    setmachinelist , 
+    finishedMachines ,
+    setFinishedMachines,
+    globalTags,
+    setGlobalTags}) => {
 
    
     return ( 
@@ -25,6 +33,8 @@ const Endmontage_Nacharbeit = ({thisarea, areas, setAreas, machinelist, setmachi
                         thisarea={thisarea}
                         finishedMachines={finishedMachines}
                         setFinishedMachines={setFinishedMachines}
+                        globalTags={globalTags}
+                        setGlobalTags={setGlobalTags}
                     />
                 ))}
 

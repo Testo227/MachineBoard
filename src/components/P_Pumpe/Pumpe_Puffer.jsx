@@ -8,7 +8,15 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const Pumpe_Puffer = ({thisarea, areas, setAreas, machinelist, setmachinelist, finishedMachines ,setFinishedMachines}) => {
+const Pumpe_Puffer = ({thisarea, 
+    areas, 
+    setAreas, 
+    machinelist, 
+    setmachinelist, 
+    finishedMachines ,
+    setFinishedMachines,
+    globalTags,
+    setGlobalTags}) => {
 
    
     return ( 
@@ -25,6 +33,8 @@ const Pumpe_Puffer = ({thisarea, areas, setAreas, machinelist, setmachinelist, f
                         thisarea={thisarea}
                         finishedMachines={finishedMachines}
                         setFinishedMachines={setFinishedMachines}
+                        globalTags={globalTags}
+                        setGlobalTags={setGlobalTags}
                     />
                 ))}
 

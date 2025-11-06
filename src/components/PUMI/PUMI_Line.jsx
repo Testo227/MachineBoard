@@ -9,7 +9,15 @@ import DummySlot from '../DummySlot';
 import '../../styles/style.css'
 
 
-const PUMI_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist , finishedMachines ,setFinishedMachines}) => {
+const PUMI_Line = ({thisarea, 
+    areas, 
+    setAreas, 
+    machinelist, 
+    setmachinelist , 
+    finishedMachines ,
+    setFinishedMachines,
+    globalTags,
+    setGlobalTags}) => {
 
    
     return ( 
@@ -26,6 +34,8 @@ const PUMI_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist , fin
                         thisarea={thisarea}
                         finishedMachines={finishedMachines}
                         setFinishedMachines={setFinishedMachines}
+                        globalTags={globalTags}
+                        setGlobalTags={setGlobalTags}
                     />
                 ))}
                     

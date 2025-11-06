@@ -3,8 +3,9 @@ import '../styles/style.css';
 
 
 //Components
-import TagInput from './TagInput';
+import TagInputDropdown from './TagInput';
 import SequenzTable from './SequenzTable';
+
 
 const Modal = ({ 
   areas,
@@ -15,7 +16,9 @@ const Modal = ({
   isOpen,
   setIsOpen,
   setFinishedMachines,
-  finishedMachines
+  finishedMachines,
+  globalTags,
+  setGlobalTags
 }) => {
   const [localMachine, setLocalMachine] = useState({...currentmachine});
   const [localSlot, setLocalSlot] = useState(`${currentmachine.area}:${currentmachine.position}`);
@@ -271,7 +274,7 @@ const Modal = ({
               
               <div className='flex gap-4'>
               <div className='flex gap-4'>
-                <div className="flex flex-col space-y-1 w-69">
+                <div className="flex flex-col space-y-1 w-142">
                     <label
                     htmlFor="Aktuelle Position"
                     className="text-[rgb(85,90,90)] text-sm font-medium"
@@ -285,7 +288,7 @@ const Modal = ({
             </div>
             </div>
             <div className='flex gap-4'>
-                <div className="flex flex-col space-y-1 w-69">
+                <div className="flex flex-col space-y-1 w-142">
                     <label
                     htmlFor="Verschieben"
                     className="text-[rgb(85,90,90)] text-sm font-medium"
@@ -318,11 +321,13 @@ const Modal = ({
                   >
                     Tags 
                   </label> 
-                  <TagInput
-                    tags={localMachine.Tags || []}
-                    onChange={handleTagChange}
+                  <TagInputDropdown
+                    machineTags={localMachine.Tags || []}
+                    onChange={(updatedIds) => setLocalMachine(prev => ({ ...prev, Tags: updatedIds }))}
+                    globalTags={globalTags}
+                    setGlobalTags={setGlobalTags}
                   >
-                  </TagInput>
+                  </TagInputDropdown>
             </div>
             <div className='flex gap-4'>
             <div className='flex flex-col space-y-1 w-142'>

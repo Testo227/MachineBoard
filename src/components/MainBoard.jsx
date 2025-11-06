@@ -458,7 +458,7 @@ const MainBoard = () => {
             area:"PUMI-Pool" ,
             Typ_Bezeichnung:"", 
             WLW:24, 
-            Tags:[{name:"Prototyp", color: "red"}], 
+            Tags:[1, 7], 
             Mängel: [""],
             Kommentare: [""],
             sequenzen: [
@@ -478,7 +478,20 @@ const MainBoard = () => {
             
         }])
 
-
+    //Global Tags
+    const [globalTags, setGlobalTags] = useState([
+        { id: 1, name: "Feuerrot", color: "bg-[rgb(228, 12, 12)]" },
+        { id: 2, name: "Minzgrün", color: "bg-[rgb(117, 233, 44)]" },
+        { id: 3, name: "Himmelblau", color: "bg-[rgb(14, 212, 234)]" },
+        { id: 4, name: "Meerblau", color: "bg-[rgb(12, 91, 228)]" },
+        { id: 5, name: "Sonnenorange", color: "bg-[rgb(241, 159, 6)]" },
+        { id: 6, name: "Zitronengelb", color: "bg-[rgb(240, 221, 10)]" },
+        { id: 7, name: "Nachtschwarz", color: "bg-[rgb(6, 6, 6)]" },
+        { id: 8, name: "Turinrot", color: "bg-[rgb(170, 61, 61)]" },
+        { id: 9, name: "Türkis", color: "bg-[rgb(12, 228, 152)]" },
+        { id: 10, name: "Rosa", color: "bg-[rgba(243, 25, 123, 1)]" },
+        { id: 11, name: "Lila", color: "bg-[rgba(201, 4, 227, 1)]" }
+        ]);
 
     return ( 
         <div className='MainBoard flex gap-4  w-full h-full overflow-x-auto overflow-y-auto'>
@@ -496,7 +509,9 @@ const MainBoard = () => {
                                 thisarea={areas[0]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}> 
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}> 
                             </PPM1_Pool>
                     </div>
                     <div className='flex flex-col'>
@@ -511,6 +526,8 @@ const MainBoard = () => {
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
                                 setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}
                             ></PPM1_Line>
                     </div>
                     <div className='flex flex-col'>
@@ -525,6 +542,8 @@ const MainBoard = () => {
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
                                 setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}
                             ></PPM1_NAorWait>
                     </div>
                 </div>
@@ -542,6 +561,8 @@ const MainBoard = () => {
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
                                 setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}
                             >
                             </PPM2_Pool>
                     </div>
@@ -557,6 +578,8 @@ const MainBoard = () => {
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
                                 setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}
                             >
                             </PPM2_Line>
                     </div>
@@ -572,6 +595,8 @@ const MainBoard = () => {
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
                                 setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}
                             >
                             </PPM2_NAorWait>
                     </div>
@@ -589,6 +614,8 @@ const MainBoard = () => {
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
                                 setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}
                             >
                             </PUMI_Pool>
                     </div>
@@ -604,6 +631,8 @@ const MainBoard = () => {
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
                                 setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}
                             >
                             </PUMI_Line>
                     </div>
@@ -619,6 +648,8 @@ const MainBoard = () => {
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
                                 setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}
                             >
                             </PUMI_NAorWait>
                     </div>
@@ -637,6 +668,8 @@ const MainBoard = () => {
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
                                 setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}
                                 >
                         </Dock_Pool>
                     </div>
@@ -652,7 +685,9 @@ const MainBoard = () => {
                                 thisarea={areas[10]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
 
                         </Dock_Places>
                     </div>
@@ -669,7 +704,9 @@ const MainBoard = () => {
                                 thisarea={areas[11]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
 
                         </BSA_Pool>
                     </div>
@@ -684,7 +721,9 @@ const MainBoard = () => {
                                 thisarea={areas[12]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </BSA_Line>
                     </div>
                     <div className='flex flex-col'>
@@ -698,7 +737,9 @@ const MainBoard = () => {
                                 thisarea={areas[13]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
 
                         </BSA_Dock>
                     </div>
@@ -722,7 +763,9 @@ const MainBoard = () => {
                                 thisarea={areas[14]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                             
                         </Pumpe_Arbeit>
                     </div>
@@ -737,7 +780,9 @@ const MainBoard = () => {
                                 thisarea={areas[15]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Pumpe_Puffer>
 
                     </div>
@@ -752,7 +797,9 @@ const MainBoard = () => {
                                 thisarea={areas[16]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Pumpe_Nacharbeit>
                     </div>
                 </div>
@@ -771,7 +818,9 @@ const MainBoard = () => {
                                 thisarea={areas[17]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Mast_Arbeit>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -785,7 +834,9 @@ const MainBoard = () => {
                                 thisarea={areas[18]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Mast_Puffer>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -799,7 +850,9 @@ const MainBoard = () => {
                                 thisarea={areas[19]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Mast_Nacharbeit>
                     </div>
                 </div>
@@ -817,7 +870,9 @@ const MainBoard = () => {
                                 thisarea={areas[20]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
 
                         </Lackierung_Arbeit>
                     </div>
@@ -832,7 +887,9 @@ const MainBoard = () => {
                                 thisarea={areas[21]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
 
                         </Lackierung_Puffer>
                     </div>
@@ -847,7 +904,9 @@ const MainBoard = () => {
                                 thisarea={areas[22]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Lackierung_Nacharbeit>
                     </div>
                 </div>
@@ -865,7 +924,9 @@ const MainBoard = () => {
                                 thisarea={areas[23]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Endmontage_Arbeit>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -879,7 +940,9 @@ const MainBoard = () => {
                                 thisarea={areas[24]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Endmontage_Puffer>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -893,7 +956,9 @@ const MainBoard = () => {
                                 thisarea={areas[25]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Endmontage_Nacharbeit>
                     </div>
                 </div>
@@ -911,7 +976,9 @@ const MainBoard = () => {
                                 thisarea={areas[26]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </PDI_Arbeit>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -925,7 +992,9 @@ const MainBoard = () => {
                                 thisarea={areas[27]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </PDI_Puffer>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -939,7 +1008,9 @@ const MainBoard = () => {
                                 thisarea={areas[28]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </PDI_Nacharbeit>
                     </div>
                 </div>
@@ -956,7 +1027,9 @@ const MainBoard = () => {
                                 thisarea={areas[29]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Konservieren_Arbeit>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -970,7 +1043,9 @@ const MainBoard = () => {
                                 thisarea={areas[30]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Konservieren_Puffer>
                     </div>
                     <div className='flex flex-col mt-9'>
@@ -984,7 +1059,9 @@ const MainBoard = () => {
                                 thisarea={areas[31]}
                                 setAreas={setAreas}
                                 finishedMachines={finishedMachines}
-                                setFinishedMachines={setFinishedMachines}>
+                                setFinishedMachines={setFinishedMachines}
+                                globalTags={globalTags}
+                                setGlobalTags={setGlobalTags}>
                         </Konservieren_Nacharbeit>
                     </div>
                 </div>

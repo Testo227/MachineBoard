@@ -8,7 +8,15 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const Dock_Pool = ({thisarea, areas, setAreas, machinelist, setmachinelist , finishedMachines ,setFinishedMachines}) => {
+const Dock_Pool = ({thisarea, 
+    areas, 
+    setAreas, 
+    machinelist, 
+    setmachinelist , 
+    finishedMachines ,
+    setFinishedMachines,
+    globalTags,
+    setGlobalTags}) => {
 
    
     return ( 
@@ -25,6 +33,8 @@ const Dock_Pool = ({thisarea, areas, setAreas, machinelist, setmachinelist , fin
                         thisarea={thisarea}
                         finishedMachines={finishedMachines}
                         setFinishedMachines={setFinishedMachines}
+                        globalTags={globalTags}
+                        setGlobalTags={setGlobalTags}
                     />
                 ))}
 

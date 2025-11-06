@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/style.css';
 import Modal from './Modal';
+import TagCircles from './TagCircles';
 
 const Card = ({
   areas,
@@ -9,7 +10,9 @@ const Card = ({
   machinelist,
   setmachinelist,
   setFinishedMachines,
-  finishedMachines
+  finishedMachines,
+  globalTags,
+  setGlobalTags
 }) => {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -54,6 +57,8 @@ const Card = ({
           setmachinelist={setmachinelist}
           setFinishedMachines={setFinishedMachines}
           finishedMachines={finishedMachines}
+          globalTags={globalTags}
+          setGlobalTags={setGlobalTags}
         />
       )}
 
@@ -78,57 +83,48 @@ const Card = ({
         <div className="text-xm text-center bg-white">{currentMachine.kunde || "Leer"}</div>
         <div className="text-xm text-center bg-white">{currentMachine.kNummer || "Leer" }</div>
         <div className="flex flex-col gap-0.5 text-xs bg-white p-1">
-          {["PlanStart", "PlanEnde", "IstStart", "IstEnde"].map((field) => {
-            let value = "-";
+            {["IstStart", "IstEnde"].map((field) => {
+              let value = "-";
 
-            // 🔹 Hole die Zeile, die auf Karte angezeigt werden soll
-            const showRow = currentMachine.sequenzen?.find(seq => seq.showOnCard);
+              // 🔹 Hole die Zeile, die auf Karte angezeigt werden soll
+              const showRow = currentMachine.sequenzen?.find(seq => seq.showOnCard);
 
-            if (showRow) {
-              switch (field) {
-                case "PlanStart":
-                  value = showRow.planStart || "-";
-                  break;
-                case "PlanEnde":
-                  value = showRow.planEnde || "-";
-                  break;
-                case "IstStart":
-                  value = showRow.istStart || "-";
-                  break;
-                case "IstEnde":
-                  value = showRow.istEnde || "-";
-                  break;
-                default:
-                  value = "-";
+              if (showRow) {
+                switch (field) {
+                  case "IstStart":
+                    value = showRow.istStart || "-";
+                    break;
+                  case "IstEnde":
+                    value = showRow.istEnde || "-";
+                    break;
+                  default:
+                    value = "-";
+                }
               }
-            }
 
-            // 🔹 Prüfe auf Abweichung (rote Warnung)
-            let showWarning = false;
-            if (showRow) {
-              if (field === "IstStart" && showRow.planStart && showRow.istStart && showRow.planStart !== showRow.istStart) {
-                showWarning = true;
+              // 🔹 Prüfe auf Abweichung (rote Warnung)
+              let showWarning = false;
+              if (showRow) {
+                if (field === "IstStart" && showRow.planStart && showRow.istStart && showRow.planStart !== showRow.istStart) {
+                  showWarning = true;
+                }
+                if (field === "IstEnde" && showRow.planEnde && showRow.istEnde && showRow.planEnde !== showRow.istEnde) {
+                  showWarning = true;
+                }
               }
-              if (field === "IstEnde" && showRow.planEnde && showRow.istEnde && showRow.planEnde !== showRow.istEnde) {
-                showWarning = true;
-              }
-            }
 
-            return (
-              <div key={field} className="flex items-center gap-1">
-                <div className="w-20 font-semibold">{field}</div>
-                <div className="w-32">
-                  {value !== "-" ? new Date(value).toLocaleDateString("de-DE") : "-"}
+              return (
+                <div key={field} className="flex items-center gap-1">
+                  <div className="w-20 font-semibold">{field}</div>
+                  <div className="w-32">
+                    {value !== "-" ? new Date(value).toLocaleDateString("de-DE") : "-"}
+                  </div>
+                  {showWarning && <span className="text-red-600 font-bold">!</span>}
                 </div>
-                {showWarning && <span className="text-red-600 font-bold">!</span>}
-              </div>
-            );
-          })}
-        </div>
-          <div className="bg-white flex gap-0.5 text-xs">
-            <div>Tags</div>
-            <div>{17}</div>
+              );
+            })}
           </div>
+          <TagCircles tags={currentMachine.Tags} globalTags={globalTags}></TagCircles>
       </div>
       )}
       

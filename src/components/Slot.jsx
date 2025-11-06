@@ -7,7 +7,17 @@ import '../styles/style.css'
 //Components
 import Card from './Card';
 
-const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, areas, thisarea, finishedMachines, setFinishedMachines}) => {
+const Slot = ({slotName, 
+    machinelist, 
+    setmachinelist, 
+    setSlotList, 
+    slotList, 
+    areas, 
+    thisarea, 
+    finishedMachines, 
+    setFinishedMachines,
+    globalTags,
+    setGlobalTags}) => {
     
     const currentMachine = machinelist.find(
         m => m.position === slotName && m.area === thisarea.name);
@@ -22,7 +32,7 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
                 Typ: "",
                 Typ_Bezeichnung:"",
                 WLW: "",
-                Tags: [{name:"", color:""}],
+                Tags: [""],
                 Start: "",
                 Ende: "",
                 Mängel: [""],
@@ -58,6 +68,8 @@ const Slot = ({slotName, machinelist, setmachinelist, setSlotList, slotList, are
                     areas={areas}
                     finishedMachines={finishedMachines}
                     setFinishedMachines={setFinishedMachines}
+                    globalTags={globalTags}
+                    setGlobalTags={setGlobalTags}
                     />
 
             ) : (

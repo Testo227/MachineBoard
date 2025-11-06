@@ -8,7 +8,15 @@ import Slot from '../Slot';
 import '../../styles/style.css'
 
 
-const BSA_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist, finishedMachines ,setFinishedMachines}) => {
+const BSA_Line = ({thisarea, 
+    areas, 
+    setAreas, 
+    machinelist, 
+    setmachinelist, 
+    finishedMachines ,
+    setFinishedMachines,
+    globalTags,
+    setGlobalTags}) => {
 
    
     return ( 
@@ -25,6 +33,8 @@ const BSA_Line = ({thisarea, areas, setAreas, machinelist, setmachinelist, finis
                         thisarea={thisarea}
                         finishedMachines={finishedMachines}
                         setFinishedMachines={setFinishedMachines}
+                        globalTags={globalTags}
+                        setGlobalTags={setGlobalTags}
                     />
                 ))}
 
