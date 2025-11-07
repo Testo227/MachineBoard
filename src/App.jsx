@@ -5,12 +5,17 @@ import MainBoard from './components/MainBoard';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import Stueckzahlen from './components/Stueckzahlen/Stueckzahlen';
+import ProtectedRoute from './components/ProtectedRoute';
+import LoginPage from './components/LoginPage';
 
 // CSS
 import './styles/style.css';
 
 
 const App = () => {
+    
+  const [user, setUser] = useState(null); // Login-Zustand
+  
   const [foldSidebar, setFoldSidebar] = useState(true);
 
   const [finishedMachines, setFinishedMachines] = useState([])
@@ -534,50 +539,68 @@ const App = () => {
 
   return (
     <Router>
-      <div className='flex'>
-        {/* Sidebar unverändert */}
-        <div className="fixed top-0 left-0 h-full z-20">
-          <Sidebar foldSidebar={foldSidebar} setFoldSidebar={setFoldSidebar} />
-        </div>
+      <Routes>
+        {/* Login-Seite */}
+        <Route path="/login" element={<LoginPage setUser={setUser} />} />
 
-        {/* Main content */}
-        <div className={`flex flex-col flex-1 transition-all duration-300 ${foldSidebar ? "ml-[220px]" : "ml-[80px]"}`}>
-          
-          {/* Topbar unverändert */}
-          <div className={`fixed top-0 right-0 z-10 transition-all duration-300 ${foldSidebar ? "left-[220px]" : "left-[80px]"}`}>
-            <Topbar filters={filters} setFilters={setFilters} globalTags={globalTags} />
-          </div>
+        {/* Geschützte Routen */}
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute user={user}>
+              <div className="flex">
+                <div className="fixed top-0 left-0 h-full z-20">
+                  <Sidebar foldSidebar={foldSidebar} setFoldSidebar={setFoldSidebar} setUser={setUser} user={user}/>
+                </div>
+                <div
+                  className={`flex flex-col flex-1 transition-all duration-300 ${
+                    foldSidebar ? "ml-[220px]" : "ml-[80px]"
+                  }`}
+                >
+                  <div
+                    className={`fixed top-0 right-0 z-10 transition-all duration-300 ${
+                      foldSidebar ? "left-[220px]" : "left-[80px]"
+                    }`}
+                  >
+                    <Topbar
+                      filters={filters}
+                      setFilters={setFilters}
+                      globalTags={globalTags}
+                    />
+                  </div>
 
-          {/* Content Bereich */}
-          <div className="mt-10 p-4">
-            <Routes>
-              {/* Standard Route */}
-              <Route path="/" element={<Navigate to="/shopfloor" />} />
-              
-              {/* Shopfloor */}
-              <Route path="/shopfloor" element={<MainBoard 
-                    machinelist={machinelist} 
-                    setmachinelist={setmachinelist} 
-                    finishedMachines={finishedMachines} 
-                    setFinishedMachines={setFinishedMachines} 
-                    areas={areas} 
-                    setAreas={setAreas} 
-                    filters={filters}
-                    globalTags={globalTags}
-                    setGlobalTags={setGlobalTags}> </MainBoard>} />
-              
-              {/* Stückzahlen – leere Seite für jetzt */}
-              <Route path="/stueckzahlen" element={<div><Stueckzahlen machinelist={machinelist} areas={areas}></Stueckzahlen></div>} />
-
-              {/* Fehler – leere Seite */}
-              <Route path="/fehler" element={<div>Fehler Seite (leer)</div>} />
-
-              {/* Fallback */}
-              <Route path="*" element={<div>Seite nicht gefunden</div>} />
-            </Routes>
-          </div>
-        </div>
-      </div>
+                  <div className="mt-10 p-4">
+                    <Routes>
+                      <Route path="/" element={<Navigate to="/shopfloor" />} />
+                      <Route
+                        path="/shopfloor"
+                        element={
+                          <MainBoard
+                            machinelist={machinelist}
+                            setmachinelist={setmachinelist}
+                            finishedMachines={finishedMachines}
+                            setFinishedMachines={setFinishedMachines}
+                            areas={areas}
+                            setAreas={setAreas}
+                            filters={filters}
+                            globalTags={globalTags}
+                            setGlobalTags={setGlobalTags}
+                          />
+                        }
+                      />
+                      <Route
+                        path="/stueckzahlen"
+                        element={<Stueckzahlen machinelist={machinelist} areas={areas} />}
+                      />
+                      <Route path="*" element={<div>Seite nicht gefunden</div>} />
+                    </Routes>
+                  </div>
+                </div>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </Router>
   );
 };

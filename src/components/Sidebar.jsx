@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../styles/style.css";
 
-const Sidebar = ({ foldSidebar, setFoldSidebar }) => {
+const Sidebar = ({ foldSidebar, setFoldSidebar, setUser, user }) => {
   const location = useLocation();
   const handleSidebar = () => setFoldSidebar(!foldSidebar);
 
@@ -11,6 +11,11 @@ const Sidebar = ({ foldSidebar, setFoldSidebar }) => {
     { name: "Stückzahlen", path: "/stueckzahlen" },
     { name: "Fehler", path: "/fehler" },
   ];
+
+   const handleLogout = () => {
+    setUser(null);          // Benutzer zurücksetzen
+    navigate("/");          // Zur Login-Seite weiterleiten
+  };
 
   return (
     <div className={`bg-[rgb(85,90,90)] h-screen flex flex-col justify-between transition-all duration-300 ${foldSidebar ? "w-[220px]" : "w-[80px]"}`}>
@@ -38,7 +43,7 @@ const Sidebar = ({ foldSidebar, setFoldSidebar }) => {
 
       <div className="flex flex-col items-center pb-4">
         <ul className={`text-white text-sm mb-3 transition-opacity duration-300 ${foldSidebar ? "opacity-100" : "opacity-0 h-0 overflow-hidden"}`}>
-          <li className="cursor-pointer hover:text-[rgb(255,204,0)]">Logout</li>
+          <li className="cursor-pointer hover:text-[rgb(255,204,0)]" onClick={handleLogout} >Logout</li>
           <li className="cursor-pointer hover:text-[rgb(255,204,0)]">Einstellungen</li>
           <li className="cursor-pointer hover:text-[rgb(255,204,0)]">Hilfe</li>
         </ul>
