@@ -21,9 +21,7 @@ const App = () => {
           machine:"Machine 1", 
           position:"Pos 2", 
           kunde: "Firma A", 
-          kNummer: "K123", 
-          Start: "2023-10-01", 
-          Ende: "2023-10-01", 
+          kNummer: "K123",  
           area: "PPM1-Pool", 
           Typ:"BSF", 
           Typ_Bezeichnung:"", 
@@ -51,9 +49,7 @@ const App = () => {
           machine:"Machine 1", 
           position:"Pos 7", 
           kunde: "Firma A", 
-          kNummer: "K123", 
-          Start: "2023-10-01", 
-          Ende: "2023-10-01", 
+          kNummer: "K123",  
           area: "PPM1-Line", 
           Typ:"BSF", 
           Typ_Bezeichnung:"", 
@@ -81,9 +77,7 @@ const App = () => {
           machine:"Machine 1", 
           position:"Pos 2", 
           kunde: "Firma A", 
-          kNummer: "K123", 
-          Start: "2023-10-01", 
-          Ende: "2023-10-01", 
+          kNummer: "K123",  
           area: "PPM2-Line", 
           Typ:"PUMI", 
           Typ_Bezeichnung:"", 
@@ -500,13 +494,43 @@ const App = () => {
 
   //Filter State
   const [filters, setFilters] = useState({
-    Search: "",
-    Tags: [],
-    Typ: "",
-    TypBezeichung: "",
+    search: "",
+    tags: [],
+    typ: "",
+    typBezeichung: "",
     wlw: "",
-    date:{from:"", till:""}
+    sequenzFilter:{ area: [
+    "PPM1",
+    "PPM2",
+    "PUMI",
+    "Dock",
+    "Prüffeld Pumpe",
+    "Prüffeld Mast",
+    "Lackierung",
+    "Endmontage",
+    "PDI",
+    "Konservieren",
+    "Optimieren",
+    "BSA Linie",
+    "BSA Dock",
+  ],
+    type:["Plan","Ist"],type2:["start", "ende"] ,  from:"", till:""}
   })
+
+  //Global Tags
+    const [globalTags, setGlobalTags] = useState([
+        { id: 1, name: "Feuerrot", color: "bg-[rgb(228, 12, 12)]" },
+        { id: 2, name: "Minzgrün", color: "bg-[rgb(117, 233, 44)]" },
+        { id: 3, name: "Himmelblau", color: "bg-[rgb(14, 212, 234)]" },
+        { id: 4, name: "Meerblau", color: "bg-[rgb(12, 91, 228)]" },
+        { id: 5, name: "Sonnenorange", color: "bg-[rgb(241, 159, 6)]" },
+        { id: 6, name: "Zitronengelb", color: "bg-[rgb(240, 221, 10)]" },
+        { id: 7, name: "Nachtschwarz", color: "bg-[rgb(6, 6, 6)]" },
+        { id: 8, name: "Turinrot", color: "bg-[rgb(170, 61, 61)]" },
+        { id: 9, name: "Türkis", color: "bg-[rgb(12, 228, 152)]" },
+        { id: 10, name: "Rosa", color: "bg-[rgba(243, 25, 123, 1)]" },
+        { id: 11, name: "Lila", color: "bg-[rgba(201, 4, 227, 1)]" }
+        ]);
 
   return (
     <Router>
@@ -521,7 +545,7 @@ const App = () => {
           
           {/* Topbar unverändert */}
           <div className={`fixed top-0 right-0 z-10 transition-all duration-300 ${foldSidebar ? "left-[220px]" : "left-[80px]"}`}>
-            <Topbar filters={filters} setFilters={setFilters}  />
+            <Topbar filters={filters} setFilters={setFilters} globalTags={globalTags} />
           </div>
 
           {/* Content Bereich */}
@@ -531,7 +555,16 @@ const App = () => {
               <Route path="/" element={<Navigate to="/shopfloor" />} />
               
               {/* Shopfloor */}
-              <Route path="/shopfloor" element={<MainBoard machinelist={machinelist} setmachinelist={setmachinelist} finishedMachines={finishedMachines} setFinishedMachines={setFinishedMachines} areas={areas} setAreas={setAreas} filters={filters}> </MainBoard>} />
+              <Route path="/shopfloor" element={<MainBoard 
+                    machinelist={machinelist} 
+                    setmachinelist={setmachinelist} 
+                    finishedMachines={finishedMachines} 
+                    setFinishedMachines={setFinishedMachines} 
+                    areas={areas} 
+                    setAreas={setAreas} 
+                    filters={filters}
+                    globalTags={globalTags}
+                    setGlobalTags={setGlobalTags}> </MainBoard>} />
               
               {/* Stückzahlen – leere Seite für jetzt */}
               <Route path="/stueckzahlen" element={<div><Stueckzahlen machinelist={machinelist} areas={areas}></Stueckzahlen></div>} />

@@ -58,42 +58,87 @@ const MainBoard = ({machinelist,
     setFinishedMachines, 
     areas, 
     setAreas,
-    filters}) => {
+    filters,
+    globalTags,
+    setGlobalTags}) => {
 
      
 
-    //Global Tags
-    const [globalTags, setGlobalTags] = useState([
-        { id: 1, name: "Feuerrot", color: "bg-[rgb(228, 12, 12)]" },
-        { id: 2, name: "Minzgrün", color: "bg-[rgb(117, 233, 44)]" },
-        { id: 3, name: "Himmelblau", color: "bg-[rgb(14, 212, 234)]" },
-        { id: 4, name: "Meerblau", color: "bg-[rgb(12, 91, 228)]" },
-        { id: 5, name: "Sonnenorange", color: "bg-[rgb(241, 159, 6)]" },
-        { id: 6, name: "Zitronengelb", color: "bg-[rgb(240, 221, 10)]" },
-        { id: 7, name: "Nachtschwarz", color: "bg-[rgb(6, 6, 6)]" },
-        { id: 8, name: "Turinrot", color: "bg-[rgb(170, 61, 61)]" },
-        { id: 9, name: "Türkis", color: "bg-[rgb(12, 228, 152)]" },
-        { id: 10, name: "Rosa", color: "bg-[rgba(243, 25, 123, 1)]" },
-        { id: 11, name: "Lila", color: "bg-[rgba(201, 4, 227, 1)]" }
-        ]);
-
-    //Filter Funktion effizient im Mainboard 
+    
     const filteredMachines = machinelist.filter((m) => {
-        const searchValue = filters.search?.toLowerCase() || "";
-        const kNummer = m.kNummer?.toLowerCase() || "";
-        const kunde = m.kunde?.toLowerCase() || "";
+  const searchValue = filters.search?.toLowerCase() || "";
+  const kNummer = m.kNummer?.toLowerCase() || "";
+  const kunde = m.kunde?.toLowerCase() || "";
 
-        const searchMatch =
-            !searchValue ||
-            kNummer.includes(searchValue) ||
-            kunde.includes(searchValue);
+  // 🔍 Suchlogik
+  const searchMatch =
+    !searchValue || kNummer.includes(searchValue) || kunde.includes(searchValue);
 
-        const typMatch = !filters.typ || m.Typ === filters.typ;
-        const tagMatch =
-            !filters.tags?.length || filters.tags.every((t) => m.Tags?.includes(t));
+  // ⚙️ Typ-Filter
+  const typMatch = !filters.typ || m.Typ === filters.typ;
 
-        return searchMatch && typMatch && tagMatch;
+  // 📝 Typ Bezeichnung Filter (Inputfeld)
+  const typBezeichnungMatch =
+    !filters.typBezeichung ||
+    (m.Typ_Bezeichnung?.toLowerCase() || "").includes(
+      filters.typBezeichung.toLowerCase()
+    );
+
+  // 🏷️ Tag-Filter
+  const tagMatch =
+    !filters.tags?.length ||
+    filters.tags.every((selectedTag) => m.Tags?.includes(selectedTag));
+
+  // 📆 Sequenzfilter
+  const { selectedArea, selectedType, selectedType2, from, till } =
+    filters.sequenzFilter;
+
+  // Wenn kein Sequenzfilter aktiv ist → alles zeigen
+  if (!selectedArea && !selectedType && !selectedType2 && !from && !till) {
+    return searchMatch && typMatch && typBezeichnungMatch && tagMatch;
+  }
+
+  // 🏭 Sequenzprüfung pro Maschine
+  const sequenzMatch = m.sequenzen.some((seq) => {
+    // 🏭 Bereich (optional)
+    const areaOk =
+      !selectedArea || seq.bereich.toLowerCase() === selectedArea.toLowerCase();
+
+    // ⏱ Datumstyp + Start/Ende Kombination
+    let dateFields = [];
+
+    const typesToCheck = selectedType
+      ? [selectedType.toLowerCase()]
+      : ["plan", "ist"];
+
+    const startEndToCheck = selectedType2
+      ? [selectedType2.toLowerCase()]
+      : ["start", "ende"];
+
+    typesToCheck.forEach((t) => {
+      startEndToCheck.forEach((se) => {
+        dateFields.push(`${t}${se.charAt(0).toUpperCase() + se.slice(1)}`); // z.B. planStart, istEnde
+      });
     });
+
+    const fromDate = from ? new Date(from) : null;
+    const tillDate = till ? new Date(till) : null;
+
+    const anyDateOk = dateFields.some((field) => {
+      const dateValue = seq[field];
+      if (!dateValue) return false;
+      const seqDate = new Date(dateValue);
+      return (!fromDate || seqDate >= fromDate) && (!tillDate || seqDate <= tillDate);
+    });
+
+    const dateOk = from || till ? anyDateOk : true;
+
+    return areaOk && dateOk;
+  });
+
+  // ✅ Alle Bedingungen kombinieren
+  return searchMatch && typMatch && typBezeichnungMatch && tagMatch && sequenzMatch;
+});
 
     return ( 
         <div className='MainBoard flex gap-4  w-full h-full overflow-x-auto overflow-y-auto'>

@@ -161,7 +161,10 @@ const SequenzTable = ({ sequenzen, onChange }) => {
                     placeholder="Bereich wählen oder eingeben..."
                   />
                   <datalist id={`bereiche-${row.id}`}>
-                    <option value="Hauptmontage" />
+                    <option value="PPM1" />
+                    <option value="PPM2" />
+                    <option value="PUMI" />
+                    <option value="Dock" />
                     <option value="Prüffeld Pumpe" />
                     <option value="Prüffeld Mast" />
                     <option value="Lackierung" />
@@ -169,6 +172,8 @@ const SequenzTable = ({ sequenzen, onChange }) => {
                     <option value="PDI" />
                     <option value="Konservieren" />
                     <option value="Optimieren" />
+                    <option value="BSA Linie" />
+                    <option value="BSA Dock" />
                   </datalist>
                 </td>
                 <td className="p-2 border w-10">

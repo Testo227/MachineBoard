@@ -1,14 +1,13 @@
-// TagCircles.js
 import React, { useState } from "react";
 
 const TagCircles = ({ tags = [], globalTags }) => {
-  const [activeTagIds, setActiveTagIds] = useState([]);
+  const [activeTagId, setActiveTagId] = useState(null); // nur ein aktives Tag
 
   const toggleTagActive = (id) => {
-    if (activeTagIds.includes(id)) {
-      setActiveTagIds(activeTagIds.filter(i => i !== id));
+    if (activeTagId === id) {
+      setActiveTagId(null); // nochmal klicken = schließen
     } else {
-      setActiveTagIds([...activeTagIds, id]);
+      setActiveTagId(id); // neues Tag aktiv, altes schließt sich automatisch
     }
   };
 
@@ -18,7 +17,7 @@ const TagCircles = ({ tags = [], globalTags }) => {
         const tag = globalTags.find(t => t.id === tagId);
         if (!tag) return null;
 
-        const isActive = activeTagIds.includes(tag.id);
+        const isActive = activeTagId === tag.id;
 
         return (
           <li key={tag.id}>
