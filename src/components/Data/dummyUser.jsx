@@ -1,22 +1,72 @@
-// Beispiel-Daten für temporäre Authentifizierung
-// Beispiel-Daten für temporäre Authentifizierung
 export const dummyUsers = [
   {
     username: "max",
     password: "1234",
-    name: "Max Mustermann",
+    vorname: "Max",
+    nachname: "Mustermann",
     email: "max.mustermann@example.com",
   },
   {
     username: "anna",
     password: "abcd",
-    name: "Anna Müller",
+    vorname: "Anna",
+    nachname: "Müller",
     email: "anna.mueller@example.com",
   },
   {
     username: "tom",
     password: "pass",
-    name: "Tom Schmidt",
+    vorname: "Tom",
+    nachname: "Schmidt",
     email: "tom.schmidt@example.com",
+  },
+  {
+    username: "lisa",
+    password: "test1",
+    vorname: "Lisa",
+    nachname: "Becker",
+    email: "lisa.becker@example.com",
+  },
+  {
+    username: "markus",
+    password: "pw123",
+    vorname: "Markus",
+    nachname: "Fischer",
+    email: "markus.fischer@example.com",
+  },
+  {
+    username: "julia",
+    password: "hallo",
+    vorname: "Julia",
+    nachname: "Wagner",
+    email: "julia.wagner@example.com",
+  },
+  {
+    username: "peter",
+    password: "secure",
+    vorname: "Peter",
+    nachname: "Keller",
+    email: "peter.keller@example.com",
+  },
+  {
+    username: "sarah",
+    password: "abc123",
+    vorname: "Sarah",
+    nachname: "Lehmann",
+    email: "sarah.lehmann@example.com",
+  },
+  {
+    username: "felix",
+    password: "pw456",
+    vorname: "Felix",
+    nachname: "Hofmann",
+    email: "felix.hofmann@example.com",
+  },
+  {
+    username: "nina",
+    password: "nina2025",
+    vorname: "Nina",
+    nachname: "Krause",
+    email: "nina.krause@example.com",
   },
 ];

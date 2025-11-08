@@ -22,11 +22,11 @@ const App = () => {
     
   //dummy machine data
   const [machinelist, setmachinelist] = useState([
-      {id:1, 
-          machine:"Machine 1", 
+      {id:1,  
           position:"Pos 2", 
           kunde: "Firma A", 
-          kNummer: "K123",  
+          kNummer: "K123", 
+          fNummer: "" ,
           area: "PPM1-Pool", 
           Typ:"BSF", 
           Typ_Bezeichnung:"", 
@@ -34,62 +34,7 @@ const App = () => {
           Tags:[1, 7], 
           Mängel: [""],
           Kommentare: [""],
-          sequenzen: [
-              {
-                  id: 1,
-                  sequenz:1,
-                  bereich: "Hauptmontage",
-                  planStart: "",
-                  planEnde: "",
-                  istStart: "",
-                  istEnde: "",
-                  status: "Offen", 
-                  DLZIst: "",
-                  DLZPlan: ""
-              }
-          ],
-          
-      },
-      {id:2, 
-          machine:"Machine 1", 
-          position:"Pos 7", 
-          kunde: "Firma A", 
-          kNummer: "K123",  
-          area: "PPM1-Line", 
-          Typ:"BSF", 
-          Typ_Bezeichnung:"", 
-          WLW:24, 
-          Tags:[1, 7], 
-          Mängel: [""],
-          Kommentare: [""],
-          sequenzen: [
-              {
-                  id: 1,
-                  sequenz:1,
-                  bereich: "Hauptmontage",
-                  planStart: "",
-                  planEnde: "",
-                  istStart: "",
-                  istEnde: "",
-                  status: "Offen", 
-                  DLZIst: "",
-                  DLZPlan: ""
-              }
-          ],
-          
-      },
-      {id:3, 
-          machine:"Machine 1", 
-          position:"Pos 2", 
-          kunde: "Firma A", 
-          kNummer: "K123",  
-          area: "PPM2-Line", 
-          Typ:"PUMI", 
-          Typ_Bezeichnung:"", 
-          WLW:24, 
-          Tags:[1, 7], 
-          Mängel: [""],
-          Kommentare: [""],
+          Dateien: [""],
           sequenzen: [
               {
                   id: 1,
@@ -106,6 +51,7 @@ const App = () => {
           ],
           
       }
+      
     ])
 
   //dummy slot data
