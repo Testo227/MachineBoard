@@ -32,12 +32,6 @@ const Modal = ({
     setLocalMachine(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleTagChange = (updatedTags) => {
-  setLocalMachine(prev => ({
-    ...prev,
-    Tags: updatedTags
-  }));
-  };
 
   const handleLocalSlotChange = (e) => {
     setLocalSlot(e.target.value);
