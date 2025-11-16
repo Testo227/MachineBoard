@@ -67,7 +67,7 @@ const MainBoard = ({machinelist,
     
     const filteredMachines = machinelist.filter((m) => {
   const searchValue = filters.search?.toLowerCase() || "";
-  const kNummer = m.kNummer?.toLowerCase() || "";
+  const kNummer = m.kNummer || "";
   const kunde = m.kunde?.toLowerCase() || "";
 
   // 🔍 Suchlogik

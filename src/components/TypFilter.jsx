@@ -5,7 +5,7 @@ const TypFilter = ({ filters, setFilters }) => {
   const [openDropdown, setOpenDropdown] = useState(null); // "typ" | null
 
   // Beispiel-Daten für Typen (kannst du dynamisch ersetzen)
-  const typen = ["BSF", "PUMI", "Dock", "PPM1", "PPM2"];
+  const typen = ["BSF", "PUMI", "BSA", "Prototyp", "PPM2", "E-Mischer", "Leerslot"];
 
   const toggleDropdown = (field) => {
     setOpenDropdown((prev) => (prev === field ? null : field));

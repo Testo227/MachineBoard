@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/style.css';
+import { supabase } from '../supabaseClient';
 
 
 //Components
@@ -32,29 +33,37 @@ const Modal = ({
     setLocalMachine(prev => ({ ...prev, [field]: value }));
   };
 
+  //Fuer Spinner beim Speichern
+  const [saving, setSaving] = useState(false);
 
   const handleLocalSlotChange = (e) => {
     setLocalSlot(e.target.value);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
   const [newAreaName, newSlotName] = localSlot.split(':');
-
   const targetMachine = machinelist.find(
     m => m.area === newAreaName && m.position === newSlotName
   );
 
-  if (!targetMachine) {
-    // 🟩 Slot ist frei → einfach verschieben
+  try {
+    setSaving(true); // Spinner aktivieren
+
+    // ------------------------
+    // 1️⃣ Optimistisches UI Update
+    // ------------------------
     setmachinelist(prev =>
-      prev.map(m =>
-        m.id === currentmachine.id
-          ? { ...m, ...localMachine, area: newAreaName, position: newSlotName }
-          : m
-      )
+      prev.map(m => {
+        if (m.id === currentmachine.id) {
+          return { ...m, ...localMachine, area: newAreaName, position: newSlotName };
+        }
+        if (targetMachine && m.id === targetMachine.id) {
+          return { ...m, area: currentmachine.area, position: currentmachine.position };
+        }
+        return m;
+      })
     );
 
-    // Slots aktualisieren (alter frei, neuer belegt)
     setAreas(prev =>
       prev.map(area => {
         if (area.name === currentmachine.area) {
@@ -62,9 +71,9 @@ const Modal = ({
             ...area,
             slots: area.slots.map(slot =>
               slot.slotName === currentmachine.position
-                ? { ...slot, occupied: false }
+                ? { ...slot, occupied: targetMachine ? true : false }
                 : slot
-            )
+            ),
           };
         }
         if (area.name === newAreaName) {
@@ -74,30 +83,82 @@ const Modal = ({
               slot.slotName === newSlotName
                 ? { ...slot, occupied: true }
                 : slot
-            )
+            ),
           };
         }
         return area;
       })
     );
-  } else {
-    // 🟦 Slot belegt → Maschinen tauschen
-    setmachinelist(prev =>
-      prev.map(m => {
-        if (m.id === currentmachine.id) {
-          return { ...m, ...localMachine, area: newAreaName, position: newSlotName };
-        }
-        if (m.id === targetMachine.id) {
-          return { ...m, area: currentmachine.area, position: currentmachine.position };
-        }
-        return m;
-      })
+
+    // ------------------------
+    // 2️⃣ Supabase Update in Parallel
+    // ------------------------
+    const updates = [];
+
+    // Update currentmachine
+    updates.push(
+      supabase.from('machines').update({
+        Typ: localMachine.Typ,
+        Typ_Bezeichnung: localMachine.Typ_Bezeichnung,
+        kunde: localMachine.kunde,
+        kNummer: localMachine.kNummer,
+        fNummer: localMachine.fNummer,
+        WLW: localMachine.WLW,
+        area: newAreaName,
+        position: newSlotName
+      }).eq('id', currentmachine.id)
     );
 
-    // occupied bleibt true auf beiden Slots (keine Änderung nötig)
-  }
+    // Wenn Slot belegt, update targetMachine auch
+    if (targetMachine) {
+      updates.push(
+        supabase.from('machines').update({
+          area: currentmachine.area,
+          position: currentmachine.position
+        }).eq('id', targetMachine.id)
+      );
+    }
 
-  setIsOpen(false);
+    // Kommentare
+    if (localMachine.kommentare?.length) {
+      localMachine.kommentare.forEach(k => {
+        updates.push(
+          supabase.from('kommentare').update({ text: k.text }).eq('id', k.id)
+        );
+      });
+    }
+
+    // Mängel
+    if (localMachine.maengel?.length) {
+      localMachine.maengel.forEach(m => {
+        updates.push(
+          supabase.from('maengel').update({ text: m.text }).eq('id', m.id)
+        );
+      });
+    }
+
+    // Dateien
+    if (localMachine.dateien?.length) {
+      localMachine.dateien.forEach(d => {
+        updates.push(
+          supabase.from('dateien').update({ name: d.name, url: d.url }).eq('id', d.id)
+        );
+      });
+    }
+
+    // Alle Updates parallel ausführen
+    const results = await Promise.all(updates);
+    results.forEach(res => {
+      if (res.error) throw res.error;
+    });
+
+    setIsOpen(false); // Modal schließen
+  } catch (err) {
+    console.error("Fehler beim Speichern in der Datenbank:", err);
+    alert("Fehler beim Speichern der Maschine. Schau in die Konsole für Details.");
+  } finally {
+    setSaving(false); // Spinner aus
+  }
   };
 
   //Loeschen von Maschinen
@@ -379,9 +440,14 @@ const Modal = ({
               </button>
               <button
                 onClick={handleSave}
-                className="bg-[rgb(255,204,0)] text-[rgb(85,90,90)] px-4 py-2 rounded font-bold hover:bg-yellow-500 transition cursor-pointer"
+                className="bg-[rgb(255,204,0)] text-[rgb(85,90,90)] px-4 py-2 rounded font-bold hover:bg-yellow-500 transition flex items-center justify-center"
+                disabled={saving} // während Save deaktivieren
               >
-                Speichern
+                {saving ? (
+                  <div className="loader w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  "Speichern"
+                )}
               </button>
             </div>
         </div>

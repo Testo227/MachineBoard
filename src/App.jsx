@@ -21,10 +21,10 @@ const App = () => {
 
   const [finishedMachines, setFinishedMachines] = useState([])
     
-  //dummy machine data
+  //machine data
   const [machinelist, setmachinelist] = useState([])
 
-  //dummy slot data
+  //slot data
     const [areas, setAreas] = useState([])
 
 
@@ -130,7 +130,7 @@ const App = () => {
           .filter(slot => slot.area_id === area.id)
           .map(slot => ({
             id: slot.id,
-            slotName: slot.slot_name,
+            slotName: slot.slotName,
             occupied: slot.occupied
           }))
       }))

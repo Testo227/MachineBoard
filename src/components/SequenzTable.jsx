@@ -9,7 +9,9 @@ const SequenzTable = ({ sequenzen, onChange }) => {
   const [rows, setRows] = useState(sequenzen || []);
 
   useEffect(() => {
+  if (sequenzen && Array.isArray(sequenzen)) {
     setRows([...sequenzen].sort((a, b) => a.sequenz - b.sequenz));
+    }
   }, [sequenzen]);
 
 
