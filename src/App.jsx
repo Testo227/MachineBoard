@@ -20,6 +20,8 @@ const App = () => {
   const [foldSidebar, setFoldSidebar] = useState(true);
 
   const [finishedMachines, setFinishedMachines] = useState([])
+
+  const [loadingAuth, setLoadingAuth] = useState(true);
     
   //machine data
   const [machinelist, setmachinelist] = useState([])
@@ -140,6 +142,53 @@ const App = () => {
 
     fetchAreas()
   }, [])
+
+
+  //Login Session mit Supabase
+  useEffect(() => {
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (session?.user) {
+          setUser({
+            id: session.user.id,
+            email: session.user.email,
+            username: session.user.user_metadata?.username || "",
+            displayName: session.user.user_metadata?.display_name || "",
+          });
+        } else {
+          setUser(null);
+        }
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  // USE EFFECT FÜR PERSISTENTES LOGIN
+  useEffect(() => {
+    const init = async () => {
+      const { data } = await supabase.auth.getSession();
+
+      if (data?.session?.user) {
+        setUser({
+          id: data.session.user.id,
+          email: data.session.user.email,
+          username: data.session.user.user_metadata?.username || "",
+          displayName: data.session.user.user_metadata?.display_name || "",
+        });
+      }
+
+      setLoadingAuth(false);
+    };
+
+    init();
+  }, []);
+
+  if (loadingAuth) {
+    return <div className="text-center mt-10 text-xl">Lade...</div>;
+  }
 
 
   return (

@@ -134,11 +134,16 @@ const MainBoard = ({machinelist,
     const dateOk = from || till ? anyDateOk : true;
 
     return areaOk && dateOk;
-  });
+        });
 
-  // ✅ Alle Bedingungen kombinieren
-  return searchMatch && typMatch && typBezeichnungMatch && tagMatch && sequenzMatch;
-});
+    // ✅ Alle Bedingungen kombinieren
+    return searchMatch && typMatch && typBezeichnungMatch && tagMatch && sequenzMatch;
+        });
+
+        
+    if (!areas || areas.length === 0) {
+        return <div>Lade Bereiche...</div>;
+        }
 
     return ( 
         <div className='MainBoard flex gap-4  w-full h-full overflow-x-auto overflow-y-auto'>

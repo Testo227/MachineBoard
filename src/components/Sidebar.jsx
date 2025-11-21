@@ -21,7 +21,7 @@ const Sidebar = ({ foldSidebar, setFoldSidebar, setUser, user }) => {
     <div className={`bg-[rgb(85,90,90)] h-screen flex flex-col justify-between transition-all duration-300 ${foldSidebar ? "w-[220px]" : "w-[80px]"}`}>
       <div>
         <div className="flex items-center justify-center rounded-full bg-[rgb(255,204,0)] m-6 w-[60px] h-[60px] mx-auto">
-          <img className="w-8 h-8" src="/logo.png" alt="Logo" />
+          <img className="w-8 h-8" src="/PM_Logo.png" alt="Logo" />
         </div>
 
         <ul className={`text-white text-lg space-y-3 transition-opacity duration-300 ${foldSidebar ? "opacity-100 px-6" : "opacity-0 w-0 overflow-hidden"}`}>

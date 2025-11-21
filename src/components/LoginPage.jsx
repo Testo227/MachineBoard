@@ -4,47 +4,39 @@ import { supabase } from "../supabaseClient";
 import { motion } from "framer-motion";
 
 const LoginPage = ({ setUser }) => {
+  const [mode, setMode] = useState("login"); // login | register
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [resetting, setResetting] = useState(false);
   const [infoMessage, setInfoMessage] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  // Einfaches Client-side Rate Limiting
+  const navigate = useNavigate();
   const loginAttempts = useRef(0);
   const lastAttemptTime = useRef(Date.now());
 
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validateEmail = (email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+  const generateDisplayName = (email) => {
+    const local = email.split("@")[0];
+    return local
+      .split(".")
+      .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+      .join(" ");
+  };
+
+  // Login behandeln
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setInfoMessage("");
 
-    // Rate limiting: max 5 Versuche in 1 Minute
-    const now = Date.now();
-    if (now - lastAttemptTime.current > 60000) {
-      loginAttempts.current = 0;
-    }
-    loginAttempts.current += 1;
-    lastAttemptTime.current = now;
-
-    if (loginAttempts.current > 5) {
-      setError("Zu viele Login-Versuche. Bitte kurz warten.");
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setError("Bitte gib eine gültige E-Mail ein.");
-      return;
-    }
-
-    if (!password) {
-      setError("Bitte gib dein Passwort ein.");
-      return;
-    }
+    if (!validateEmail(email)) return setError("Bitte gib eine gültige E-Mail ein.");
+    if (!password) return setError("Bitte gib dein Passwort ein.");
 
     setLoading(true);
 
@@ -55,55 +47,70 @@ const LoginPage = ({ setUser }) => {
       });
 
       if (loginError) {
-        // Keine sensiblen Infos anzeigen
         setError("E-Mail oder Passwort ungültig.");
-        console.error("Login Error:", loginError);
         return;
       }
 
       if (data?.user) {
-        // User-Objekt aus Supabase Auth
         setUser({
           id: data.user.id,
           email: data.user.email,
-          username: data.user.user_metadata?.username || "",
           displayName: data.user.user_metadata?.display_name || "",
         });
-        navigate("/shopfloor");
+        navigate("/shopfloor"); // Weiterleitung nach erfolgreichem Login
       }
     } catch (err) {
-      console.error("Unexpected login error:", err);
-      setError("Fehler beim Einloggen. Bitte erneut versuchen.");
+      setError("Fehler beim Einloggen.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handlePasswordReset = async () => {
-    if (!validateEmail(email)) {
-      setError("Bitte gib zuerst eine gültige E-Mail ein.");
-      return;
-    }
+
+
+  // Registrierung behandeln
+  const handleRegister = async (event) => {
+    event.preventDefault();
     setError("");
     setInfoMessage("");
-    setResetting(true);
+
+    if (!validateEmail(email)) {
+      return setError("Bitte gib eine gültige E-Mail ein.");
+    }
 
     try {
-      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + "/reset-password",
+      const { data, error } = await supabase.functions.invoke("secureSignup2", {
+        method: "POST",
+        body: { email, password, firstName, lastName },
       });
-      if (error) {
-        console.error("Password reset error:", error);
-        setError("Fehler beim Anfordern des Passwort-Resets.");
-      } else {
-        setInfoMessage("Falls die E-Mail existiert, wurde eine Reset-Mail verschickt.");
+
+      const parsedData = data ? JSON.parse(data) : null
+
+      if (error || data?.error) {
+        setError("Registrierung fehlgeschlagen");
+        return;
+      }
+
+      if (parsedData?.success) {
+        // Felder zurücksetzen
+        setEmail("");
+        setPassword("");
+        setFirstName("");
+        setLastName("");
+
+        // Info-Meldung anzeigen
+        setInfoMessage(
+          "Registrierungsanfrage gesendet... verifiziere deinen Account durch das Drücken des Links in deinem Email-Postfach"
+        );
       }
     } catch (err) {
-      console.error("Unexpected reset error:", err);
-      setError("Fehler beim Anfordern des Passwort-Resets.");
-    } finally {
-      setResetting(false);
+      setError("Registrierung fehlgeschlagen");
     }
+  };
+    
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") mode === "login" ? handleLogin(e) : handleRegister(e);
   };
 
   return (
@@ -116,11 +123,8 @@ const LoginPage = ({ setUser }) => {
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      <motion.form
-        onSubmit={handleLogin}
+      <motion.div
         className="relative bg-white rounded-md shadow-lg w-[350px] overflow-hidden z-10"
-        animate={error ? { x: [0, -8, 8, -8, 8, 0] } : { x: 0 }}
-        transition={{ duration: 0.4 }}
       >
         <div className="bg-[rgb(244,204,0)] flex justify-center items-center h-28">
           <img src="/PM_Logo.png" alt="PM Logo" className="h-20 object-contain" />
@@ -131,52 +135,136 @@ const LoginPage = ({ setUser }) => {
         </div>
 
         <div className="p-6 flex flex-col gap-4">
-          {error && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-500 text-sm text-center font-medium">{error}</motion.p>}
-          {infoMessage && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-green-500 text-sm text-center font-medium">{infoMessage}</motion.p>}
+          {error && <p className="text-red-500 text-sm text-center font-medium">{error}</p>}
+          {infoMessage && <p className="text-green-500 text-sm text-center font-medium">{infoMessage}</p>}
 
           <input
             type="email"
             placeholder="E-Mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            disabled={loading || resetting}
-            className="w-full px-3 py-2 border-2 border-[rgb(84,88,90)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(244,204,0)] disabled:opacity-60"
+            onKeyDown={handleKeyDown}
+            className="w-full px-3 py-2 border-2 border-gray-700 rounded-md"
+            required
           />
 
-          <input
-            type="password"
-            placeholder="Passwort"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={loading || resetting}
-            className="w-full px-3 py-2 border-2 border-[rgb(84,88,90)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(244,204,0)] disabled:opacity-60"
-          />
+          {mode === "login" && (
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Passwort"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-full px-3 py-2 border-2 border-gray-700 rounded-md"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-700"
+              >
+                {showPassword ? "👁" : "👁‍🗨"}
+              </button>
+            </div>
+          )}
 
-          <button
-            type="button"
-            onClick={handlePasswordReset}
-            disabled={loading || resetting}
-            className="text-sm text-gray-500 hover:text-[rgb(84,88,90)] text-right -mt-2"
-          >
-            {resetting ? "E-Mail wird gesendet..." : "Passwort vergessen?"}
-          </button>
-
-          <button
-            type="submit"
-            disabled={loading || resetting}
-            className="relative w-full bg-[rgb(244,204,0)] text-[rgb(84,88,90)] font-bold py-2 rounded-md hover:bg-yellow-400 transition disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
-          >
-            {loading ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-4 h-4 border-2 border-[rgb(84,88,90)] border-t-transparent rounded-full animate-spin" />
-                <span>Wird überprüft...</span>
+          {mode === "register" && (
+            <div className="flex flex-col gap-3">
+              <input
+                type="text"
+                value={firstName}
+                className="w-full px-3 py-2 border-2 border-gray-700 rounded-md"
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Vorname"
+                required
+              />
+              <input
+                type="text"
+                value={lastName}
+                className="w-full px-3 py-2 border-2 border-gray-700 rounded-md"
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Nachname"
+                required
+              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Passwort"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="w-full px-3 py-2 border-2 border-gray-700 rounded-md"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-700"
+                >
+                  {showPassword ? "👁" : "👁‍🗨"}
+                </button>
               </div>
-            ) : (
-              "Einloggen"
-            )}
-          </button>
+            </div>
+          )}
+
+          {mode === "login" ? (
+            <>
+              <button
+                type="button"
+                onClick={() => {}}
+                className="text-sm text-gray-500 hover:text-gray-700 text-right -mt-2 cursor-pointer"
+              >
+                Passwort vergessen?
+              </button>
+
+              <button
+                onClick={handleLogin}
+                className="w-full bg-[rgb(244,204,0)] text-gray-900 font-bold py-2 rounded-md hover:bg-yellow-400 transition cursor-pointer"
+              >
+                Einloggen
+              </button>
+
+              <div className="flex items-center my-2">
+                <div className="flex-grow h-[1px] bg-gray-300" />
+                <span className="px-2 text-gray-500 text-sm">oder</span>
+                <div className="flex-grow h-[1px] bg-gray-300" />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setMode("register")}
+                className="w-full bg-gray-700 text-white font-bold py-2 rounded-md hover:bg-gray-800 transition cursor-pointer"
+              >
+                Registrieren
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={handleRegister}
+                className="w-full bg-[rgb(244,204,0)] text-gray-900 font-bold py-2 rounded-md hover:bg-yellow-400 cursor-pointer"
+              >
+                Jetzt registrieren
+              </button>
+
+              <div className="flex items-center my-3">
+                <div className="flex-grow h-[1px] bg-gray-300" />
+                <span className="px-2 text-gray-500 text-sm">oder</span>
+                <div className="flex-grow h-[1px] bg-gray-300" />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setMode("login")}
+                className="w-full bg-gray-700 text-white font-bold py-2 rounded-md hover:bg-gray-800 cursor-pointer"
+              >
+                Doch Einloggen?
+              </button>
+            </>
+          )}
         </div>
-      </motion.form>
+      </motion.div>
 
       <p className="absolute bottom-2 right-3 text-sm text-white/70 z-10">
         Created by J. Wörn

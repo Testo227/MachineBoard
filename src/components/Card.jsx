@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles/style.css';
 import Modal from './Modal';
 import TagCircles from './TagCircles';
+import { Settings } from 'lucide-react';
 
 const Card = ({
   areas,
@@ -65,66 +66,78 @@ const Card = ({
 
       
       {currentMachine.Typ !== "Leerslot" &&( 
-      <div  style={{opacity: dimmed ? 0.3 : 1, pointerEvents: dimmed ? 'none' : 'auto'}} className="bg-[rgb(85,90,90)] rounded-lg text-[rgb(85,90,90)] flex flex-col p-2 gap-0.5 my-[2px] mx-[4px]">
-         <div className='flex gap-0.5'>
-          <div className="flex items-center w-38 h-4">
-            <div className="w-27 text-xs h-4" style={{backgroundColor: typeColor}}>
-              {currentMachine.Typ} {" "}
-              {currentMachine.Typ_Bezeichnung}
-            </div>
-          </div>
-          <button 
-              onClick={() => setIsOpen(true)} 
-              className="bg-[rgb(255,204,0)] text-[rgb(85,90,90)] font-extrabold rounded w-5 h-4 hover:cursor-pointer hover:rgba(92, 80, 33, 1)"
+      <div  style={{opacity: dimmed ? 0.3 : 1, pointerEvents: dimmed ? 'none' : 'auto'}} className="bg-[rgb(85,90,90)] rounded-lg text-[rgb(85,90,90)] flex flex-col p-2 gap-1 my-[6px] mx-[4px]">
+         
+          <div
+            className="text-center w-[60%] absolute top-[7px] left-1/2 -translate-x-1/2 px-3 py-1 rounded-xl text-[7px] font-bold shadow-md"
+            style={{ backgroundColor: typeColor }}
             >
-              ^
-            </button>
-        </div> 
-        
-        <div className="text-xm text-center bg-white">{currentMachine.kunde || "Leer"}</div>
-        <div className="text-xm text-center bg-white">{currentMachine.kNummer || "Leer" }</div>
-        <div className="flex flex-col gap-0.5 text-xs bg-white p-1">
-            {["IstStart", "IstEnde"].map((field) => {
-              let value = "-";
-
-              // 🔹 Hole die Zeile, die auf Karte angezeigt werden soll
-              const showRow = currentMachine.sequenzen?.find(seq => seq.showOnCard);
-
-              if (showRow) {
-                switch (field) {
-                  case "IstStart":
-                    value = showRow.istStart || "-";
-                    break;
-                  case "IstEnde":
-                    value = showRow.istEnde || "-";
-                    break;
-                  default:
-                    value = "-";
-                }
-              }
-
-              // 🔹 Prüfe auf Abweichung (rote Warnung)
-              let showWarning = false;
-              if (showRow) {
-                if (field === "IstStart" && showRow.planStart && showRow.istStart && showRow.planStart !== showRow.istStart) {
-                  showWarning = true;
-                }
-                if (field === "IstEnde" && showRow.planEnde && showRow.istEnde && showRow.planEnde !== showRow.istEnde) {
-                  showWarning = true;
-                }
-              }
-
-              return (
-                <div key={field} className="flex items-center gap-1">
-                  <div className="w-20 font-semibold">{field}</div>
-                  <div className="w-32">
-                    {value !== "-" ? new Date(value).toLocaleDateString("de-DE") : "-"}
-                  </div>
-                  {showWarning && <span className="text-red-600 font-bold">!</span>}
-                </div>
-              );
-            })}
+            {currentMachine.Typ || currentMachine.Typ_Bezeichnung 
+            ? `${currentMachine.Typ || ""} ${currentMachine.Typ_Bezeichnung || ""}`.trim()
+            : "kein Typ"}
           </div>
+
+          <button
+            onClick={() => setIsOpen(true)}
+            className="
+              group
+              absolute top-[6px] right-[-8px]
+              bg-[rgb(85,90,90)]
+              rounded-full w-6 h-6
+              flex items-center justify-center
+              shadow-lg border-2 border-[rgb(191,191,191)]
+              transition-all duration-200 ease-out
+              hover:bg-[rgb(255,204,0)]
+              hover:scale-110
+            "
+          >
+            <Settings
+              size={14}
+              className="
+                text-white
+                transition-all duration-200
+                group-hover:text-[rgb(85,90,90)] cursor-pointer
+              "
+            />
+          </button>
+         
+        
+        <div className="text-xs font-bold text-center bg-white rounded-xs ">{currentMachine.kunde || "Leer"}</div>
+        <div className="text-xs font-bold text-center bg-white rounded-xs ">{currentMachine.kNummer || "Leer" }</div>
+        <div className="grid grid-cols-[30px_82px] grid-rows-[15px_15px] gap-1">
+          {["IstStart", "IstEnde"].map((field) => {
+            const showRow = currentMachine.sequenzen?.find(seq => seq.showOnCard);
+            const raw = showRow
+              ? (field === "IstStart" ? showRow.istStart : showRow.istEnde) || "-"
+              : "-";
+
+            // Datum formatieren: Mo-01.02.
+            let formattedDate = "-";
+            if (raw !== "-") {
+              const d = new Date(raw);
+              const weekday = d.toLocaleDateString("de-DE", { weekday: "short" })
+                .replace(".", "")
+                .slice(0, 2);
+              const day = String(d.getDate()).padStart(2, "0");
+              const month = String(d.getMonth() + 1).padStart(2, "0");
+              formattedDate = `${weekday}-${day}.${month}.`;
+            }
+
+            return (
+              <React.Fragment key={field}>
+                {/* Feld-Name */}
+                <div className="text-left text-[8px] bg-white rounded-xs px-1 py-1 flex items-center justify-start text-[rgb(85,90,90)] font-bold">
+                  {field === "IstStart" ? "Start:" : "Ende:"}
+                </div>
+
+                {/* Datum */}
+                <div className="text-[8px] font-bold bg-white rounded-xs px-2 py-1 flex items-center justify-center text-[rgb(85,90,90)]">
+                  {formattedDate}
+                </div>
+              </React.Fragment>
+            );
+          })}
+        </div>
           <TagCircles tags={currentMachine.Tags} globalTags={globalTags}></TagCircles>
       </div>
       )}

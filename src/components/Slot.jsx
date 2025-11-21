@@ -140,7 +140,7 @@ const Slot = ({
   };
 
   return (
-  <div className="w-40 h-43 flex flex-col bg-[rgb(222,222,222)] flex-shrink-0 relative">
+  <div className="w-35 h-30 flex flex-col bg-[rgb(222,222,222)] flex-shrink-0 relative">
   <h3 className="text-center font-extrabold text-[9px] text-[rgb(85,90,90)]">
     {slotName}
   </h3>
