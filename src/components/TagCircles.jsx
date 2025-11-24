@@ -23,13 +23,13 @@ const TagCircles = ({ tags = [], globalTags }) => {
           return (
             <li key={tag.id}>
               <div
-                className={`flex items-center justify-center h-3 rounded-full cursor-pointer transition-all duration-300
+                className={`flex items-center justify-center h-4 rounded-full cursor-pointer transition-all duration-300
                             ${isActive ? "px-2 min-w-max" : "w-4"}`}
                 style={{ backgroundColor: tag.color.replace("bg-[", "").replace("]", "") }}
                 onClick={() => toggleTagActive(tag.id)}
               >
                 {isActive && (
-                  <span className="text-white text-xs whitespace-nowrap">
+                  <span className="text-white text-[9px] whitespace-nowrap">
                     {tag.name}
                   </span>
                 )}

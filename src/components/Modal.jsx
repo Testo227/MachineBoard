@@ -6,6 +6,8 @@ import { supabase } from '../supabaseClient';
 //Components
 import TagInputDropdown from './TagInput';
 import SequenzTable from './SequenzTable';
+import SlotDropdown from './SlotDropdown';
+import { useToast } from "./ToastContext";
 
 
 const Modal = ({ 
@@ -23,11 +25,26 @@ const Modal = ({
 }) => {
   const [localMachine, setLocalMachine] = useState({...currentmachine});
   const [localSlot, setLocalSlot] = useState(`${currentmachine.area}:${currentmachine.position}`);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const { addToast } = useToast();
 
   useEffect(() => {
     setLocalMachine(currentmachine);
     setLocalSlot(`${currentmachine.area}:${currentmachine.position}`);
   }, [currentmachine]);
+
+  useEffect(() => {
+  if (isOpen) {
+    document.body.style.overflow = "hidden";   // Scroll verhindern
+  } else {
+    document.body.style.overflow = "auto";     // Scroll wieder erlauben
+  }
+
+  return () => {
+    document.body.style.overflow = "auto";     // Cleanup falls Modal unmounted
+  };
+}, [isOpen]);
 
   const handleLocalChange = (field, value) => {
     setLocalMachine(prev => ({ ...prev, [field]: value }));
@@ -161,27 +178,49 @@ const Modal = ({
   }
   };
 
-  //Loeschen von Maschinen
-  const handleDeleteMachine = () => {
-  if (!window.confirm("Willst du diese Maschine wirklich löschen?")) return;
 
-  setmachinelist(prev => prev.filter(m => m.id !== currentmachine.id));
-  setAreas(prev =>
-    prev.map(area => {
-      if (area.name === currentmachine.area) {
-        return {
-          ...area,
-          slots: area.slots.map(slot =>
-            slot.slotName === currentmachine.position
-              ? { ...slot, occupied: false }
-              : slot
-          ),
-        };
-      }
-      return area;
-    })
-  );
-  setIsOpen(false);
+  
+  const handleConfirmDelete = async () => {
+    setLoadingDelete(true);
+
+    const { error } = await supabase
+      .from("machines")
+      .delete()
+      .eq("id", currentmachine.id); // ✔ DIREKT lösbar
+
+    setLoadingDelete(false);
+    setShowDeleteModal(false);
+
+    if (error) {
+      console.error("Fehler beim Löschen der Maschine:", error);
+      addToast("❌ Fehler beim Löschen der Maschine!", "error");
+      return;
+    }
+
+    // Lokale machinelist aktualisieren
+    setmachinelist(prev => prev.filter(m => m.id !== currentmachine.id));
+
+    // Slot freigeben
+    setAreas(prev =>
+      prev.map(area => {
+        if (area.name === currentmachine.area) {
+          return {
+            ...area,
+            slots: area.slots.map(slot =>
+              slot.slotName === currentmachine.position
+                ? { ...slot, occupied: false }
+                : slot
+            ),
+          };
+        }
+        return area;
+      })
+    );
+
+    // Modal schließen
+    setIsOpen(false);
+
+    addToast("✅ Maschine wurde erfolgreich gelöscht!", "success");
   };
 
 
@@ -227,6 +266,8 @@ const Modal = ({
   // Modal schließen
   setIsOpen(false);
   };
+
+  
 
 
 
@@ -350,21 +391,14 @@ const Modal = ({
                   >
                     Maschine nach ... verschieben 
                   </label>
-                  <select value={localSlot} onChange={handleLocalSlotChange} className="Ende border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]">
-                    <option value="" disabled>Bitte Slot auswählen...</option>
-                    {areas.map(area => (
-                      <optgroup key={area.id} label={area.name}>
-                        {area.slots.map(slot => (
-                          <option
-                            key={slot.id}
-                            value={`${area.name}:${slot.slotName}`}
-                          >
-                            {area.name} {slot.slotName}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </select>
+                  <SlotDropdown
+                    areas={areas}
+                    value={localSlot}
+                    machinelist={machinelist}
+                    onChange={(newValue) => {
+                    handleLocalSlotChange({ target: { value: newValue } });
+                    }}
+                  />
               </div>
             </div>
           </div>
@@ -418,10 +452,10 @@ const Modal = ({
         </div>
         <div className="flex justify-between items-center mt-6">
             <button
-              onClick={handleDeleteMachine}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition cursor-pointer"
+              onClick={() => setShowDeleteModal(true)}
+              className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-700 transition cursor-pointer"
             >
-              Maschine Löschen
+              🗑️
             </button>
 
             <button
@@ -451,7 +485,41 @@ const Modal = ({
               </button>
             </div>
         </div>
-        
+        {showDeleteModal && (
+          <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-[99999] backdrop-blur-sm">
+            <div className="relative bg-white w-[90%] max-w-[400px] p-6 rounded-2xl shadow-xl border border-[rgb(85,90,90)]">
+              
+              <h2 className="text-xl font-bold text-[rgb(85,90,90)] text-center mb-4">
+                Maschine wirklich löschen?
+              </h2>
+
+              <p className="text-center text-[rgb(85,90,90)] opacity-80 mb-6">
+                Diese Aktion kann nicht rückgängig gemacht werden.
+              </p>
+
+              <div className="flex justify-between gap-4">
+
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="flex-1 py-2 rounded-xl border border-[rgb(85,90,90)] text-[rgb(85,90,90)]
+                    font-semibold hover:bg-[rgb(85,90,90)] hover:text-white transition hover:cursor-pointer"
+                >
+                  Abbrechen
+                </button>
+
+                <button
+                  onClick={handleConfirmDelete}
+                  disabled={loadingDelete}
+                  className="flex-1 py-2 rounded-xl font-semibold bg-red-600 text-white hover:bg-red-700
+                    transition hover:cursor-pointer disabled:opacity-50"
+                >
+                  {loadingDelete ? "Lösche..." : "Löschen"}
+                </button>
+
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import Topbar from './components/Topbar';
 import Stueckzahlen from './components/Stueckzahlen/Stueckzahlen';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './components/LoginPage';
+import { ToastProvider } from './components/ToastContext';
 
 // CSS
 import './styles/style.css';
@@ -202,18 +203,19 @@ const App = () => {
           path="/*"
           element={
             <ProtectedRoute user={user}>
-              <div className="flex">
+              <ToastProvider>
+              <div className="flex bg-[rgb(230,226,226)] bg-cover bg-center w-screen bg-repeat ">
                 <div className="fixed top-0 left-0 h-full z-20">
                   <Sidebar foldSidebar={foldSidebar} setFoldSidebar={setFoldSidebar} setUser={setUser} user={user}/>
                 </div>
                 <div
                   className={`flex flex-col flex-1 transition-all duration-300 ${
-                    foldSidebar ? "ml-[220px]" : "ml-[80px]"
+                    foldSidebar ? "ml-[220px]" : "ml-[60px]"
                   }`}
                 >
                   <div
                     className={`fixed top-0 right-0 z-10 transition-all duration-300 ${
-                      foldSidebar ? "left-[220px]" : "left-[80px]"
+                      foldSidebar ? "left-[220px]" : "left-[60px]"
                     }`}
                   >
                     <Topbar
@@ -223,7 +225,7 @@ const App = () => {
                     />
                   </div>
 
-                  <div className="mt-10 p-4">
+                  <div className="mt-12 p-4">
                     <Routes>
                       <Route path="/" element={<Navigate to="/shopfloor" />} />
                       <Route
@@ -251,6 +253,7 @@ const App = () => {
                   </div>
                 </div>
               </div>
+              </ToastProvider>
             </ProtectedRoute>
           }
         />

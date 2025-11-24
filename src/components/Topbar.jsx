@@ -44,10 +44,10 @@ const Topbar = ({ filters, setFilters, globalTags }) => {
     Boolean(sf.till);
 
   return (
-    <div className="flex bg-[rgb(255,204,0)] h-12 items-center justify-between px-6 shadow-md relative">
+    <div className="flex bg-[rgb(255,204,0)] h-14 items-center justify-between px-6 shadow-md relative">
       {/* Titel */}
-      <h1 className="absolute left-1/2 transform -translate-x-1/2 text-2xl font-extrabold text-[rgb(85,90,90)] select-none">
-        Shopfloorboard PCP
+      <h1 className="absolute left-1/2 transform -translate-x-1/2 text-3xl font-extrabold text-[rgb(85,90,90)] select-none">
+        Shopfloorboard PCP Aichtal
       </h1>
 
       {/* Suchfeld */}

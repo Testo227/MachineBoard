@@ -146,7 +146,7 @@ const MainBoard = ({machinelist,
         }
 
     return ( 
-        <div className='MainBoard flex gap-4  w-full h-full overflow-x-auto overflow-y-auto'>
+        <div className='MainBoard flex gap-4 '>
             <div className='flex flex-col gap-4'>
         
                 <div className='flex gap-4'> 
@@ -413,9 +413,9 @@ const MainBoard = ({machinelist,
                 </div>
             </div>
             <div className='flex flex-col gap-4'>
-                <div className='text-xl font-extrabold text-[rgb(85,90,90)] bg-[rgb(166,202,236)] w-8 h-[770px] flex items-center justify-center [writing-mode:vertical-rl] rotate-180 text-center'>↓ in Arbeit ↓</div>
-                <div className='text-xl font-extrabold text-[rgb(85,90,90)] bg-[rgb(242,207,238)] w-8 h-[630px] flex items-center justify-center [writing-mode:vertical-rl] rotate-180 text-center'>↓ Puffer ↓</div>
-                <div className='text-xl font-extrabold text-[rgb(85,90,90)] bg-[rgb(246,198,173)] w-8 h-[358px] flex items-center justify-center [writing-mode:vertical-rl] rotate-180 text-center'>↓ Nacharbeit ↓</div>
+                <div className='text-xl font-extrabold text-[rgb(85,90,90)] bg-[rgb(166,202,236)] w-8 h-[1032px] flex items-center justify-center [writing-mode:vertical-rl] rotate-180 text-center'>↓ in Arbeit ↓</div>
+                <div className='text-xl font-extrabold text-[rgb(85,90,90)] bg-[rgb(242,207,238)] w-8 h-[860px] flex items-center justify-center [writing-mode:vertical-rl] rotate-180 text-center'>↓ Puffer ↓</div>
+                <div className='text-xl font-extrabold text-[rgb(85,90,90)] bg-[rgb(246,198,173)] w-8 h-[480px] flex items-center justify-center [writing-mode:vertical-rl] rotate-180 text-center'>↓ Nacharbeit ↓</div>
             </div>
             <div className='flex gap-4'>
                 <div className='flex flex-col gap-4'>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import Card from './Card';
+import { useToast } from "./ToastContext";
 
 const Slot = ({
   slotName,
@@ -16,6 +17,8 @@ const Slot = ({
   setAreas
 }) => {
   const [loading, setLoading] = useState(false);
+  const { addToast } = useToast();
+  const [showModal, setShowModal] = useState(false);
 
   const currentMachine = machinelist.find(
     (m) => m.position === slotName && m.area === thisarea.name
@@ -24,6 +27,17 @@ const Slot = ({
   const isFilteredIn = filteredMachines?.some(
     (m) => m.id === currentMachine?.id
   );
+
+  
+
+  // prevent scrolling when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [showModal]);
 
   const handleCreateMachine = async () => {
     if (!currentMachine) {
@@ -119,6 +133,7 @@ const Slot = ({
         ]);
       } catch (err) {
         console.error("Fehler beim Erstellen der Maschine:", err);
+        addToast("❌ Fehler beim Erstellen der Maschine!", "error");
         // Falls Fehler, optimistische Maschine wieder entfernen
         setmachinelist(prev => prev.filter(m => m.id !== optimisticMachine.id));
         setAreas(prev =>
@@ -135,13 +150,14 @@ const Slot = ({
         );
       } finally {
         setLoading(false); // Spinner verstecken
+        addToast("✅ Maschine wurde erfolgreich erstellt!", "success");
       }
     }
   };
 
   return (
-  <div className="w-35 h-30 flex flex-col bg-[rgb(222,222,222)] flex-shrink-0 relative">
-  <h3 className="text-center font-extrabold text-[9px] text-[rgb(85,90,90)]">
+  <div className="w-40 h-36 flex flex-col bg-[rgba(85,90,90,0.3)] flex-shrink-0 relative gap-2">
+  <h3 className="text-center font-extrabold text-[9px] text-white">
     {slotName}
   </h3>
 
@@ -162,16 +178,61 @@ const Slot = ({
     />
   ) : (
     <div
-      onClick={handleCreateMachine}
-      className="flex items-center justify-center my-[30px] mx-[60px] hover:cursor-pointer w-10 h-10 relative"
+      onClick={() => setShowModal(true)}
+      className="flex items-center justify-center my-[20px] mx-[51px] hover:cursor-pointer w-10 h-10 relative"
     >
       {loading ? (
         <div className="w-5 h-5 border-2 border-t-transparent border-gray-700 rounded-full animate-spin"></div>
       ) : (
-        <h1 className="text-[16px] font-bold">+</h1>
+        <h1 className="text-[16px] font-bold text-white hover:text-[rgb(244,204,0)]">+</h1>
       )}
     </div>
   )}
+      {showModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        
+        {/* Overlay */}
+        <div 
+          className="absolute inset-0 backdrop-blur-sm"
+          onClick={() => setShowModal(false)}
+        />
+
+        {/* Modal */}
+        <div className="relative bg-white w-[90%] max-w-[400px] p-6 rounded-2xl shadow-xl border border-[rgb(85,90,90)]">
+          
+          <h2 className="text-xl font-bold text-[rgb(85,90,90)] text-center mb-4">
+            Neue Maschine erstellen?
+          </h2>
+
+          <p className="text-center text-[rgb(85,90,90)] opacity-80 mb-6">
+            Bist du sicher, dass du eine neue Maschine anlegen möchtest?
+          </p>
+
+          <div className="flex justify-between gap-4">
+            
+            {/* Cancel */}
+            <button
+              onClick={() => setShowModal(false)}
+              className="flex-1 py-2 rounded-xl border border-[rgb(85,90,90)] text-[rgb(85,90,90)] font-semibold hover:bg-[rgb(85,90,90)] hover:text-white transition hover:cursor-pointer"
+            >
+              Abbrechen
+            </button>
+
+            {/* Confirm */}
+            <button
+              onClick={async () => {
+                setShowModal(false);
+                await handleCreateMachine();
+              }}
+              className="flex-1 py-2 rounded-xl font-semibold bg-[rgb(244,204,0)] text-black hover:brightness-110 transition hover:cursor-pointer"
+            >
+              Erstellen
+            </button>
+
+          </div>
+        </div>
+      </div>
+    )}
 </div>
 );
 };

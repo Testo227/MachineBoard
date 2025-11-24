@@ -266,7 +266,7 @@ const LoginPage = ({ setUser }) => {
         </div>
       </motion.div>
 
-      <p className="absolute bottom-2 right-3 text-sm text-white/70 z-10">
+      <p className="absolute bottom-2 right-3 text-sm text-black/70 z-10">
         Created by J. Wörn
       </p>
     </div>
