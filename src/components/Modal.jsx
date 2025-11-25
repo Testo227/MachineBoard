@@ -28,11 +28,19 @@ const Modal = ({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const { addToast } = useToast();
+  const [showFertigModal, setShowFertigModal] = useState(false);
+  const [loadingFertig, setLoadingFertig] = useState(false);
 
+  // Immer die aktuelle Maschine aus machinelist holen, falls sich irgendwas ändert
   useEffect(() => {
-    setLocalMachine(currentmachine);
-    setLocalSlot(`${currentmachine.area}:${currentmachine.position}`);
-  }, [currentmachine]);
+    if (!currentmachine) return;
+
+    const freshMachine = machinelist.find(m => m.id === currentmachine.id);
+    if (freshMachine) {
+      setLocalMachine({ ...freshMachine });
+      setLocalSlot(`${freshMachine.area}:${freshMachine.position}`);
+    }
+  }, [machinelist, currentmachine?.id]);
 
   useEffect(() => {
   if (isOpen) {
@@ -59,60 +67,19 @@ const Modal = ({
 
   const handleSave = async () => {
   const [newAreaName, newSlotName] = localSlot.split(':');
+
+  // Prüfen, ob der Zielslot von einer anderen Maschine besetzt ist
   const targetMachine = machinelist.find(
     m => m.area === newAreaName && m.position === newSlotName
   );
 
   try {
-    setSaving(true); // Spinner aktivieren
+    setSaving(true);
 
-    // ------------------------
-    // 1️⃣ Optimistisches UI Update
-    // ------------------------
-    setmachinelist(prev =>
-      prev.map(m => {
-        if (m.id === currentmachine.id) {
-          return { ...m, ...localMachine, area: newAreaName, position: newSlotName };
-        }
-        if (targetMachine && m.id === targetMachine.id) {
-          return { ...m, area: currentmachine.area, position: currentmachine.position };
-        }
-        return m;
-      })
-    );
-
-    setAreas(prev =>
-      prev.map(area => {
-        if (area.name === currentmachine.area) {
-          return {
-            ...area,
-            slots: area.slots.map(slot =>
-              slot.slotName === currentmachine.position
-                ? { ...slot, occupied: targetMachine ? true : false }
-                : slot
-            ),
-          };
-        }
-        if (area.name === newAreaName) {
-          return {
-            ...area,
-            slots: area.slots.map(slot =>
-              slot.slotName === newSlotName
-                ? { ...slot, occupied: true }
-                : slot
-            ),
-          };
-        }
-        return area;
-      })
-    );
-
-    // ------------------------
-    // 2️⃣ Supabase Update in Parallel
-    // ------------------------
+    // --- DB Updates vorbereiten ---
     const updates = [];
 
-    // Update currentmachine
+    // Update currentMachine
     updates.push(
       supabase.from('machines').update({
         Typ: localMachine.Typ,
@@ -126,7 +93,7 @@ const Modal = ({
       }).eq('id', currentmachine.id)
     );
 
-    // Wenn Slot belegt, update targetMachine auch
+    // Update targetMachine falls Slot belegt ist
     if (targetMachine) {
       updates.push(
         supabase.from('machines').update({
@@ -136,120 +103,108 @@ const Modal = ({
       );
     }
 
-    // Kommentare
-    if (localMachine.kommentare?.length) {
-      localMachine.kommentare.forEach(k => {
-        updates.push(
-          supabase.from('kommentare').update({ text: k.text }).eq('id', k.id)
-        );
-      });
-    }
+    // Kommentare aktualisieren
+    localMachine.kommentare?.forEach(k => {
+      updates.push(
+        supabase.from('kommentare').update({ text: k.text }).eq('id', k.id)
+      );
+    });
 
-    // Mängel
-    if (localMachine.maengel?.length) {
-      localMachine.maengel.forEach(m => {
-        updates.push(
-          supabase.from('maengel').update({ text: m.text }).eq('id', m.id)
-        );
-      });
-    }
+    // Mängel aktualisieren
+    localMachine.maengel?.forEach(m => {
+      updates.push(
+        supabase.from('maengel').update({ text: m.text }).eq('id', m.id)
+      );
+    });
 
-    // Dateien
-    if (localMachine.dateien?.length) {
-      localMachine.dateien.forEach(d => {
-        updates.push(
-          supabase.from('dateien').update({ name: d.name, url: d.url }).eq('id', d.id)
-        );
-      });
-    }
+    // Dateien aktualisieren
+    localMachine.dateien?.forEach(d => {
+      updates.push(
+        supabase.from('dateien').update({ name: d.name, url: d.url }).eq('id', d.id)
+      );
+    });
 
-    // Alle Updates parallel ausführen
+    
+
+
+    // --- Alle DB Updates parallel ausführen ---
     const results = await Promise.all(updates);
     results.forEach(res => {
       if (res.error) throw res.error;
     });
 
-    setIsOpen(false); // Modal schließen
-  } catch (err) {
-    console.error("Fehler beim Speichern in der Datenbank:", err);
-    alert("Fehler beim Speichern der Maschine. Schau in die Konsole für Details.");
-  } finally {
-    setSaving(false); // Spinner aus
-  }
-  };
+    // --- Tags seriell behandeln ---
+      // 1️⃣ Alte Tags löschen
+      await supabase
+        .from("machine_tags")
+        .delete()
+        .eq("machine_id", currentmachine.id);
 
+      // 2️⃣ Neue Tags einfügen
+      if (localMachine.Tags?.length > 0) {
+        const tagInserts = localMachine.Tags.map(tagId => ({
+          machine_id: currentmachine.id,
+          tag_id: tagId
+        }));
 
-  
-  const handleConfirmDelete = async () => {
-    setLoadingDelete(true);
+        const { error: insertError } = await supabase
+          .from("machine_tags")
+          .insert(tagInserts);
 
-    const { error } = await supabase
-      .from("machines")
-      .delete()
-      .eq("id", currentmachine.id); // ✔ DIREKT lösbar
+        if (insertError) throw insertError;
+      }
 
-    setLoadingDelete(false);
-    setShowDeleteModal(false);
-
-    if (error) {
-      console.error("Fehler beim Löschen der Maschine:", error);
-      addToast("❌ Fehler beim Löschen der Maschine!", "error");
-      return;
-    }
-
-    // Lokale machinelist aktualisieren
-    setmachinelist(prev => prev.filter(m => m.id !== currentmachine.id));
-
-    // Slot freigeben
-    setAreas(prev =>
-      prev.map(area => {
-        if (area.name === currentmachine.area) {
-          return {
-            ...area,
-            slots: area.slots.map(slot =>
-              slot.slotName === currentmachine.position
-                ? { ...slot, occupied: false }
-                : slot
-            ),
-          };
+    // --- State aktualisieren nach erfolgreichem DB Update ---
+    setmachinelist(prev =>
+      prev.map(m => {
+        if (m.id === currentmachine.id) {
+          return { ...m, ...localMachine, area: newAreaName, position: newSlotName };
         }
-        return area;
+        if (targetMachine && m.id === targetMachine.id) {
+          return { ...m, area: currentmachine.area, position: currentmachine.position };
+        }
+        return m;
       })
     );
 
-    // Modal schließen
     setIsOpen(false);
+    addToast("✅ Maschine wurde erfolgreich gespeichert!", "success");
 
-    addToast("✅ Maschine wurde erfolgreich gelöscht!", "success");
-  };
+  } catch (err) {
+    console.error("Fehler beim Speichern der Maschine:", err);
+    addToast("❌ Fehler beim Speichern der Maschine!", "error");
+  } finally {
+    setSaving(false);
+  }
+};
 
 
-  //Fertigmelden von Maschinen
-  const handleFertigmelden = () => {
-  if (!window.confirm("Willst du diese Maschine wirklich als fertig melden?")) return;
+  // Loeschen von Maschinen
+  const handleConfirmDelete = async () => {
+  setLoadingDelete(true);
 
-  const today = new Date().toISOString().split("T")[0]; // aktuelles Datum yyyy-mm-dd
+  const { error } = await supabase
+    .from("machines")
+    .delete()
+    .eq("id", currentmachine.id);
 
-  // Maschine mit Fertigstellungsdatum versehen
-  const finishedMachine = {
-    ...localMachine,
-    Fertigstellung: today,
-  };
+  if (error) {
+    console.error("Fehler beim Löschen der Maschine:", error);
+    addToast("❌ Fehler beim Löschen der Maschine!", "error");
+    setLoadingDelete(false);
+    return;
+  }
 
-  // Maschine aus machinelist entfernen
+
+  
+
+  // Lokale machinelist aktualisieren
   setmachinelist(prev => prev.filter(m => m.id !== currentmachine.id));
 
-  // Maschine in finishedMachines hinzufügen
-  setFinishedMachines(prev => {
-    const updated = [...prev, finishedMachine];
-    console.log("🏁 Aktueller finishedMachines State:", updated);
-    return updated;
-  });
-
-  // Slot als frei markieren
+  // Slot im Frontend-State freigeben
   setAreas(prev =>
     prev.map(area => {
-      if (area.name === currentmachine.area) {
+      if (area.id === currentmachine.area_id) {
         return {
           ...area,
           slots: area.slots.map(slot =>
@@ -259,12 +214,67 @@ const Modal = ({
           ),
         };
       }
-      return area ;
+      return area;
     })
   );
 
-  // Modal schließen
+  setShowDeleteModal(false);
   setIsOpen(false);
+
+  addToast("✅ Maschine wurde erfolgreich gelöscht!", "success");
+  setLoadingDelete(false);
+};
+
+
+  //Fertigmelden von Maschinen
+  const handleConfirmFertigmelden = async () => {
+    try {
+      setLoadingFertig(true);
+
+      const today = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
+
+      // Status und Fertigstellung in der DB updaten
+      const { error } = await supabase
+        .from("machines")
+        .update({ status: "fertig", fertigstellung: today })
+        .eq("id", currentmachine.id);
+
+      if (error) throw error;
+
+      // Maschine aus machinelist entfernen
+      setmachinelist(prev => prev.filter(m => m.id !== currentmachine.id));
+
+      // Maschine zu finishedMachines hinzufügen (lokal)
+      setFinishedMachines(prev => [...prev, { ...localMachine, Fertigstellung: today }]);
+
+      // Slot als frei markieren
+      setAreas(prev =>
+        prev.map(area => {
+          if (area.name === currentmachine.area) {
+            return {
+              ...area,
+              slots: area.slots.map(slot =>
+                slot.slotName === currentmachine.position
+                  ? { ...slot, occupied: false }
+                  : slot
+              ),
+            };
+          }
+          return area;
+        })
+      );
+
+      // Modals schließen
+      setShowFertigModal(false);
+      setIsOpen(false);
+      addToast("✅ Maschine wurde erfolgreich fertiggemeldet!", "success");
+
+    } catch (err) {
+      console.error("Fehler beim Fertigmelden:", err);
+      addToast("❌ Fehler beim Fertigmelden der Maschine!", "error");
+    } finally {
+      setLoadingFertig(false);
+    }
   };
 
   
@@ -275,9 +285,44 @@ const Modal = ({
 
   return (
     <div className="fixed inset-0 bg-black/20 flex justify-center items-center z-[9999]">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-300 h-300 relative">
-        <h2 className="text-2xl font-bold mb-4 text-[rgb(85,90,90)]">Maschine bearbeiten</h2>
+      <div className="bg-white rounded-lg shadow-lg p-6 w-300 h-250 relative">
+        <div className="flex justify-between items-center mb-4">
+            {/* Linker Teil */}
+            <h2 className="text-2xl font-bold text-[rgb(85,90,90)]">Maschine bearbeiten</h2>
 
+            {/* Rechter Teil */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-700 transition cursor-pointer"
+              >
+                🗑️ Löschen
+              </button>
+              <button
+                onClick={() => setShowFertigModal(true)}
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition cursor-pointer"
+              >
+                ✅ Fertigmelden
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="bg-[rgb(85,90,90)] text-white px-4 py-2 rounded hover:bg-gray-400 transition cursor-pointer"
+              >
+                Schließen
+              </button>
+              <button
+                onClick={handleSave}
+                className="bg-[rgb(255,204,0)] text-[rgb(85,90,90)] px-4 py-2 rounded font-bold hover:bg-yellow-500 hover:cursor-pointer transition flex items-center justify-center"
+                disabled={saving}
+              >
+                {saving ? (
+                  <div className="loader w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  "Speichern"
+                )}
+              </button>
+            </div>
+          </div>
         <div className="flex flex-col gap-3">
           <div className='flex gap-4'>
             <div className="flex flex-col space-y-1 w-150">
@@ -296,7 +341,7 @@ const Modal = ({
                 placeholder="..."
               />
             </div>
-            <div className="flex flex-col space-y-1 w-150">
+            <div className="flex flex-col space-y-1 w-118">
               <label
                 htmlFor="kNummer"
                 className="text-[rgb(85,90,90)] text-sm font-medium"
@@ -312,9 +357,25 @@ const Modal = ({
                 placeholder="..."
               />
             </div>
+            <div className="flex flex-col space-y-1 w-32">
+                <label
+                htmlFor="Wunschliefertermin"
+                className="text-[rgb(85,90,90)] text-sm font-medium"
+              >
+                WLW
+              </label>
+              <input
+                id="WLW"
+                className="Wunschliefertermin border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
+                value={localMachine.WLW || ""}
+                onChange={(e) => handleLocalChange("WLW", e.target.value)}
+                type="text"
+                placeholder="..."
+              />
+              </div>
           </div>
           <div className='flex gap-4'>
-            <div className="flex flex-col space-y-1 w-69">
+            <div className="flex flex-col space-y-1 w-40">
               <label
                 htmlFor="Typ"
                 className="text-[rgb(85,90,90)] text-sm font-medium"
@@ -331,7 +392,7 @@ const Modal = ({
                 <option key={6}>Leerslot</option>
               </select>
             </div>
-            <div className="flex flex-col space-y-1 w-69">
+            <div className="flex flex-col space-y-1 w-95">
               <label
                 htmlFor="Typ-Bezeichnung"
                 className="text-[rgb(85,90,90)] text-sm font-medium"
@@ -348,22 +409,21 @@ const Modal = ({
               />
             </div>
           <div className='flex gap-4'>
-              <div className="flex flex-col space-y-1 w-142">
-                <label
-                htmlFor="Wunschliefertermin"
-                className="text-[rgb(85,90,90)] text-sm font-medium"
-              >
-                Wunschliefertermin
-              </label>
-              <input
-                id="WLW"
-                className="Wunschliefertermin border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
-                value={localMachine.WLW || ""}
-                onChange={(e) => handleLocalChange("WLW", e.target.value)}
-                type="text"
-                placeholder="..."
-              />
-              </div>
+              <div className='flex flex-col space-y-1 w-145'>
+                 <label
+                    htmlFor="Tags"
+                    className="text-[rgb(85,90,90)] text-sm font-medium"
+                  >
+                    Tags 
+                  </label> 
+                  <TagInputDropdown
+                    machineTags={localMachine.Tags || []}
+                    onChange={(updatedIds) => setLocalMachine(prev => ({ ...prev, Tags: updatedIds }))}
+                    globalTags={globalTags}
+                    setGlobalTags={setGlobalTags}
+                  >
+                  </TagInputDropdown>
+            </div>
           </div>
           </div>
           <div className='flex gap-4'>
@@ -403,21 +463,7 @@ const Modal = ({
             </div>
           </div>
           <div className='flex gap-4'>
-            <div className='flex flex-col space-y-1 w-290'>
-                 <label
-                    htmlFor="Tags"
-                    className="text-[rgb(85,90,90)] text-sm font-medium"
-                  >
-                    Tags 
-                  </label> 
-                  <TagInputDropdown
-                    machineTags={localMachine.Tags || []}
-                    onChange={(updatedIds) => setLocalMachine(prev => ({ ...prev, Tags: updatedIds }))}
-                    globalTags={globalTags}
-                    setGlobalTags={setGlobalTags}
-                  >
-                  </TagInputDropdown>
-            </div>
+            
             <div className='flex gap-4'>
             <div className='flex flex-col space-y-1 w-142'>
                  <label
@@ -444,46 +490,6 @@ const Modal = ({
               onChange={(updated) => handleLocalChange("sequenzen", updated)}
             />
           </div>
-          
-
-
-          
-          
-        </div>
-        <div className="flex justify-between items-center mt-6">
-            <button
-              onClick={() => setShowDeleteModal(true)}
-              className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-700 transition cursor-pointer"
-            >
-              🗑️
-            </button>
-
-            <button
-              onClick={handleFertigmelden}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition cursor-pointer"
-            >
-              Maschine fertig melden
-            </button>
-
-            <div className="flex gap-4">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="bg-[rgb(85,90,90)] text-white px-4 py-2 rounded hover:bg-gray-400 transition cursor-pointer"
-              >
-                Schließen
-              </button>
-              <button
-                onClick={handleSave}
-                className="bg-[rgb(255,204,0)] text-[rgb(85,90,90)] px-4 py-2 rounded font-bold hover:bg-yellow-500 transition flex items-center justify-center"
-                disabled={saving} // während Save deaktivieren
-              >
-                {saving ? (
-                  <div className="loader w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  "Speichern"
-                )}
-              </button>
-            </div>
         </div>
         {showDeleteModal && (
           <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-[99999] backdrop-blur-sm">
@@ -514,6 +520,41 @@ const Modal = ({
                     transition hover:cursor-pointer disabled:opacity-50"
                 >
                   {loadingDelete ? "Lösche..." : "Löschen"}
+                </button>
+
+              </div>
+            </div>
+          </div>
+        )}
+        {showFertigModal && (
+          <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-[99999] backdrop-blur-sm">
+            <div className="relative bg-white w-[90%] max-w-[400px] p-6 rounded-2xl shadow-xl border border-[rgb(85,90,90)]">
+              
+              <h2 className="text-xl font-bold text-[rgb(85,90,90)] text-center mb-4">
+                Maschine wirklich fertig melden?
+              </h2>
+
+              <p className="text-center text-[rgb(85,90,90)] opacity-80 mb-6">
+                Hiermit wird die Maschine an den Versand übergeben.
+              </p>
+
+              <div className="flex justify-between gap-4">
+
+                <button
+                  onClick={() => setShowFertigModal(false)}
+                  className="flex-1 py-2 rounded-xl border border-[rgb(85,90,90)] text-[rgb(85,90,90)]
+                    font-semibold hover:bg-[rgb(85,90,90)] hover:text-white transition hover:cursor-pointer"
+                >
+                  Abbrechen
+                </button>
+
+                <button
+                  onClick={handleConfirmFertigmelden}
+                  disabled={loadingFertig}
+                  className="flex-1 py-2 rounded-xl font-semibold bg-green-600 text-white hover:bg-green-700
+                    transition hover:cursor-pointer disabled:opacity-50"
+                >
+                  {loadingFertig ? "Fertig..." : "Fertigmelden"}
                 </button>
 
               </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import '../styles/style.css';
+import { supabase } from '../supabaseClient';
 
 const TagInputDropdown = ({ machineTags = [], onChange, globalTags, setGlobalTags }) => {
   const [open, setOpen] = useState(false);
@@ -18,14 +19,27 @@ const TagInputDropdown = ({ machineTags = [], onChange, globalTags, setGlobalTag
     onChange(machineTags.filter(id => id !== tagId));
   };
 
-  // Globalen Tag umbenennen
-  const renameTag = (tagId) => {
+  const renameTag = async (tagId) => {
     if (!editValue.trim()) return;
+
+    // 1️⃣ UI State updaten
     setGlobalTags(prev =>
       prev.map(tag => tag.id === tagId ? { ...tag, name: editValue } : tag)
     );
+
+    // 2️⃣ Datenbank updaten
+    const { error } = await supabase
+      .from('globaltags')
+      .update({ name: editValue })
+      .eq('id', tagId);
+
+    if (error) {
+      console.error('Fehler beim Updaten des Tags:', error);
+    }
+
+    // 3️⃣ Edit-Modus beenden
     setEditingTagId(null);
-    setEditValue("");
+    setEditValue('');
   };
 
   // Alle Tags außer die, die schon hinzugefügt wurden
@@ -85,7 +99,7 @@ const TagInputDropdown = ({ machineTags = [], onChange, globalTags, setGlobalTag
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+        <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-gray-100 border border-gray-300 rounded-lg shadow-lg z-50">
           {availableTags.map(tag => (
             <div
               key={tag.id}

@@ -72,12 +72,17 @@ const App = () => {
           machine_tags(*),
           maengel(*)
         `)
+        .eq('status', 'in_progress') // 🔹 nur Maschinen in Arbeit
         .order('created_at', { ascending: true })
 
       if (error) {
         console.error('Fehler beim Laden der Maschinen:', error)
       } else {
-        setmachinelist(data)
+        const mapped = data.map(machine => ({
+          ...machine,
+          Tags: machine.machine_tags.map(mt => mt.tag_id) // 🔹 Hier die Umwandlung
+        }))
+        setmachinelist(mapped)
       }
     }
 
@@ -147,45 +152,44 @@ const App = () => {
 
   //Login Session mit Supabase
   useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (session?.user) {
-          setUser({
-            id: session.user.id,
-            email: session.user.email,
-            username: session.user.user_metadata?.username || "",
-            displayName: session.user.user_metadata?.display_name || "",
-          });
-        } else {
-          setUser(null);
-        }
-      }
-    );
+  // 1️⃣ Initiales Abrufen der Session
+  const init = async () => {
+    const { data } = await supabase.auth.getSession();
+    if (data?.session?.user) {
+      const u = data.session.user;
+      setUser({
+        id: u.id,
+        email: u.email,
+        username: u.user_metadata?.username || "",
+        displayName: u.user_metadata?.display_name || "",
+        firstName: u.user_metadata?.firstName || "",
+        lastName: u.user_metadata?.lastName || "",
+      });
+    }
+    setLoadingAuth(false);
+  };
+  init();
 
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
+  // 2️⃣ Listener für Login / Logout
+  const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+    if (session?.user) {
+      const u = session.user;
+      setUser({
+        id: u.id,
+        email: u.email,
+        username: u.user_metadata?.username || "",
+        displayName: u.user_metadata?.display_name || "",
+        firstName: u.user_metadata?.firstName || "",
+        lastName: u.user_metadata?.lastName || "",
+        profileColor: u.user_metadata?.profileColor || "",
+      });
+    } else {
+      setUser(null);
+    }
+  });
 
-  // USE EFFECT FÜR PERSISTENTES LOGIN
-  useEffect(() => {
-    const init = async () => {
-      const { data } = await supabase.auth.getSession();
-
-      if (data?.session?.user) {
-        setUser({
-          id: data.session.user.id,
-          email: data.session.user.email,
-          username: data.session.user.user_metadata?.username || "",
-          displayName: data.session.user.user_metadata?.display_name || "",
-        });
-      }
-
-      setLoadingAuth(false);
-    };
-
-    init();
-  }, []);
+  return () => listener.subscription.unsubscribe();
+}, []);
 
   if (loadingAuth) {
     return <div className="text-center mt-10 text-xl">Lade...</div>;

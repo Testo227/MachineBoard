@@ -85,7 +85,7 @@ const SequenzTable = ({ sequenzen, onChange }) => {
   };
 
   return (
-    <div className="flex flex-col h-[500px] rounded overflow-hidden">
+    <div className="flex flex-col h-[350px] rounded overflow-hidden">
       <div className="flex justify-between items-center bg-white px-2 py-2 border-b border-gray-300 flex-shrink-0 sticky top-0 z-20">
         <h3 className="text-[rgb(85,90,90)] text-sm font-medium">
           Sequenz-Planung

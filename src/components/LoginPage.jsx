@@ -56,6 +56,9 @@ const LoginPage = ({ setUser }) => {
           id: data.user.id,
           email: data.user.email,
           displayName: data.user.user_metadata?.display_name || "",
+          firstName: data.user.user_metadata?.firstName || "",
+          lastName: data.user.user_metadata?.lastName || "",
+          profileColor: data.user.user_metadata?.profileColor || "",
         });
         navigate("/shopfloor"); // Weiterleitung nach erfolgreichem Login
       }

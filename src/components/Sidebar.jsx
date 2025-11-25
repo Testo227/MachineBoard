@@ -6,7 +6,7 @@ import { supabase } from "../supabaseClient";
 import { useState, useEffect } from "react";
 
 
-const Sidebar = ({ foldSidebar, setFoldSidebar, setUser }) => {
+const Sidebar = ({ foldSidebar, setFoldSidebar, setUser, user }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -38,6 +38,8 @@ const Sidebar = ({ foldSidebar, setFoldSidebar, setUser }) => {
       document.body.style.overflow = "auto";
     };
   }, [showLogoutModal]);
+
+
 
   return (
     <div
@@ -78,7 +80,26 @@ const Sidebar = ({ foldSidebar, setFoldSidebar, setUser }) => {
       </ul>
 
       {/* UNTERE ICONS – am unteren Rand */}
-      <div className="mt-auto mb-10 flex flex-col items-start space-y-4 pl-4">
+      <div className="mt-auto mb-10 flex flex-col items-center space-y-4 pl-4">
+        {/* User-Bereich */}
+        {user && (
+          <div
+            className={`flex flex-col items-center transition-all duration-300 ${
+              foldSidebar ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            {/* Kreis mit Initialen */}
+            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md ${user.profileColor}`}>
+              {(user.firstName?.charAt(0)?.toUpperCase() || "") +
+                (user.lastName?.charAt(0)?.toUpperCase() || "")}
+            </div>
+            {/* Vollständiger Name */}
+            <p className="mt-2 text-white text-sm font-medium">
+              {user.firstName} {user.lastName}
+            </p>
+          </div>
+        )}
+
         {/* Ausloggen */}
         <div
           className="flex items-center space-x-2 cursor-pointer"
@@ -90,21 +111,20 @@ const Sidebar = ({ foldSidebar, setFoldSidebar, setUser }) => {
               foldSidebar ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           >
-           ➜ Ausloggen
+            ➜ Ausloggen
           </span>
         </div>
 
         {/* Einstellungen */}
         <div className="flex items-center space-x-2 cursor-pointer">
-          
           <span
             className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${
               foldSidebar ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           >
             <div className="flex text-white group hover:text-[rgb(255,204,0)]">
-            <Settings className="w-6 h-6 text-white grouphover:text-[rgb(255,204,0)] " />
-            Einstellungen
+              <Settings className="w-6 h-6 text-white grouphover:text-[rgb(255,204,0)] " />
+              Einstellungen
             </div>
           </span>
         </div>
