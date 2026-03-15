@@ -49,12 +49,12 @@ const TagInputDropdown = ({ machineTags = [], onChange, globalTags, setGlobalTag
     <div className="relative w-full">
       {/* Box mit ausgewählten Tags */}
       <div
-        className="flex items-center justify-between border border-[rgb(222,222,222)] border-8 bg-white px-3 py-2 cursor-pointer"
+        className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 cursor-pointer hover:bg-white transition"
         onClick={() => setOpen(prev => !prev)}
       >
         <div className="flex flex-wrap gap-2">
           {machineTags.length === 0 ? (
-            <span className="text-gray-400 italic">Keine Tags...</span>
+            <span className="text-gray-400 text-sm">Tags hinzufügen…</span>
           ) : (
             machineTags.map(tagId => {
               const tag = globalTags.find(t => t.id === tagId);
@@ -99,7 +99,7 @@ const TagInputDropdown = ({ machineTags = [], onChange, globalTags, setGlobalTag
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-gray-100 border border-gray-300 rounded-lg shadow-lg z-50">
+        <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg z-50">
           {availableTags.map(tag => (
             <div
               key={tag.id}
@@ -141,7 +141,7 @@ const TagInputDropdown = ({ machineTags = [], onChange, globalTags, setGlobalTag
           ))}
 
           {availableTags.length === 0 && (
-            <div className="px-3 py-2 text-gray-500 text-sm italic">
+            <div className="px-3 py-3 text-gray-400 text-sm text-center">
               Keine weiteren Tags verfügbar
             </div>
           )}

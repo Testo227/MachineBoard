@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import '../styles/style.css';
 import { supabase } from '../supabaseClient';
 
 
 //Components
 import TagInputDropdown from './TagInput';
-import SequenzTable from './SequenzTable';
 import SlotDropdown from './SlotDropdown';
 import { useToast } from "./ToastContext";
 
@@ -283,286 +283,160 @@ const Modal = ({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/20 flex justify-center items-center z-[9999]">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-300 h-250 relative">
-        <div className="flex justify-between items-center mb-4">
-            {/* Linker Teil */}
-            <h2 className="text-2xl font-bold text-[rgb(85,90,90)]">Maschine bearbeiten</h2>
+  const inputCls = "w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[rgb(255,204,0)] focus:bg-white focus:border-transparent transition";
+  const labelCls = "text-xs font-semibold text-gray-400 uppercase tracking-wider";
+  const sectionCls = "bg-white rounded-xl p-5 shadow-sm flex flex-col gap-4";
+  const sectionTitleCls = "text-xs font-bold text-gray-400 uppercase tracking-widest pb-1 border-b border-gray-100";
 
-            {/* Rechter Teil */}
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setShowDeleteModal(true)}
-                className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-700 transition cursor-pointer"
-              >
-                🗑️ Löschen
-              </button>
-              <button
-                onClick={() => setShowFertigModal(true)}
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition cursor-pointer"
-              >
-                ✅ Fertigmelden
-              </button>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="bg-[rgb(85,90,90)] text-white px-4 py-2 rounded hover:bg-gray-400 transition cursor-pointer"
-              >
-                Schließen
-              </button>
-              <button
-                onClick={handleSave}
-                className="bg-[rgb(255,204,0)] text-[rgb(85,90,90)] px-4 py-2 rounded font-bold hover:bg-yellow-500 hover:cursor-pointer transition flex items-center justify-center"
-                disabled={saving}
-              >
-                {saving ? (
-                  <div className="loader w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  "Speichern"
-                )}
-              </button>
-            </div>
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-[9999] p-4">
+      <div className="bg-[rgb(245,246,248)] rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+
+        {/* ── Header ── */}
+        <div className="bg-[rgb(70,75,82)] px-6 py-4 flex items-center justify-between flex-shrink-0 rounded-t-2xl">
+          <div>
+            <h2 className="text-white font-bold text-lg leading-tight">Maschine bearbeiten</h2>
+            {(localMachine.Typ || localMachine.kunde) && (
+              <p className="text-white/50 text-xs mt-0.5">
+                {[localMachine.Typ, localMachine.Typ_Bezeichnung, localMachine.kunde].filter(Boolean).join(' · ')}
+              </p>
+            )}
           </div>
-        <div className="flex flex-col gap-3">
-          <div className='flex gap-4'>
-            <div className="flex flex-col space-y-1 w-150">
-              <label
-                htmlFor="kunde"
-                className="text-[rgb(85,90,90)] text-sm font-medium"
-              >
-                Kunde
-              </label>
-              <input
-                id="kunde"
-                className="kunde border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
-                value={localMachine.kunde || ""}
-                onChange={(e) => handleLocalChange("kunde", e.target.value)}
-                type="text"
-                placeholder="..."
-              />
-            </div>
-            <div className="flex flex-col space-y-1 w-118">
-              <label
-                htmlFor="kNummer"
-                className="text-[rgb(85,90,90)] text-sm font-medium"
-              >
-                K-Nummer
-              </label>
-              <input
-                id="kNummer"
-                className="kNummer border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
-                value={localMachine.kNummer || ""}
-                onChange={(e) => handleLocalChange("kNummer", e.target.value)}
-                type="text"
-                placeholder="..."
-              />
-            </div>
-            <div className="flex flex-col space-y-1 w-32">
-                <label
-                htmlFor="Wunschliefertermin"
-                className="text-[rgb(85,90,90)] text-sm font-medium"
-              >
-                WLW
-              </label>
-              <input
-                id="WLW"
-                className="Wunschliefertermin border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
-                value={localMachine.WLW || ""}
-                onChange={(e) => handleLocalChange("WLW", e.target.value)}
-                type="text"
-                placeholder="..."
-              />
+          <button onClick={() => setIsOpen(false)} className="text-white/50 hover:text-white transition text-2xl leading-none cursor-pointer">×</button>
+        </div>
+
+        {/* ── Scrollable body ── */}
+        <div className="overflow-y-auto flex-1 p-5 flex flex-col gap-4">
+
+          {/* Maschineninfo */}
+          <div className={sectionCls}>
+            <h3 className={sectionTitleCls}>Maschineninformationen</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="col-span-2 flex flex-col gap-1.5">
+                <label className={labelCls}>Kunde</label>
+                <input className={inputCls} value={localMachine.kunde || ""} onChange={(e) => handleLocalChange("kunde", e.target.value)} type="text" placeholder="Kundenname" />
               </div>
-          </div>
-          <div className='flex gap-4'>
-            <div className="flex flex-col space-y-1 w-40">
-              <label
-                htmlFor="Typ"
-                className="text-[rgb(85,90,90)] text-sm font-medium"
-              >
-                Typ
-              </label>
-              <select value={localMachine.Typ || ""} onChange={(e) => handleLocalChange("Typ", e.target.value)} className='Typ border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]'>
-                <option value="" disabled>...</option>
-                <option key={1}>BSF</option>
-                <option key={2}>PUMI</option>
-                <option key={3}>BSA</option>
-                <option key={4}>Prototyp</option>
-                <option key={5}>E-Mischer</option>
-                <option key={6}>Leerslot</option>
-              </select>
-            </div>
-            <div className="flex flex-col space-y-1 w-95">
-              <label
-                htmlFor="Typ-Bezeichnung"
-                className="text-[rgb(85,90,90)] text-sm font-medium"
-              >
-                Typ-Bezeichnung
-              </label>
-              <input
-                id="Typ_Bezeichnung"
-                className="Typ-Bezeichnung border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
-                value={localMachine.Typ_Bezeichnung || ""}
-                onChange={(e) => handleLocalChange("Typ_Bezeichnung", e.target.value)}
-                type="text"
-                placeholder="..."
-              />
-            </div>
-          <div className='flex gap-4'>
-              <div className='flex flex-col space-y-1 w-145'>
-                 <label
-                    htmlFor="Tags"
-                    className="text-[rgb(85,90,90)] text-sm font-medium"
-                  >
-                    Tags 
-                  </label> 
-                  <TagInputDropdown
-                    machineTags={localMachine.Tags || []}
-                    onChange={(updatedIds) => setLocalMachine(prev => ({ ...prev, Tags: updatedIds }))}
-                    globalTags={globalTags}
-                    setGlobalTags={setGlobalTags}
-                  >
-                  </TagInputDropdown>
-            </div>
-          </div>
-          </div>
-          <div className='flex gap-4'>
-              
-              <div className='flex gap-4'>
-              <div className='flex gap-4'>
-                <div className="flex flex-col space-y-1 w-142">
-                    <label
-                    htmlFor="Aktuelle Position"
-                    className="text-[rgb(85,90,90)] text-sm font-medium"
-                  >
-                    Aktuelle Position
-                  </label>
-                  <div className="Ende border border-[rgb(222,222,222)] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]" >
-                    {currentmachine.area} auf {currentmachine.position}
-                  </div>
+              <div className="flex flex-col gap-1.5">
+                <label className={labelCls}>K-Nummer</label>
+                <input className={inputCls} value={localMachine.kNummer || ""} onChange={(e) => handleLocalChange("kNummer", e.target.value)} type="text" placeholder="z. B. 123456" />
               </div>
-            </div>
-            </div>
-            <div className='flex gap-4'>
-                <div className="flex flex-col space-y-1 w-142">
-                    <label
-                    htmlFor="Verschieben"
-                    className="text-[rgb(85,90,90)] text-sm font-medium"
-                  >
-                    Maschine nach ... verschieben 
-                  </label>
-                  <SlotDropdown
-                    areas={areas}
-                    value={localSlot}
-                    machinelist={machinelist}
-                    onChange={(newValue) => {
-                    handleLocalSlotChange({ target: { value: newValue } });
-                    }}
-                  />
+              <div className="flex flex-col gap-1.5">
+                <label className={labelCls}>WLW</label>
+                <input className={inputCls} value={localMachine.WLW || ""} onChange={(e) => handleLocalChange("WLW", e.target.value)} type="text" placeholder="Wunschliefertermin" />
               </div>
-            </div>
-          </div>
-          <div className='flex gap-4'>
-            
-            <div className='flex gap-4'>
-            <div className='flex flex-col space-y-1 w-142'>
-                 <label
-                    htmlFor="Kommentare"
-                    className="text-[rgb(85,90,90)] text-sm font-medium"
-                  >
-                  Kommentare
-                  </label> 
-                  <textarea
-                  id="Kommentare"
-                  className=" resize-none border border-[rgb(222,222,222)]  !h-[200px] border-8 bg-white placeholder-gray-400 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgb(222,222,222)]"
-                  value={localMachine.Kommentare || ""}
-                  onChange={(e) => handleLocalChange("Kommentare", e.target.value)}
-                  type="text"
-                  placeholder="..."
+              <div className="flex flex-col gap-1.5">
+                <label className={labelCls}>Typ</label>
+                <select value={localMachine.Typ || ""} onChange={(e) => handleLocalChange("Typ", e.target.value)} className={inputCls}>
+                  <option value="" disabled>Typ wählen…</option>
+                  <option>BSF</option>
+                  <option>PUMI</option>
+                  <option>BSA</option>
+                  <option>Prototyp</option>
+                  <option>E-Mischer</option>
+                  <option>Leerslot</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className={labelCls}>Typ-Bezeichnung</label>
+                <input className={inputCls} value={localMachine.Typ_Bezeichnung || ""} onChange={(e) => handleLocalChange("Typ_Bezeichnung", e.target.value)} type="text" placeholder="z. B. 20T, 30T …" />
+              </div>
+              <div className="col-span-2 flex flex-col gap-1.5">
+                <label className={labelCls}>Tags</label>
+                <TagInputDropdown
+                  machineTags={localMachine.Tags || []}
+                  onChange={(updatedIds) => setLocalMachine(prev => ({ ...prev, Tags: updatedIds }))}
+                  globalTags={globalTags}
+                  setGlobalTags={setGlobalTags}
                 />
+              </div>
             </div>
-            
           </div>
+
+          {/* Position */}
+          <div className={sectionCls}>
+            <h3 className={sectionTitleCls}>Position</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className={labelCls}>Aktuelle Position</label>
+                <div className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-500">
+                  {currentmachine.area} — {currentmachine.position}
+                </div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className={labelCls}>Verschieben nach</label>
+                <SlotDropdown areas={areas} value={localSlot} machinelist={machinelist} onChange={(newValue) => handleLocalSlotChange({ target: { value: newValue } })} />
+              </div>
+            </div>
           </div>
-          <div className="mt-6">
-            <SequenzTable
-              sequenzen={localMachine.sequenzen}
-              onChange={(updated) => handleLocalChange("sequenzen", updated)}
+
+          {/* Kommentare */}
+          <div className={sectionCls}>
+            <h3 className={sectionTitleCls}>Kommentare</h3>
+            <textarea
+              className={`${inputCls} resize-none h-28`}
+              value={localMachine.Kommentare || ""}
+              onChange={(e) => handleLocalChange("Kommentare", e.target.value)}
+              placeholder="Notizen zur Maschine…"
             />
           </div>
+
         </div>
-        {showDeleteModal && (
-          <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-[99999] backdrop-blur-sm">
-            <div className="relative bg-white w-[90%] max-w-[400px] p-6 rounded-2xl shadow-xl border border-[rgb(85,90,90)]">
-              
-              <h2 className="text-xl font-bold text-[rgb(85,90,90)] text-center mb-4">
-                Maschine wirklich löschen?
-              </h2>
 
-              <p className="text-center text-[rgb(85,90,90)] opacity-80 mb-6">
-                Diese Aktion kann nicht rückgängig gemacht werden.
-              </p>
-
-              <div className="flex justify-between gap-4">
-
-                <button
-                  onClick={() => setShowDeleteModal(false)}
-                  className="flex-1 py-2 rounded-xl border border-[rgb(85,90,90)] text-[rgb(85,90,90)]
-                    font-semibold hover:bg-[rgb(85,90,90)] hover:text-white transition hover:cursor-pointer"
-                >
-                  Abbrechen
-                </button>
-
-                <button
-                  onClick={handleConfirmDelete}
-                  disabled={loadingDelete}
-                  className="flex-1 py-2 rounded-xl font-semibold bg-red-600 text-white hover:bg-red-700
-                    transition hover:cursor-pointer disabled:opacity-50"
-                >
-                  {loadingDelete ? "Lösche..." : "Löschen"}
-                </button>
-
-              </div>
-            </div>
+        {/* ── Footer ── */}
+        <div className="bg-white px-6 py-3.5 border-t border-gray-100 flex items-center justify-between gap-3 flex-shrink-0 rounded-b-2xl">
+          <div className="flex gap-2">
+            <button onClick={() => setShowDeleteModal(true)} className="px-3 py-2 rounded-lg border border-red-200 text-red-500 text-sm font-medium hover:bg-red-50 transition cursor-pointer">
+              Löschen
+            </button>
+            <button onClick={() => setShowFertigModal(true)} className="px-3 py-2 rounded-lg border border-green-200 text-green-600 text-sm font-medium hover:bg-green-50 transition cursor-pointer">
+              Fertigmelden
+            </button>
           </div>
-        )}
-        {showFertigModal && (
-          <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-[99999] backdrop-blur-sm">
-            <div className="relative bg-white w-[90%] max-w-[400px] p-6 rounded-2xl shadow-xl border border-[rgb(85,90,90)]">
-              
-              <h2 className="text-xl font-bold text-[rgb(85,90,90)] text-center mb-4">
-                Maschine wirklich fertig melden?
-              </h2>
-
-              <p className="text-center text-[rgb(85,90,90)] opacity-80 mb-6">
-                Hiermit wird die Maschine an den Versand übergeben.
-              </p>
-
-              <div className="flex justify-between gap-4">
-
-                <button
-                  onClick={() => setShowFertigModal(false)}
-                  className="flex-1 py-2 rounded-xl border border-[rgb(85,90,90)] text-[rgb(85,90,90)]
-                    font-semibold hover:bg-[rgb(85,90,90)] hover:text-white transition hover:cursor-pointer"
-                >
-                  Abbrechen
-                </button>
-
-                <button
-                  onClick={handleConfirmFertigmelden}
-                  disabled={loadingFertig}
-                  className="flex-1 py-2 rounded-xl font-semibold bg-green-600 text-white hover:bg-green-700
-                    transition hover:cursor-pointer disabled:opacity-50"
-                >
-                  {loadingFertig ? "Fertig..." : "Fertigmelden"}
-                </button>
-
-              </div>
-            </div>
+          <div className="flex gap-2">
+            <button onClick={() => setIsOpen(false)} className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition cursor-pointer">
+              Abbrechen
+            </button>
+            <button onClick={handleSave} disabled={saving} className="px-5 py-2 rounded-lg bg-[rgb(255,204,0)] text-[rgb(40,44,48)] text-sm font-bold hover:brightness-95 transition cursor-pointer flex items-center gap-2 min-w-[100px] justify-center disabled:opacity-60">
+              {saving ? <div className="w-4 h-4 border-2 border-t-transparent border-[rgb(40,44,48)] rounded-full animate-spin" /> : "Speichern"}
+            </button>
           </div>
-        )}
+        </div>
+
       </div>
-    </div>
+
+      {/* ── Delete confirmation ── */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[99999] p-4">
+          <div className="bg-white w-full max-w-sm p-6 rounded-2xl shadow-2xl">
+            <h2 className="text-lg font-bold text-[rgb(85,90,90)] text-center mb-1">Maschine löschen?</h2>
+            <p className="text-center text-gray-400 text-sm mb-6">Diese Aktion kann nicht rückgängig gemacht werden.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setShowDeleteModal(false)} className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition cursor-pointer">Abbrechen</button>
+              <button onClick={handleConfirmDelete} disabled={loadingDelete} className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-red-600 text-white hover:bg-red-700 transition cursor-pointer disabled:opacity-50">
+                {loadingDelete ? "Lösche…" : "Ja, löschen"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Fertig confirmation ── */}
+      {showFertigModal && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[99999] p-4">
+          <div className="bg-white w-full max-w-sm p-6 rounded-2xl shadow-2xl">
+            <h2 className="text-lg font-bold text-[rgb(85,90,90)] text-center mb-1">Maschine fertigmelden?</h2>
+            <p className="text-center text-gray-400 text-sm mb-6">Hiermit wird die Maschine an den Versand übergeben.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setShowFertigModal(false)} className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition cursor-pointer">Abbrechen</button>
+              <button onClick={handleConfirmFertigmelden} disabled={loadingFertig} className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-green-600 text-white hover:bg-green-700 transition cursor-pointer disabled:opacity-50">
+                {loadingFertig ? "Fertig…" : "Fertigmelden"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>,
+    document.body
   );
 };
 

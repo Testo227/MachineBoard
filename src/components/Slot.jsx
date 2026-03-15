@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { supabase } from '../supabaseClient';
 import Card from './Card';
 import { useToast } from "./ToastContext";
@@ -156,24 +157,24 @@ const Slot = ({
         </div>
       )}
 
-      {/* Modal bleibt normal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div 
-            className="absolute inset-0 backdrop-blur-sm"
+      {/* Create machine modal — rendered via portal so backdrop-blur-sm on slot doesn't break fixed positioning */}
+      {showModal && ReactDOM.createPortal(
+        <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0"
             onClick={() => setShowModal(false)}
           />
-          <div className="relative bg-white w-[90%] max-w-[400px] p-6 rounded-2xl shadow-xl border border-[rgb(85,90,90)]">
-            <h2 className="text-xl font-bold text-[rgb(85,90,90)] text-center mb-4">
+          <div className="relative bg-white w-[90%] max-w-[400px] p-6 rounded-2xl shadow-xl border border-gray-200">
+            <h2 className="text-xl font-bold text-[rgb(85,90,90)] text-center mb-2">
               Neue Maschine erstellen?
             </h2>
-            <p className="text-center text-[rgb(85,90,90)] opacity-80 mb-6">
+            <p className="text-center text-gray-500 text-sm mb-6">
               Bist du sicher, dass du eine neue Maschine anlegen möchtest?
             </p>
-            <div className="flex justify-between gap-4">
+            <div className="flex gap-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="flex-1 py-2 rounded-xl border border-[rgb(85,90,90)] text-[rgb(85,90,90)] font-semibold hover:bg-[rgb(85,90,90)] hover:text-white transition hover:cursor-pointer"
+                className="flex-1 py-2 rounded-xl border border-gray-300 text-[rgb(85,90,90)] font-semibold hover:bg-gray-100 transition cursor-pointer"
               >
                 Abbrechen
               </button>
@@ -182,13 +183,14 @@ const Slot = ({
                   setShowModal(false);
                   await handleCreateMachine();
                 }}
-                className="flex-1 py-2 rounded-xl font-semibold bg-[rgb(244,204,0)] text-black hover:brightness-110 transition hover:cursor-pointer"
+                className="flex-1 py-2 rounded-xl font-semibold bg-[rgb(255,204,0)] text-[rgb(85,90,90)] hover:brightness-95 transition cursor-pointer"
               >
                 Erstellen
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

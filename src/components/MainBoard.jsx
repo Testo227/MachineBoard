@@ -49,8 +49,8 @@ import '../styles/style.css';
 // Reusable area header + content wrapper
 const Area = ({ name, flex, children }) => (
   <div style={{ flex }} className='flex flex-col min-w-0 min-h-0'>
-    <div className='bg-[rgb(255,204,0)] rounded-sm px-1 flex-shrink-0 mb-0.5' style={{ paddingTop: '1px', paddingBottom: '1px' }}>
-      <h2 className='text-center font-extrabold text-[rgb(85,90,90)] tracking-wide truncate leading-tight' style={{ fontSize: 'clamp(8px, 0.75vw, 13px)' }}>{name}</h2>
+    <div className='bg-[rgb(70,75,82)] rounded-sm px-1 flex-shrink-0 mb-0.5' style={{ paddingTop: '2px', paddingBottom: '2px' }}>
+      <h2 className='text-center font-extrabold text-white tracking-wide truncate leading-tight' style={{ fontSize: 'clamp(8px, 0.75vw, 13px)' }}>{name}</h2>
     </div>
     <div className='flex-1 min-h-0'>
       {children}
@@ -148,9 +148,9 @@ const MainBoard = ({ machinelist, setmachinelist, finishedMachines, setFinishedM
 
       {/* ── DIVIDER: Arbeit / Puffer / Nacharbeit zones ── */}
       <div className='flex flex-col gap-1 w-6 flex-shrink-0'>
-        <div style={{ flex: 6 }} className='flex items-center justify-center bg-[rgb(166,202,236)] rounded text-[rgb(85,90,90)] font-extrabold text-[9px] [writing-mode:vertical-rl] rotate-180 select-none'>↓ in Arbeit ↓</div>
-        <div style={{ flex: 5 }} className='flex items-center justify-center bg-[rgb(242,207,238)] rounded text-[rgb(85,90,90)] font-extrabold text-[9px] [writing-mode:vertical-rl] rotate-180 select-none'>↓ Puffer ↓</div>
-        <div style={{ flex: 3 }} className='flex items-center justify-center bg-[rgb(246,198,173)] rounded text-[rgb(85,90,90)] font-extrabold text-[9px] [writing-mode:vertical-rl] rotate-180 select-none'>↓ Nacharbeit ↓</div>
+        <div style={{ flex: 6 }} className='flex items-center justify-center bg-[rgb(50,90,140)] rounded text-white font-extrabold text-[9px] [writing-mode:vertical-rl] rotate-180 select-none'>↓ in Arbeit ↓</div>
+        <div style={{ flex: 5 }} className='flex items-center justify-center bg-[rgb(150,115,40)] rounded text-white font-extrabold text-[9px] [writing-mode:vertical-rl] rotate-180 select-none'>↓ Puffer ↓</div>
+        <div style={{ flex: 3 }} className='flex items-center justify-center bg-[rgb(145,60,60)] rounded text-white font-extrabold text-[9px] [writing-mode:vertical-rl] rotate-180 select-none'>↓ Nacharbeit ↓</div>
       </div>
 
       {/* ── RIGHT GROUP: station columns ── flex-[7] */}
