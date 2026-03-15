@@ -30,6 +30,7 @@ const Modal = ({
   const { addToast } = useToast();
   const [showFertigModal, setShowFertigModal] = useState(false);
   const [loadingFertig, setLoadingFertig] = useState(false);
+  const [fertigDate, setFertigDate] = useState(() => new Date().toISOString().split("T")[0]);
 
   // Immer die aktuelle Maschine aus machinelist holen, falls sich irgendwas ändert
   useEffect(() => {
@@ -195,12 +196,10 @@ const Modal = ({
     try {
       setLoadingFertig(true);
 
-      const today = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
-
       // Status und Fertigstellung in der DB updaten
       const { error } = await supabase
         .from("machines")
-        .update({ status: "fertig", fertigstellung: today })
+        .update({ status: "fertig", fertigstellung: fertigDate })
         .eq("id", currentmachine.id);
 
       if (error) throw error;
@@ -209,7 +208,7 @@ const Modal = ({
       setmachinelist(prev => prev.filter(m => m.id !== currentmachine.id));
 
       // Maschine zu finishedMachines hinzufügen (lokal)
-      setFinishedMachines(prev => [...prev, { ...localMachine, Fertigstellung: today }]);
+      setFinishedMachines(prev => [...prev, { ...localMachine, fertigstellung: fertigDate }]);
 
       // Slot als frei markieren
       setAreas(prev =>
@@ -404,13 +403,26 @@ const Modal = ({
       {/* ── Fertig confirmation ── */}
       {showFertigModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[99999] p-4">
-          <div className="bg-white w-full max-w-sm p-6 rounded-2xl shadow-2xl">
-            <h2 className="text-lg font-bold text-[rgb(85,90,90)] text-center mb-1">Maschine fertigmelden?</h2>
-            <p className="text-center text-gray-400 text-sm mb-6">Hiermit wird die Maschine an den Versand übergeben.</p>
-            <div className="flex gap-3">
+          <div className="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
+            <div className="bg-[rgb(70,75,82)] px-5 py-4">
+              <h2 className="text-white font-bold text-base">Maschine fertigmelden?</h2>
+              <p className="text-white/50 text-xs mt-0.5">Hiermit wird die Maschine an den Versand übergeben.</p>
+            </div>
+            <div className="p-5 flex flex-col gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Wann wurde die Maschine fertiggestellt?</label>
+                <input
+                  type="date"
+                  value={fertigDate}
+                  onChange={e => setFertigDate(e.target.value)}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[rgb(255,204,0)] focus:bg-white focus:border-transparent transition"
+                />
+              </div>
+            </div>
+            <div className="px-5 pb-5 flex gap-3">
               <button onClick={() => setShowFertigModal(false)} className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition cursor-pointer">Abbrechen</button>
-              <button onClick={handleConfirmFertigmelden} disabled={loadingFertig} className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-green-600 text-white hover:bg-green-700 transition cursor-pointer disabled:opacity-50">
-                {loadingFertig ? "Fertig…" : "Fertigmelden"}
+              <button onClick={handleConfirmFertigmelden} disabled={loadingFertig || !fertigDate} className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-green-600 text-white hover:bg-green-700 transition cursor-pointer disabled:opacity-50">
+                {loadingFertig ? "Speichere…" : "Fertigmelden"}
               </button>
             </div>
           </div>

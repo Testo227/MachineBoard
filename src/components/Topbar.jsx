@@ -334,10 +334,10 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser, onlineUsers })
           {/* Nav: Fertige Maschinen */}
           <Link
             to="/fertige-maschinen"
-            className={`text-xs font-semibold px-2 py-0.5 rounded transition whitespace-nowrap ${
+            className={`bg-white px-2.5 py-0.5 rounded shadow-sm border text-xs font-semibold hover:bg-gray-100 transition-all duration-200 whitespace-nowrap ${
               location.pathname === '/fertige-maschinen'
-                ? 'bg-[rgb(70,75,82)] text-white'
-                : 'text-[rgb(85,90,90)] hover:bg-black/10'
+                ? 'ring-2 ring-[rgb(85,90,90)] border-[rgb(85,90,90)] text-[rgb(85,90,90)]'
+                : 'border-gray-300 text-[rgb(85,90,90)]'
             }`}
           >
             Fertige Maschinen

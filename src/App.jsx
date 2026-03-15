@@ -174,18 +174,17 @@ const App = () => {
         lastName: u.user_metadata?.lastName || "",
         profileColor: u.user_metadata?.profileColor || "",
       });
-      // Keep profiles table populated for @mention dropdown
+      // Keep profiles table populated for @mention dropdown (always upsert)
       const fn = u.user_metadata?.firstName || '';
       const ln = u.user_metadata?.lastName  || '';
-      if (fn || ln) {
-        supabase.from('profiles').upsert({
-          id: u.id,
-          first_name: fn,
-          last_name:  ln,
-          email: u.email,
-          profile_color: u.user_metadata?.profileColor || '',
-        }, { onConflict: 'id' }).then(() => {});
-      }
+      const emailHandle = u.email?.split('@')[0] || '';
+      supabase.from('profiles').upsert({
+        id: u.id,
+        first_name: fn || emailHandle,
+        last_name:  ln,
+        email: u.email,
+        profile_color: u.user_metadata?.profileColor || '',
+      }, { onConflict: 'id' }).then(() => {});
     } else {
       setUser(null);
     }
@@ -239,27 +238,6 @@ const App = () => {
         { event: 'DELETE', schema: 'public', table: 'machines' },
         (payload) => {
           setmachinelist(prev => prev.filter(m => m.id !== payload.old.id));
-        }
-      )
-      // Tag changes (machine_tags is a separate join table)
-      .on('postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'machine_tags' },
-        (payload) => {
-          setmachinelist(prev => prev.map(m =>
-            m.id === payload.new.machine_id
-              ? { ...m, Tags: [...(m.Tags || []), payload.new.tag_id] }
-              : m
-          ));
-        }
-      )
-      .on('postgres_changes',
-        { event: 'DELETE', schema: 'public', table: 'machine_tags' },
-        (payload) => {
-          setmachinelist(prev => prev.map(m =>
-            m.id === payload.old.machine_id
-              ? { ...m, Tags: (m.Tags || []).filter(t => t !== payload.old.tag_id) }
-              : m
-          ));
         }
       )
       .subscribe();

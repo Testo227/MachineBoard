@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '../supabaseClient';
 import { useToast } from './ToastContext';
-import { MessageCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { MessageCircle, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -173,7 +173,17 @@ const ReplyInput = ({ onSubmit, onCancel, profiles, targetName }) => {
 const CommentNode = ({ comment, allComments, profileMap, profiles, currentUser, onPosted, depth = 0 }) => {
   const [replying,    setReplying]    = useState(false);
   const [repliesOpen, setRepliesOpen] = useState(false);
+  const [deleting,    setDeleting]    = useState(false);
   const { addToast } = useToast();
+
+  const handleDelete = async () => {
+    if (!window.confirm('Kommentar wirklich löschen?')) return;
+    setDeleting(true);
+    const { error } = await supabase.from('kommentare').delete().eq('id', comment.id);
+    setDeleting(false);
+    if (error) { addToast('Fehler beim Löschen', 'error'); return; }
+    onPosted();
+  };
 
   const p = profileMap[comment.user_id] || null;
 
@@ -240,6 +250,13 @@ const CommentNode = ({ comment, allComments, profileMap, profiles, currentUser, 
                 {repliesOpen ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
               </button>
             )}
+            {currentUser?.id === comment.user_id && (
+              <button onClick={handleDelete} disabled={deleting}
+                className="ml-auto text-gray-300 hover:text-red-400 transition cursor-pointer disabled:opacity-50"
+                title="Kommentar löschen">
+                <Trash2 size={11} />
+              </button>
+            )}
           </div>
           {replying && (
             <ReplyInput onSubmit={handleReply} onCancel={() => setReplying(false)}
@@ -279,20 +296,18 @@ const Comments = ({ machineId }) => {
       const firstName    = u.user_metadata?.firstName    || '';
       const lastName     = u.user_metadata?.lastName     || '';
       const profileColor = u.user_metadata?.profileColor || '';
-      const emailHandle  = u.email?.split('@')[0]?.replace(/[._]/g, ' ') || '';
+      const emailHandle  = u.email?.split('@')[0] || '';
       const displayName  = (firstName + ' ' + lastName).trim() || emailHandle || u.email || 'Benutzer';
       setCurrentUser({ id: u.id, email: u.email, firstName, lastName, displayName, profileColor });
 
-      // Ensure this user exists in profiles so @mention dropdown is populated
-      if (firstName || lastName) {
-        await supabase.from('profiles').upsert({
-          id: u.id,
-          first_name:    firstName,
-          last_name:     lastName,
-          email:         u.email,
-          profile_color: profileColor,
-        }, { onConflict: 'id' });
-      }
+      // Always upsert into profiles so @mention dropdown is populated
+      await supabase.from('profiles').upsert({
+        id: u.id,
+        first_name:    firstName || emailHandle,
+        last_name:     lastName,
+        email:         u.email,
+        profile_color: profileColor,
+      }, { onConflict: 'id' });
     });
   }, []);
 
