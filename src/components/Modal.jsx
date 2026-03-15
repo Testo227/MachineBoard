@@ -6,6 +6,8 @@ import { supabase } from '../supabaseClient';
 
 //Components
 import TagInputDropdown from './TagInput';
+import Comments from './Comments';
+import Tasks from './Tasks';
 import { useToast } from "./ToastContext";
 
 
@@ -74,15 +76,11 @@ const Modal = ({
         kNummer: localMachine.kNummer,
         fNummer: localMachine.fNummer,
         WLW: localMachine.WLW,
+        allgemeines: localMachine.allgemeines,
+        start_date: localMachine.start_date || null,
+        end_date: localMachine.end_date || null,
       }).eq('id', currentmachine.id)
     );
-
-    // Kommentare aktualisieren
-    localMachine.kommentare?.forEach(k => {
-      updates.push(
-        supabase.from('kommentare').update({ text: k.text }).eq('id', k.id)
-      );
-    });
 
     // Mängel aktualisieren
     localMachine.maengel?.forEach(m => {
@@ -318,15 +316,49 @@ const Modal = ({
             </div>
           </div>
 
+          {/* Allgemeines & Einsatzdaten */}
+          <div className={sectionCls}>
+            <h3 className={sectionTitleCls}>Allgemeines</h3>
+            <div className="flex flex-col gap-1.5">
+              <textarea
+                className={`${inputCls} resize-none h-24`}
+                value={localMachine.allgemeines || ""}
+                onChange={(e) => handleLocalChange("allgemeines", e.target.value)}
+                placeholder="Allgemeine Informationen zur Maschine…"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3 mt-1">
+              <div className="flex flex-col gap-1.5">
+                <label className={labelCls}>Start</label>
+                <input
+                  type="date"
+                  className={inputCls}
+                  value={localMachine.start_date || ""}
+                  onChange={(e) => handleLocalChange("start_date", e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className={labelCls}>Ende</label>
+                <input
+                  type="date"
+                  className={inputCls}
+                  value={localMachine.end_date || ""}
+                  onChange={(e) => handleLocalChange("end_date", e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Aufgaben */}
+          <div className={sectionCls}>
+            <h3 className={sectionTitleCls}>Aufgaben</h3>
+            <Tasks machineId={currentmachine.id} />
+          </div>
+
           {/* Kommentare */}
           <div className={sectionCls}>
             <h3 className={sectionTitleCls}>Kommentare</h3>
-            <textarea
-              className={`${inputCls} resize-none h-28`}
-              value={localMachine.Kommentare || ""}
-              onChange={(e) => handleLocalChange("Kommentare", e.target.value)}
-              placeholder="Notizen zur Maschine…"
-            />
+            <Comments machineId={currentmachine.id} />
           </div>
 
         </div>
