@@ -22,14 +22,15 @@ export function useLiveCursors(user) {
     if (!user?.id) return;
 
     // Only use real first+last name — no email fallback for label
-    const firstName = user.firstName || '';
-    const lastName  = user.lastName  || '';
-    const name      = [firstName, lastName].filter(Boolean).join(' ');
-    const initials  = ([firstName[0], lastName[0]].filter(Boolean).join('').toUpperCase())
-      || user.email?.[0]?.toUpperCase() || '?';
-    const color     = user.profileColor || getAvatarColor(user.email || user.id || '');
+    const firstName   = user.firstName || '';
+    const lastName    = user.lastName  || '';
+    const emailHandle = user.email?.split('@')[0] || '';
+    const name        = firstName || emailHandle.split('.')[0] || emailHandle;
+    const initials    = ([firstName[0], lastName[0]].filter(Boolean).join('').toUpperCase())
+      || emailHandle[0]?.toUpperCase() || '?';
+    const color       = user.profileColor || getAvatarColor(user.email || user.id || '');
 
-    userInfoRef.current = { name, initials, color };
+    userInfoRef.current = { name, initials, color, email: user.email || '' };
 
     const channel = supabase.channel('live-cursors', {
       config: { presence: { key: user.id } },

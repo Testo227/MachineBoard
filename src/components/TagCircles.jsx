@@ -1,43 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const TagCircles = ({ tags = [], globalTags }) => {
-  const [activeTagId, setActiveTagId] = useState(null); // nur ein aktives Tag
+  const containerRef = useRef(null);
+  const [size, setSize] = useState(7);
 
-  const toggleTagActive = (id) => {
-    if (activeTagId === id) {
-      setActiveTagId(null); // nochmal klicken = schließen
-    } else {
-      setActiveTagId(id); // neues Tag aktiv, altes schließt sich automatisch
-    }
-  };
+  const validTags = tags
+    .map(tagId => globalTags?.find(t => t.id === tagId))
+    .filter(Boolean);
+
+  useEffect(() => {
+    if (!containerRef.current || !validTags.length) return;
+    const measure = () => {
+      const w = containerRef.current.clientWidth;
+      const n = validTags.length;
+      const gap = 2;
+      const computed = Math.floor((w - gap * (n - 1)) / n);
+      setSize(Math.max(3, Math.min(8, computed)));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, [validTags.length]);
+
+  if (!validTags.length) return null;
 
   return (
-    <div className="bg-white rounded-xs p-0.5 h-4">
-      <ul className="flex gap-1 flex-wrap">
-        {tags.map(tagId => {
-          const tag = globalTags.find(t => t.id === tagId);
-          if (!tag) return null;
-
-          const isActive = activeTagId === tag.id;
-
-          return (
-            <li key={tag.id}>
-              <div
-                className={`flex items-center justify-center h-4 rounded-full cursor-pointer transition-all duration-300
-                            ${isActive ? "px-2 min-w-max" : "w-4"}`}
-                style={{ backgroundColor: tag.color.replace("bg-[", "").replace("]", "") }}
-                onClick={() => toggleTagActive(tag.id)}
-              >
-                {isActive && (
-                  <span className="text-white text-[9px] whitespace-nowrap">
-                    {tag.name}
-                  </span>
-                )}
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+    <div
+      ref={containerRef}
+      style={{ display: 'flex', gap: 2, width: '100%', alignItems: 'center', height: size, overflow: 'hidden' }}
+    >
+      {validTags.map(tag => (
+        <div
+          key={tag.id}
+          title={tag.name}
+          style={{
+            backgroundColor: tag.color.replace("bg-[", "").replace("]", ""),
+            borderRadius: '50%',
+            width: size,
+            height: size,
+            flexShrink: 0,
+          }}
+        />
+      ))}
     </div>
   );
 };

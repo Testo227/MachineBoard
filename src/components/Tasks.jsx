@@ -49,7 +49,7 @@ const PersonPicker = ({ profiles, value, onChange }) => {
         <span className="truncate max-w-[80px]">{value || 'Verantwortlich'}</span>
       </button>
       {open && (
-        <div className="absolute bottom-full mb-1 left-0 w-52 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+        <div className="absolute top-full mt-1 right-0 w-52 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
           <div className="px-3 py-1.5 border-b border-gray-100">
             <input autoFocus value={query} onChange={e => setQuery(e.target.value)}
               placeholder="Suchen…"
@@ -61,20 +61,22 @@ const PersonPicker = ({ profiles, value, onChange }) => {
               — Keiner
             </button>
           )}
-          {filtered.map(p => {
-            const name = `${p.first_name} ${p.last_name}`.trim();
-            return (
-              <button key={p.id} type="button"
-                onMouseDown={e => { e.preventDefault(); onChange(name); setOpen(false); }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-blue-50 transition text-left group">
-                <MiniAvatar name={name} />
-                <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition">{name}</span>
-              </button>
-            );
-          })}
-          {filtered.length === 0 && (
-            <div className="px-3 py-2 text-xs text-gray-400">Keine Benutzer gefunden</div>
-          )}
+          <div className="max-h-48 overflow-y-auto">
+            {filtered.map(p => {
+              const name = `${p.first_name} ${p.last_name}`.trim();
+              return (
+                <button key={p.id} type="button"
+                  onMouseDown={e => { e.preventDefault(); onChange(name); setOpen(false); }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-blue-50 transition text-left group">
+                  <MiniAvatar name={name} />
+                  <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition">{name}</span>
+                </button>
+              );
+            })}
+            {filtered.length === 0 && (
+              <div className="px-3 py-2 text-xs text-gray-400">Keine Benutzer gefunden</div>
+            )}
+          </div>
         </div>
       )}
     </div>

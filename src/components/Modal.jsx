@@ -11,7 +11,7 @@ import Tasks from './Tasks';
 import { useToast } from "./ToastContext";
 
 
-const Modal = ({ 
+const Modal = ({
   areas,
   setAreas,
   currentmachine,
@@ -22,9 +22,11 @@ const Modal = ({
   setFinishedMachines,
   finishedMachines,
   globalTags,
-  setGlobalTags
+  setGlobalTags,
+  hideFertigmelden = false,
 }) => {
   const [localMachine, setLocalMachine] = useState({...currentmachine});
+  const [saving, setSaving] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const { addToast } = useToast();
@@ -32,34 +34,35 @@ const Modal = ({
   const [loadingFertig, setLoadingFertig] = useState(false);
   const [fertigDate, setFertigDate] = useState(() => new Date().toISOString().split("T")[0]);
 
-  // Immer die aktuelle Maschine aus machinelist holen, falls sich irgendwas ändert
+  // Sync from machinelist on external changes, but never during save
+  // (real-time UPDATE fires mid-save and would overwrite the user's tag edits)
   useEffect(() => {
-    if (!currentmachine) return;
+    if (!currentmachine || saving) return;
 
     const freshMachine = machinelist.find(m => m.id === currentmachine.id);
     if (freshMachine) {
       setLocalMachine({ ...freshMachine });
     }
-  }, [machinelist, currentmachine?.id]);
+  }, [machinelist, currentmachine?.id, saving]);
 
   useEffect(() => {
   if (isOpen) {
-    document.body.style.overflow = "hidden";   // Scroll verhindern
+    const sw = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = sw + "px";
   } else {
-    document.body.style.overflow = "auto";     // Scroll wieder erlauben
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
   }
-
   return () => {
-    document.body.style.overflow = "auto";     // Cleanup falls Modal unmounted
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
   };
 }, [isOpen]);
 
   const handleLocalChange = (field, value) => {
     setLocalMachine(prev => ({ ...prev, [field]: value }));
   };
-
-  //Fuer Spinner beim Speichern
-  const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
   try {
@@ -368,9 +371,11 @@ const Modal = ({
             <button onClick={() => setShowDeleteModal(true)} className="px-3 py-2 rounded-lg border border-red-200 text-red-500 text-sm font-medium hover:bg-red-50 transition cursor-pointer">
               Löschen
             </button>
-            <button onClick={() => setShowFertigModal(true)} className="px-3 py-2 rounded-lg border border-green-200 text-green-600 text-sm font-medium hover:bg-green-50 transition cursor-pointer">
-              Fertigmelden
-            </button>
+            {!hideFertigmelden && (
+              <button onClick={() => setShowFertigModal(true)} className="px-3 py-2 rounded-lg border border-green-200 text-green-600 text-sm font-medium hover:bg-green-50 transition cursor-pointer">
+                Fertigmelden
+              </button>
+            )}
           </div>
           <div className="flex gap-2">
             <button onClick={() => setIsOpen(false)} className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition cursor-pointer">

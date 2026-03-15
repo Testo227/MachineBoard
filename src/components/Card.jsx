@@ -48,6 +48,25 @@ const Card = ({
       globalTags={globalTags} setGlobalTags={setGlobalTags} />
   );
 
+  // Leerslot: show only a minimal placeholder card
+  if (currentMachine.Typ === 'Leerslot') {
+    return (
+      <div className="w-full" style={{ opacity: dimmed ? 0.3 : isDragging ? 0.3 : 1, pointerEvents: dimmed ? 'none' : 'auto' }}>
+        {modal}
+        <div
+          ref={setNodeRef} {...listeners} {...attributes}
+          onClick={() => setIsOpen(true)}
+          className="mx-1.5 my-1.5 bg-white/60 rounded-lg shadow-sm flex items-center justify-center cursor-grab active:cursor-grabbing hover:shadow-md transition-all duration-150"
+          style={{ borderLeft: '3px solid #cbd5e1', minHeight: 30 }}
+        >
+          <span className="text-gray-300 font-semibold select-none" style={{ fontSize: 'clamp(7px, 0.6vw, 10px)' }}>
+            Leerslot
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full" style={{ opacity: dimmed ? 0.3 : isDragging ? 0.3 : 1, pointerEvents: dimmed ? 'none' : 'auto' }}>
       {modal}

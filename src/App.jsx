@@ -21,6 +21,9 @@ const App = () => {
 
   const [user, setUser] = useState(null); // Login-Zustand
   const { remoteCursors, currentUserId, onlineUsers } = useLiveCursors(user);
+  const [cursorsEnabled, setCursorsEnabled] = useState(
+    () => localStorage.getItem('cursorsEnabled') !== 'false'
+  );
 
 
   const [finishedMachines, setFinishedMachines] = useState([])
@@ -44,6 +47,7 @@ const App = () => {
     mentionHandle: "",
     dateFrom: "",
     dateTill: "",
+    taskMachineIds: [],
   })
 
   //Global Tags
@@ -262,7 +266,7 @@ const App = () => {
           element={
             <ProtectedRoute user={user}>
               <ToastProvider>
-              <LiveCursors remoteCursors={remoteCursors} currentUserId={currentUserId} />
+              <LiveCursors remoteCursors={remoteCursors} currentUserId={currentUserId} enabled={cursorsEnabled} />
               <div className="flex flex-col bg-[rgb(240,241,245)] w-screen h-screen">
                   <div className="fixed top-0 left-0 right-0 z-10">
                     <Topbar
@@ -272,10 +276,12 @@ const App = () => {
                       user={user}
                       setUser={setUser}
                       onlineUsers={onlineUsers}
+                      cursorsEnabled={cursorsEnabled}
+                      setCursorsEnabled={setCursorsEnabled}
                     />
                   </div>
 
-                  <div className="mt-8 overflow-y-auto overflow-x-hidden" style={{ height: 'calc(100vh - 32px)' }}>
+                  <div className="mt-8 overflow-y-auto overflow-x-auto" style={{ height: 'calc(100vh - 32px)' }}>
                     <div style={{ minHeight: '1850px', height: '100%', width: '100%', padding: '8px', boxSizing: 'border-box' }}>
                     <Routes>
                       <Route path="/" element={<Navigate to="/shopfloor" />} />
@@ -301,7 +307,16 @@ const App = () => {
                       />
                       <Route
                         path="/fertige-maschinen"
-                        element={<FertigeMaschinen globalTags={globalTags} />}
+                        element={
+                          <FertigeMaschinen
+                            globalTags={globalTags}
+                            setGlobalTags={setGlobalTags}
+                            areas={areas}
+                            setAreas={setAreas}
+                            machinelist={machinelist}
+                            setmachinelist={setmachinelist}
+                          />
+                        }
                       />
                       <Route path="*" element={<div>Seite nicht gefunden</div>} />
                     </Routes>

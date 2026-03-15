@@ -59,7 +59,19 @@ A machine's position in the board is determined by `machine.area` (area name str
 
 All DB access goes through `src/supabaseClient.js`. Auth uses email/password. User metadata fields: `firstName`, `lastName`, `displayName`, `profileColor`.
 
-Key tables: `machines`, `sequenzen`, `kommentare`, `dateien`, `machine_tags`, `maengel`, `areas`, `area_slots`, `globaltags`.
+Key tables: `machines`, `sequenzen`, `kommentare`, `dateien`, `machine_tags`, `maengel`, `areas`, `area_slots`, `globaltags`, `soll_ziele`, `tasks`, `profiles`.
+
+**`soll_ziele`** — stores monthly Soll targets for FertigeMaschinen chart. Schema: `key text primary key, value integer`. Required SQL:
+```sql
+create table soll_ziele (key text primary key, value integer not null default 0);
+```
+
+**User management** — users are created manually via the Supabase dashboard (no self-registration). User metadata fields set at creation: `firstName`, `lastName`, `display_name`, `profileColor`.
+
+### Edge Functions
+
+- `notify-mention` — sends email via Resend when a user is @mentioned in a comment
+- `secureSignup2` — *(kept but unused)* domain-restricted signup, only `@putzmeister.com` emails allowed
 
 ### Notifications
 
@@ -103,11 +115,21 @@ Card structure (inside `mx-1.5 my-1.5` inner div with left colored border):
 - Customer name: `clamp(6px, 0.65vw, 11px)`, bold
 - K-number: `clamp(5px, 0.5vw, 9px)`, gray
 - Start / End dates: `clamp(5px, 0.45vw, 8px)`, from the sequenz with `showOnCard = true`
-- Tag circles (`TagCircles.jsx`)
+- Tag circles (`TagCircles.jsx`) — auto-sized via ResizeObserver, always show all tags in one row
+
+**Leerslot** cards render as a minimal placeholder (only "Leerslot" text, grey border, no other fields).
 
 Clicking the card opens the `Modal`. There is no separate settings button.
 
-**TYPE_COLORS**: `BSF=#22c55e`, `PUMI=#FFCC00`, `BSA=#f97316`, `Prototyp=#94a3b8`, `E-Mischer=#3b82f6`. All other types fall back to `#e2e8f0`.
+**TYPE_COLORS**: `BSF=#22c55e`, `PUMI=#FFCC00`, `BSA=#f97316`, `Prototyp=#94a3b8`, `E-Mischer=#3b82f6`, `Leerslot=#cbd5e1`. All other types fall back to `#e2e8f0`.
+
+### FertigeMaschinen (`FertigeMaschinen.jsx`)
+
+Standalone page for completed machines (`status = 'fertig'`). Groups by KW / Monat / Jahr, sorted ascending (oldest left). Karten view is horizontally scrollable. Soll targets only shown in Monat mode, saved to `soll_ziele` table. Clicking a card opens `FertigDetailModal` (inline, not the generic Modal) with options to change Fertigstelldatum or reaktivieren (place back on the board — only free slots selectable).
+
+### Login (`LoginPage.jsx`)
+
+Login and password-reset only — no self-registration. Users are created in the Supabase dashboard. Animated card with background image (`/public/background.jpg`). Uses `framer-motion` for entrance and mode transitions.
 
 ### Typography Scaling
 
