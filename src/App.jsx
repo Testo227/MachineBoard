@@ -214,6 +214,8 @@ const App = () => {
                       filters={filters}
                       setFilters={setFilters}
                       globalTags={globalTags}
+                      user={user}
+                      setUser={setUser}
                     />
                   </div>
 

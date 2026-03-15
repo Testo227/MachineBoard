@@ -6,7 +6,6 @@ import { supabase } from '../supabaseClient';
 
 //Components
 import TagInputDropdown from './TagInput';
-import SlotDropdown from './SlotDropdown';
 import { useToast } from "./ToastContext";
 
 
@@ -24,7 +23,6 @@ const Modal = ({
   setGlobalTags
 }) => {
   const [localMachine, setLocalMachine] = useState({...currentmachine});
-  const [localSlot, setLocalSlot] = useState(`${currentmachine.area}:${currentmachine.position}`);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const { addToast } = useToast();
@@ -38,7 +36,6 @@ const Modal = ({
     const freshMachine = machinelist.find(m => m.id === currentmachine.id);
     if (freshMachine) {
       setLocalMachine({ ...freshMachine });
-      setLocalSlot(`${freshMachine.area}:${freshMachine.position}`);
     }
   }, [machinelist, currentmachine?.id]);
 
@@ -61,18 +58,7 @@ const Modal = ({
   //Fuer Spinner beim Speichern
   const [saving, setSaving] = useState(false);
 
-  const handleLocalSlotChange = (e) => {
-    setLocalSlot(e.target.value);
-  };
-
   const handleSave = async () => {
-  const [newAreaName, newSlotName] = localSlot.split(':');
-
-  // Prüfen, ob der Zielslot von einer anderen Maschine besetzt ist
-  const targetMachine = machinelist.find(
-    m => m.area === newAreaName && m.position === newSlotName
-  );
-
   try {
     setSaving(true);
 
@@ -88,20 +74,8 @@ const Modal = ({
         kNummer: localMachine.kNummer,
         fNummer: localMachine.fNummer,
         WLW: localMachine.WLW,
-        area: newAreaName,
-        position: newSlotName
       }).eq('id', currentmachine.id)
     );
-
-    // Update targetMachine falls Slot belegt ist
-    if (targetMachine) {
-      updates.push(
-        supabase.from('machines').update({
-          area: currentmachine.area,
-          position: currentmachine.position
-        }).eq('id', targetMachine.id)
-      );
-    }
 
     // Kommentare aktualisieren
     localMachine.kommentare?.forEach(k => {
@@ -156,15 +130,7 @@ const Modal = ({
 
     // --- State aktualisieren nach erfolgreichem DB Update ---
     setmachinelist(prev =>
-      prev.map(m => {
-        if (m.id === currentmachine.id) {
-          return { ...m, ...localMachine, area: newAreaName, position: newSlotName };
-        }
-        if (targetMachine && m.id === targetMachine.id) {
-          return { ...m, area: currentmachine.area, position: currentmachine.position };
-        }
-        return m;
-      })
+      prev.map(m => m.id === currentmachine.id ? { ...m, ...localMachine } : m)
     );
 
     setIsOpen(false);
@@ -348,23 +314,6 @@ const Modal = ({
                   globalTags={globalTags}
                   setGlobalTags={setGlobalTags}
                 />
-              </div>
-            </div>
-          </div>
-
-          {/* Position */}
-          <div className={sectionCls}>
-            <h3 className={sectionTitleCls}>Position</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className={labelCls}>Aktuelle Position</label>
-                <div className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-500">
-                  {currentmachine.area} — {currentmachine.position}
-                </div>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className={labelCls}>Verschieben nach</label>
-                <SlotDropdown areas={areas} value={localSlot} machinelist={machinelist} onChange={(newValue) => handleLocalSlotChange({ target: { value: newValue } })} />
               </div>
             </div>
           </div>
