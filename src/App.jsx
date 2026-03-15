@@ -241,6 +241,27 @@ const App = () => {
           setmachinelist(prev => prev.filter(m => m.id !== payload.old.id));
         }
       )
+      // Tag changes (machine_tags is a separate join table)
+      .on('postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'machine_tags' },
+        (payload) => {
+          setmachinelist(prev => prev.map(m =>
+            m.id === payload.new.machine_id
+              ? { ...m, Tags: [...(m.Tags || []), payload.new.tag_id] }
+              : m
+          ));
+        }
+      )
+      .on('postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'machine_tags' },
+        (payload) => {
+          setmachinelist(prev => prev.map(m =>
+            m.id === payload.old.machine_id
+              ? { ...m, Tags: (m.Tags || []).filter(t => t !== payload.old.tag_id) }
+              : m
+          ));
+        }
+      )
       .subscribe();
 
     return () => supabase.removeChannel(channel);
