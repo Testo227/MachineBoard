@@ -8,15 +8,18 @@ import Topbar from './components/Topbar';
 import Stueckzahlen from './components/Stueckzahlen/Stueckzahlen';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './components/LoginPage';
+import LiveCursors from './components/LiveCursors';
 import { ToastProvider } from './components/ToastContext';
+import { useLiveCursors } from './hooks/useLiveCursors';
 
 // CSS
 import './styles/style.css';
 
 
 const App = () => {
-    
+
   const [user, setUser] = useState(null); // Login-Zustand
+  const { remoteCursors, currentUserId } = useLiveCursors(user);
 
 
   const [finishedMachines, setFinishedMachines] = useState([])
@@ -191,6 +194,58 @@ const App = () => {
   return () => listener.subscription.unsubscribe();
 }, []);
 
+  // Real-time DB sync — board updates visible to all users without refresh
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const channel = supabase
+      .channel('db-realtime')
+      .on('postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'area_slots' },
+        (payload) => {
+          setAreas(prev => prev.map(area => ({
+            ...area,
+            slots: area.slots.map(slot =>
+              slot.id === payload.new.id
+                ? { ...slot, occupied: payload.new.occupied }
+                : slot
+            ),
+          })));
+        }
+      )
+      .on('postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'machines' },
+        (payload) => {
+          setmachinelist(prev => prev.map(m =>
+            m.id === payload.new.id ? { ...m, ...payload.new } : m
+          ));
+        }
+      )
+      .on('postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'machines' },
+        async (payload) => {
+          if (payload.new.status !== 'in_progress') return;
+          const { data } = await supabase
+            .from('machines')
+            .select('*, sequenzen(*), kommentare(*), dateien(*), machine_tags(*), maengel(*)')
+            .eq('id', payload.new.id)
+            .single();
+          if (data) {
+            setmachinelist(prev => [...prev, { ...data, Tags: data.machine_tags.map(mt => mt.tag_id) }]);
+          }
+        }
+      )
+      .on('postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'machines' },
+        (payload) => {
+          setmachinelist(prev => prev.filter(m => m.id !== payload.old.id));
+        }
+      )
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [user?.id]);
+
   if (loadingAuth) {
     return <div className="text-center mt-10 text-xl">Lade...</div>;
   }
@@ -208,6 +263,7 @@ const App = () => {
           element={
             <ProtectedRoute user={user}>
               <ToastProvider>
+              <LiveCursors remoteCursors={remoteCursors} currentUserId={currentUserId} />
               <div className="flex flex-col bg-[rgb(240,241,245)] w-screen h-screen">
                   <div className="fixed top-0 left-0 right-0 z-10">
                     <Topbar
