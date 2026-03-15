@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { Search, LogOut, KeyRound, HelpCircle, ChevronDown } from "lucide-react";
+import { Search, LogOut, KeyRound, HelpCircle, ChevronDown, AtSign } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import FiltersPanel from "./FiltersPanel";
@@ -47,7 +47,7 @@ const ChangePasswordModal = ({ onClose }) => {
         </div>
         <div className="p-5 flex flex-col gap-3">
           {success ? (
-            <p className="text-green-600 text-sm font-medium text-center py-2">✅ Passwort erfolgreich geändert.</p>
+            <p className="text-green-600 text-sm font-medium text-center py-2">Passwort erfolgreich geändert.</p>
           ) : (
             <>
               {error && <p className="text-red-500 text-xs font-medium">{error}</p>}
@@ -110,14 +110,103 @@ const HelpModal = ({ onClose }) => ReactDOM.createPortal(
   document.body
 );
 
+// ── Online Users Avatar Group ──────────────────────────────────────────────────
+const OnlineUsers = ({ onlineUsers }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  if (!onlineUsers?.length) return null;
+
+  const visible = onlineUsers.slice(0, 4);
+  const overflow = onlineUsers.length - 4;
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="flex items-center hover:bg-black/10 rounded-full px-1 py-0.5 transition cursor-pointer"
+        title="Online-Nutzer"
+      >
+        {/* Overlapping avatars */}
+        <div className="flex" style={{ direction: 'ltr' }}>
+          {visible.map((u, i) => (
+            <div
+              key={u.id}
+              className="rounded-full flex items-center justify-center border-2 border-[rgb(255,204,0)] flex-shrink-0"
+              style={{
+                width: 20, height: 20,
+                backgroundColor: u.color || getAvatarColor(u.id || ''),
+                marginLeft: i === 0 ? 0 : -6,
+                zIndex: visible.length - i,
+                position: 'relative',
+              }}
+              title={u.name || u.initials}
+            >
+              <span style={{ color: 'white', fontSize: 7, fontWeight: 700 }}>{u.initials}</span>
+            </div>
+          ))}
+          {overflow > 0 && (
+            <div
+              className="rounded-full flex items-center justify-center border-2 border-[rgb(255,204,0)] bg-[rgb(85,90,90)]"
+              style={{ width: 20, height: 20, marginLeft: -6, position: 'relative', zIndex: 0 }}
+            >
+              <span style={{ color: 'white', fontSize: 7, fontWeight: 700 }}>+{overflow}</span>
+            </div>
+          )}
+        </div>
+        {/* Green dot */}
+        <span className="w-1.5 h-1.5 bg-green-500 rounded-full ml-1 flex-shrink-0" />
+      </button>
+
+      {open && (
+        <div className="absolute left-0 top-full mt-1.5 w-52 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+          <div className="px-3 py-2 border-b border-gray-100 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+              {onlineUsers.length} Online
+            </span>
+          </div>
+          <div className="py-1 max-h-52 overflow-y-auto">
+            {onlineUsers.map(u => (
+              <div key={u.id} className="flex items-center gap-2.5 px-3 py-2">
+                <div
+                  className="rounded-full flex items-center justify-center flex-shrink-0"
+                  style={{ width: 26, height: 26, backgroundColor: u.color || getAvatarColor(u.id || '') }}
+                >
+                  <span style={{ color: 'white', fontSize: 9, fontWeight: 700 }}>{u.initials}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-[rgb(85,90,90)] truncate">
+                    {u.name || u.initials}
+                  </p>
+                </div>
+                {u.isMe && (
+                  <span className="text-[10px] text-gray-400 font-medium flex-shrink-0">Ich</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ── Main Topbar ───────────────────────────────────────────────────────────────
-const Topbar = ({ filters, setFilters, globalTags, user, setUser }) => {
+const Topbar = ({ filters, setFilters, globalTags, user, setUser, onlineUsers }) => {
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showChangePw, setShowChangePw] = useState(false);
-  const [showHelp, setShowHelp] = useState(false);
-  const menuRef = useRef(null);
-  const navigate = useNavigate();
+  const [showUserMenu, setShowUserMenu]       = useState(false);
+  const [showChangePw, setShowChangePw]       = useState(false);
+  const [showHelp, setShowHelp]               = useState(false);
+  const menuRef    = useRef(null);
+  const filterRef  = useRef(null);
+  const navigate   = useNavigate();
 
   // Close user menu on outside click
   useEffect(() => {
@@ -128,11 +217,20 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser }) => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // Close filter panel on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (filterRef.current && !filterRef.current.contains(e.target)) setShowFilterModal(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   const handleSearch = (value) => setFilters((prev) => ({ ...prev, search: value }));
 
   const clearAllFilters = () => {
     setFilters({
-      search: "", tags: [], typ: "", typBezeichung: "", wlw: "",
+      search: "", tags: [], typ: "", typBezeichung: "", wlw: "", mentionHandle: "",
       sequenzFilter: {
         area: ["PPM1","PPM2","PUMI","Dock","Prüffeld Pumpe","Prüffeld Mast","Lackierung","Endmontage","PDI","Konservieren","Optimieren","BSA Linie","BSA Dock"],
         type: ["Plan", "Ist"], type2: ["start","ende"], from: "", till: "",
@@ -146,12 +244,22 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser }) => {
     navigate("/login");
   };
 
+  // Mention filter
+  const mentionHandle = (user?.firstName && user?.lastName)
+    ? `@${user.firstName}.${user.lastName}` : null;
+  const isMentionActive = Boolean(filters.mentionHandle);
+  const toggleMentionFilter = () => {
+    if (!mentionHandle) return;
+    setFilters(prev => ({ ...prev, mentionHandle: isMentionActive ? "" : mentionHandle }));
+  };
+
   const sf = filters.sequenzFilter || {};
   const isAnyFilterActive =
     Boolean(filters.search?.trim()) || (filters.tags?.length > 0) ||
     Boolean(filters.typ?.trim()) || Boolean(filters.typBezeichung?.trim()) ||
     Boolean(sf.selectedArea?.trim()) || Boolean(sf.selectedType?.trim()) ||
-    Boolean(sf.selectedType2?.trim()) || Boolean(sf.from) || Boolean(sf.till);
+    Boolean(sf.selectedType2?.trim()) || Boolean(sf.from) || Boolean(sf.till) ||
+    Boolean(filters.mentionHandle);
 
   // Avatar
   const initials = [user?.firstName?.[0], user?.lastName?.[0]].filter(Boolean).join("").toUpperCase()
@@ -163,68 +271,68 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser }) => {
     <>
       <div className="flex bg-[rgb(255,204,0)] h-8 items-center justify-between px-3 shadow-md relative">
 
-        {/* ── Avatar (left) ── */}
-        <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => setShowUserMenu(prev => !prev)}
-            className="flex items-center gap-1.5 rounded-full hover:bg-black/10 pl-0.5 pr-2 py-0.5 transition cursor-pointer"
-          >
-            <div
-              className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
-              style={{ backgroundColor: avatarBg }}
+        {/* ── Left: Avatar + Online users ── */}
+        <div className="flex items-center gap-2">
+          {/* User menu */}
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setShowUserMenu(prev => !prev)}
+              className="flex items-center gap-1.5 rounded-full hover:bg-black/10 pl-0.5 pr-2 py-0.5 transition cursor-pointer"
             >
-              <span className="text-white font-bold leading-none select-none" style={{ fontSize: "9px" }}>{initials}</span>
-            </div>
-            <ChevronDown
-              size={10}
-              className={`text-[rgb(85,90,90)] transition-transform duration-200 ${showUserMenu ? "rotate-180" : ""}`}
-            />
-          </button>
+              <div
+                className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
+                style={{ backgroundColor: avatarBg }}
+              >
+                <span className="text-white font-bold leading-none select-none" style={{ fontSize: "9px" }}>{initials}</span>
+              </div>
+              <ChevronDown
+                size={10}
+                className={`text-[rgb(85,90,90)] transition-transform duration-200 ${showUserMenu ? "rotate-180" : ""}`}
+              />
+            </button>
 
-          {/* ── Dropdown ── */}
-          {showUserMenu && (
-            <div className="absolute left-0 top-full mt-1.5 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
-
-              {/* User info header */}
-              <div className="px-4 py-3 flex items-center gap-3 border-b border-gray-100">
-                <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm" style={{ backgroundColor: avatarBg }}>
-                  <span className="text-white font-bold text-sm select-none">{initials}</span>
+            {showUserMenu && (
+              <div className="absolute left-0 top-full mt-1.5 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+                <div className="px-4 py-3 flex items-center gap-3 border-b border-gray-100">
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm" style={{ backgroundColor: avatarBg }}>
+                    <span className="text-white font-bold text-sm select-none">{initials}</span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-[rgb(85,90,90)] truncate">{fullName}</p>
+                    <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-[rgb(85,90,90)] truncate">{fullName}</p>
-                  <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+                <div className="py-1">
+                  <button
+                    onClick={() => { setShowUserMenu(false); setShowChangePw(true); }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition cursor-pointer"
+                  >
+                    <KeyRound size={14} className="text-gray-400 flex-shrink-0" />
+                    Passwort ändern
+                  </button>
+                  <button
+                    onClick={() => { setShowUserMenu(false); setShowHelp(true); }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition cursor-pointer"
+                  >
+                    <HelpCircle size={14} className="text-gray-400 flex-shrink-0" />
+                    Hilfe
+                  </button>
+                </div>
+                <div className="border-t border-gray-100 py-1">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition cursor-pointer"
+                  >
+                    <LogOut size={14} className="flex-shrink-0" />
+                    Abmelden
+                  </button>
                 </div>
               </div>
+            )}
+          </div>
 
-              {/* Actions */}
-              <div className="py-1">
-                <button
-                  onClick={() => { setShowUserMenu(false); setShowChangePw(true); }}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition cursor-pointer"
-                >
-                  <KeyRound size={14} className="text-gray-400 flex-shrink-0" />
-                  Passwort ändern
-                </button>
-                <button
-                  onClick={() => { setShowUserMenu(false); setShowHelp(true); }}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition cursor-pointer"
-                >
-                  <HelpCircle size={14} className="text-gray-400 flex-shrink-0" />
-                  Hilfe
-                </button>
-              </div>
-
-              <div className="border-t border-gray-100 py-1">
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition cursor-pointer"
-                >
-                  <LogOut size={14} className="flex-shrink-0" />
-                  Abmelden
-                </button>
-              </div>
-            </div>
-          )}
+          {/* Online users */}
+          <OnlineUsers onlineUsers={onlineUsers} />
         </div>
 
         {/* ── Title (centered) ── */}
@@ -232,8 +340,25 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser }) => {
           Shopfloorboard PCP Aichtal
         </h1>
 
-        {/* ── Search + Filter (right) ── */}
+        {/* ── Right: Mention filter + Search + Filter ── */}
         <div className="flex items-center gap-2 ml-auto">
+
+          {/* @ Mention filter button */}
+          {mentionHandle && (
+            <button
+              onClick={toggleMentionFilter}
+              title="Nur Maschinen zeigen, in denen ich erwähnt wurde"
+              className={`flex items-center justify-center w-6 h-6 rounded shadow-sm border text-xs font-bold transition-all duration-200 cursor-pointer ${
+                isMentionActive
+                  ? "bg-[rgb(70,75,82)] border-[rgb(70,75,82)] text-[rgb(255,204,0)]"
+                  : "bg-white border-gray-300 text-gray-500 hover:bg-gray-100"
+              }`}
+            >
+              <AtSign size={11} />
+            </button>
+          )}
+
+          {/* Search */}
           <div className="relative w-52">
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500" size={11} />
             <input
@@ -245,10 +370,11 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser }) => {
             />
           </div>
 
-          <div className="relative">
+          {/* Filter panel */}
+          <div className="relative" ref={filterRef}>
             <button
               onClick={() => setShowFilterModal((prev) => !prev)}
-              className={`bg-white px-2.5 py-0.5 rounded shadow-sm border text-xs font-semibold flex items-center gap-1.5 hover:bg-gray-100 transition-all duration-200 ${
+              className={`bg-white px-2.5 py-0.5 rounded shadow-sm border text-xs font-semibold flex items-center gap-1.5 hover:bg-gray-100 transition-all duration-200 cursor-pointer ${
                 isAnyFilterActive ? "ring-2 ring-[rgb(85,90,90)]" : "border-gray-300"
               }`}
             >

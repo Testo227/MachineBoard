@@ -24,8 +24,8 @@ const LiveCursors = ({ remoteCursors, currentUserId }) => {
           >
             {/* Cursor arrow */}
             <svg
-              width="14"
-              height="18"
+              width="12"
+              height="15"
               viewBox="0 0 14 18"
               fill="none"
               style={{ position: 'absolute', left: 0, top: 0 }}
@@ -42,42 +42,45 @@ const LiveCursors = ({ remoteCursors, currentUserId }) => {
             <div
               style={{
                 position: 'absolute',
-                left: 10,
-                top: -9,
+                left: 8,
+                top: -7,
                 backgroundColor: p.color,
-                width: 20,
-                height: 20,
+                width: 16,
+                height: 16,
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                border: '1.5px solid white',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+                border: '1px solid white',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
               }}
             >
-              <span style={{ color: 'white', fontSize: 8, fontWeight: 700, lineHeight: 1 }}>
+              <span style={{ color: 'white', fontSize: 6, fontWeight: 700, lineHeight: 1 }}>
                 {p.initials}
               </span>
             </div>
 
-            {/* Name label */}
-            <div
-              style={{
-                position: 'absolute',
-                left: 32,
-                top: -7,
-                backgroundColor: p.color,
-                color: 'white',
-                fontSize: 10,
-                fontWeight: 600,
-                padding: '2px 6px',
-                borderRadius: 4,
-                whiteSpace: 'nowrap',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
-              }}
-            >
-              {p.name}
-            </div>
+            {/* Name label — only shown when a real name exists */}
+            {p.name && (
+              <div
+                style={{
+                  position: 'absolute',
+                  left: 26,
+                  top: -5,
+                  backgroundColor: p.color,
+                  color: 'white',
+                  fontSize: 9,
+                  fontWeight: 600,
+                  padding: '1px 5px',
+                  borderRadius: 3,
+                  whiteSpace: 'nowrap',
+                  opacity: 0.85,
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                }}
+              >
+                {p.name}
+              </div>
+            )}
           </div>
         );
       })}

@@ -19,7 +19,7 @@ import './styles/style.css';
 const App = () => {
 
   const [user, setUser] = useState(null); // Login-Zustand
-  const { remoteCursors, currentUserId } = useLiveCursors(user);
+  const { remoteCursors, currentUserId, onlineUsers } = useLiveCursors(user);
 
 
   const [finishedMachines, setFinishedMachines] = useState([])
@@ -40,6 +40,7 @@ const App = () => {
     typ: "",
     typBezeichung: "",
     wlw: "",
+    mentionHandle: "",
     sequenzFilter:{ area: [
     "PPM1",
     "PPM2",
@@ -293,6 +294,7 @@ const App = () => {
                       globalTags={globalTags}
                       user={user}
                       setUser={setUser}
+                      onlineUsers={onlineUsers}
                     />
                   </div>
 

@@ -141,10 +141,12 @@ const MainBoard = ({ machinelist, setmachinelist, finishedMachines, setFinishedM
     const typMatch = !filters.typ || m.Typ === filters.typ;
     const typBezeichnungMatch = !filters.typBezeichung || (m.Typ_Bezeichnung?.toLowerCase() || "").includes(filters.typBezeichung.toLowerCase());
     const tagMatch = !filters.tags?.length || filters.tags.every((t) => m.Tags?.includes(t));
+    const mentionMatch = !filters.mentionHandle ||
+      (m.kommentare || []).some(k => k.text?.includes(filters.mentionHandle));
 
     const { selectedArea, selectedType, selectedType2, from, till } = filters.sequenzFilter || {};
     if (!selectedArea && !selectedType && !selectedType2 && !from && !till) {
-      return searchMatch && typMatch && typBezeichnungMatch && tagMatch;
+      return searchMatch && typMatch && typBezeichnungMatch && tagMatch && mentionMatch;
     }
 
     const sequenzMatch = m.sequenzen.some((seq) => {
@@ -164,7 +166,7 @@ const MainBoard = ({ machinelist, setmachinelist, finishedMachines, setFinishedM
       return areaOk && (from || till ? anyDateOk : true);
     });
 
-    return searchMatch && typMatch && typBezeichnungMatch && tagMatch && sequenzMatch;
+    return searchMatch && typMatch && typBezeichnungMatch && tagMatch && mentionMatch && sequenzMatch;
   });
 
   if (!areas || areas.length === 0) return <div>Lade Bereiche...</div>;

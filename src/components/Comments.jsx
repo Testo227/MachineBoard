@@ -273,21 +273,26 @@ const Comments = ({ machineId }) => {
   const { addToast } = useToast();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       const u = data?.session?.user;
       if (!u) return;
       const firstName    = u.user_metadata?.firstName    || '';
       const lastName     = u.user_metadata?.lastName     || '';
+      const profileColor = u.user_metadata?.profileColor || '';
       const emailHandle  = u.email?.split('@')[0]?.replace(/[._]/g, ' ') || '';
       const displayName  = (firstName + ' ' + lastName).trim() || emailHandle || u.email || 'Benutzer';
-      setCurrentUser({
-        id:           u.id,
-        email:        u.email,
-        firstName,
-        lastName,
-        displayName,
-        profileColor: u.user_metadata?.profileColor || '',
-      });
+      setCurrentUser({ id: u.id, email: u.email, firstName, lastName, displayName, profileColor });
+
+      // Ensure this user exists in profiles so @mention dropdown is populated
+      if (firstName || lastName) {
+        await supabase.from('profiles').upsert({
+          id: u.id,
+          first_name:    firstName,
+          last_name:     lastName,
+          email:         u.email,
+          profile_color: profileColor,
+        }, { onConflict: 'id' });
+      }
     });
   }, []);
 

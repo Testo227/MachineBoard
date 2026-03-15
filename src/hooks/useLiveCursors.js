@@ -13,17 +13,21 @@ function getAvatarColor(str = "") {
 
 export function useLiveCursors(user) {
   const [remoteCursors, setRemoteCursors] = useState({});
-  const channelRef = useRef(null);
-  const userInfoRef = useRef(null);
+  const [onlineUsers, setOnlineUsers]     = useState([]);
+  const channelRef   = useRef(null);
+  const userInfoRef  = useRef(null);
   const lastTrackRef = useRef(0);
 
   useEffect(() => {
     if (!user?.id) return;
 
-    const name = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email || 'Benutzer';
-    const initials = [user.firstName?.[0], user.lastName?.[0]].filter(Boolean).join('').toUpperCase()
+    // Only use real first+last name — no email fallback for label
+    const firstName = user.firstName || '';
+    const lastName  = user.lastName  || '';
+    const name      = [firstName, lastName].filter(Boolean).join(' ');
+    const initials  = ([firstName[0], lastName[0]].filter(Boolean).join('').toUpperCase())
       || user.email?.[0]?.toUpperCase() || '?';
-    const color = user.profileColor || getAvatarColor(user.email || user.id || '');
+    const color     = user.profileColor || getAvatarColor(user.email || user.id || '');
 
     userInfoRef.current = { name, initials, color };
 
@@ -31,10 +35,19 @@ export function useLiveCursors(user) {
       config: { presence: { key: user.id } },
     });
 
+    const syncUsers = () => {
+      const state = channel.presenceState();
+      setRemoteCursors({ ...state });
+      const users = Object.entries(state).map(([id, arr]) => ({
+        id,
+        ...(arr[0] || {}),
+        isMe: id === user.id,
+      }));
+      setOnlineUsers(users);
+    };
+
     channel
-      .on('presence', { event: 'sync' }, () => {
-        setRemoteCursors({ ...channel.presenceState() });
-      })
+      .on('presence', { event: 'sync' }, syncUsers)
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
           await channel.track({ ...userInfoRef.current, x: -1, y: -1 });
@@ -62,5 +75,5 @@ export function useLiveCursors(user) {
     };
   }, [user?.id]);
 
-  return { remoteCursors, currentUserId: user?.id };
+  return { remoteCursors, currentUserId: user?.id, onlineUsers };
 }
