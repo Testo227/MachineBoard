@@ -21,8 +21,7 @@ const PPM1_Pool = ({thisarea,
 
    
     return ( 
-        <div className="flex-shrink-0">
-        <div className='grid grid-cols-3 grid-rows-3 gap-4 w-max h-max'>
+        <div className='grid grid-cols-3 grid-rows-3 gap-1 h-full w-full'>
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -41,7 +40,6 @@ const PPM1_Pool = ({thisarea,
                     />
                 ))}
 
-        </div>
         </div>
      );
 }

@@ -21,7 +21,7 @@ const Pumpe_Puffer = ({thisarea,
 
    
     return ( 
-        <div className="grid grid-cols-2 grid-rows-5 gap-4">
+        <div className="grid grid-cols-2 grid-rows-5 gap-1 h-full w-full">
 
                 {thisarea.slots.map(slot => (
                     <Slot 

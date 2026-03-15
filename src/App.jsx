@@ -17,8 +17,7 @@ import './styles/style.css';
 const App = () => {
     
   const [user, setUser] = useState(null); // Login-Zustand
-  
-  const [foldSidebar, setFoldSidebar] = useState(true);
+
 
   const [finishedMachines, setFinishedMachines] = useState([])
 
@@ -150,6 +149,7 @@ const App = () => {
   }, [])
 
 
+
   //Login Session mit Supabase
   useEffect(() => {
   // 1️⃣ Initiales Abrufen der Session
@@ -208,20 +208,8 @@ const App = () => {
           element={
             <ProtectedRoute user={user}>
               <ToastProvider>
-              <div className="flex bg-[rgb(230,226,226)] bg-cover bg-center w-screen bg-repeat ">
-                <div className="fixed top-0 left-0 h-full z-20">
-                  <Sidebar foldSidebar={foldSidebar} setFoldSidebar={setFoldSidebar} setUser={setUser} user={user}/>
-                </div>
-                <div
-                  className={`flex flex-col flex-1 transition-all duration-300 ${
-                    foldSidebar ? "ml-[220px]" : "ml-[60px]"
-                  }`}
-                >
-                  <div
-                    className={`fixed top-0 right-0 z-10 transition-all duration-300 ${
-                      foldSidebar ? "left-[220px]" : "left-[60px]"
-                    }`}
-                  >
+              <div className="flex flex-col bg-[rgb(240,241,245)] w-screen h-screen">
+                  <div className="fixed top-0 left-0 right-0 z-10">
                     <Topbar
                       filters={filters}
                       setFilters={setFilters}
@@ -229,7 +217,8 @@ const App = () => {
                     />
                   </div>
 
-                  <div className="mt-12 p-4">
+                  <div className="mt-8 overflow-y-auto overflow-x-hidden" style={{ height: 'calc(100vh - 32px)' }}>
+                    <div style={{ minHeight: '1850px', height: '100%', width: '100%', padding: '8px', boxSizing: 'border-box' }}>
                     <Routes>
                       <Route path="/" element={<Navigate to="/shopfloor" />} />
                       <Route
@@ -254,8 +243,8 @@ const App = () => {
                       />
                       <Route path="*" element={<div>Seite nicht gefunden</div>} />
                     </Routes>
+                    </div>
                   </div>
-                </div>
               </div>
               </ToastProvider>
             </ProtectedRoute>

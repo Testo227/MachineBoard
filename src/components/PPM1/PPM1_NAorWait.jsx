@@ -21,8 +21,7 @@ const PPM1_NAorWait = ({thisarea,
 
    
     return ( 
-        <div className="flex-shrink-0">
-        <div className="flex flex-col gap-4 w-max h-max">
+        <div className="h-full w-full flex flex-col gap-1">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
@@ -41,7 +40,6 @@ const PPM1_NAorWait = ({thisarea,
                     />
                 ))}
 
-        </div>
         </div>
      );
 }

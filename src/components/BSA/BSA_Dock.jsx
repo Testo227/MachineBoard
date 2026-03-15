@@ -21,7 +21,7 @@ const BSA_Dock = ({thisarea,
 
    
     return ( 
-        <div className='grid grid-cols-2 grid-rows-3 gap-4'>
+        <div className='grid grid-cols-2 grid-rows-3 gap-1 h-full w-full'>
 
                 {thisarea.slots.map(slot => (
                     <Slot 

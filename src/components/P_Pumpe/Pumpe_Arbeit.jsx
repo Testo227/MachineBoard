@@ -21,7 +21,7 @@ const Pumpe_Arbeit = ({thisarea,
 
    
     return ( 
-        <div className="grid grid-cols-2 grid-rows-6 gap-4 w-max h-max">
+        <div className="grid grid-cols-2 grid-rows-6 gap-1 h-full w-full">
 
                 {thisarea.slots.map(slot => (
                     <Slot 

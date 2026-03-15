@@ -21,7 +21,7 @@ const PUMI_Pool = ({thisarea,
 
    
     return ( 
-        <div className="grid grid-cols-3 grid-rows-2 gap-4">
+        <div className="grid grid-cols-3 grid-rows-2 gap-1 h-full w-full">
 
                 {thisarea.slots.map(slot => (
                     <Slot 

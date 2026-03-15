@@ -21,7 +21,7 @@ const PPM2_Line = ({thisarea,
 
    
     return ( 
-        <div className="grid grid-cols-4 grid-rows-2 gap-4">
+        <div className="grid grid-cols-4 grid-rows-2 gap-1 h-full w-full">
 
                 {thisarea.slots.map(slot => (
                     <Slot 

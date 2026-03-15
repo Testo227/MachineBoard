@@ -121,35 +121,37 @@ const Slot = ({
   };
 
   return (
-    <div className="w-40 h-36 flex flex-col bg-[rgba(85,90,90,0.3)] flex-shrink-0 relative gap-2">
-      <h3 className="text-center font-extrabold text-[9px] text-white">
+    <div className="flex flex-col bg-white/40 border border-white/60 rounded-xl relative backdrop-blur-sm w-full h-full min-w-0 min-h-0 overflow-hidden">
+      <span className="absolute top-0.5 left-1 font-bold text-[rgb(85,90,90)]/70 leading-none select-none z-10" style={{ fontSize: 'clamp(6px, 0.55vw, 9px)' }}>
         {slotName}
-      </h3>
+      </span>
 
       {currentMachine ? (
-        <Card
-          machineid={currentMachine.id}
-          currentMachine={currentMachine}
-          slotName={slotName}
-          machinelist={machinelist}
-          setmachinelist={setmachinelist}
-          areas={areas}
-          finishedMachines={finishedMachines}
-          setFinishedMachines={setFinishedMachines}
-          globalTags={globalTags}
-          setGlobalTags={setGlobalTags}
-          dimmed={!isFilteredIn}
-          setAreas={setAreas}
-        />
+        <div className="absolute inset-0 flex items-center justify-center" style={{ padding: '3px', paddingTop: '16px', paddingBottom: '10px' }}>
+          <Card
+            machineid={currentMachine.id}
+            currentMachine={currentMachine}
+            slotName={slotName}
+            machinelist={machinelist}
+            setmachinelist={setmachinelist}
+            areas={areas}
+            finishedMachines={finishedMachines}
+            setFinishedMachines={setFinishedMachines}
+            globalTags={globalTags}
+            setGlobalTags={setGlobalTags}
+            dimmed={!isFilteredIn}
+            setAreas={setAreas}
+          />
+        </div>
       ) : (
         <div
           onClick={() => setShowModal(true)}
-          className="flex items-center justify-center my-[20px] mx-[51px] hover:cursor-pointer w-10 h-10 relative"
+          className="flex items-center justify-center flex-1 hover:cursor-pointer group"
         >
           {loading ? (
-            <div className="w-5 h-5 border-2 border-t-transparent border-gray-700 rounded-full animate-spin"></div>
+            <div className="w-5 h-5 border-2 border-t-transparent border-[rgb(85,90,90)] rounded-full animate-spin"></div>
           ) : (
-            <h1 className="text-[16px] font-bold text-white hover:text-[rgb(244,204,0)]">+</h1>
+            <span className="text-[rgb(85,90,90)]/25 group-hover:text-[rgb(255,204,0)] text-[10px] font-light leading-none transition-all duration-200 select-none">+</span>
           )}
         </div>
       )}

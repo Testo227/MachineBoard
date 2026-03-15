@@ -21,7 +21,7 @@ const Dock_Places = ({thisarea,
 
    
     return ( 
-        <div className="grid grid-cols-5 grid-rows-2 gap-4">
+        <div className="grid grid-cols-5 grid-rows-2 gap-1 h-full w-full">
 
                 {thisarea.slots.map(slot => (
                     <Slot 
