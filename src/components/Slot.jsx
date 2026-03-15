@@ -56,8 +56,8 @@ const Slot = ({
           area: thisarea.name,
           Typ: "",
           Typ_Bezeichnung: "",
-          kNummer: "",
-          fNummer: "",
+          kNummer: null,
+          fNummer: null,
           WLW: ""
         })
         .select()
