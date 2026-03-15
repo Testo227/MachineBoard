@@ -10,6 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './components/LoginPage';
 import LiveCursors from './components/LiveCursors';
 import { ToastProvider } from './components/ToastContext';
+import FertigeMaschinen from './components/FertigeMaschinen';
 import { useLiveCursors } from './hooks/useLiveCursors';
 
 // CSS
@@ -41,22 +42,8 @@ const App = () => {
     typBezeichung: "",
     wlw: "",
     mentionHandle: "",
-    sequenzFilter:{ area: [
-    "PPM1",
-    "PPM2",
-    "PUMI",
-    "Dock",
-    "Prüffeld Pumpe",
-    "Prüffeld Mast",
-    "Lackierung",
-    "Endmontage",
-    "PDI",
-    "Konservieren",
-    "Optimieren",
-    "BSA Linie",
-    "BSA Dock",
-  ],
-    type:["Plan","Ist"],type2:["start", "ende"] ,  from:"", till:""}
+    dateFrom: "",
+    dateTill: "",
   })
 
   //Global Tags
@@ -187,6 +174,18 @@ const App = () => {
         lastName: u.user_metadata?.lastName || "",
         profileColor: u.user_metadata?.profileColor || "",
       });
+      // Keep profiles table populated for @mention dropdown
+      const fn = u.user_metadata?.firstName || '';
+      const ln = u.user_metadata?.lastName  || '';
+      if (fn || ln) {
+        supabase.from('profiles').upsert({
+          id: u.id,
+          first_name: fn,
+          last_name:  ln,
+          email: u.email,
+          profile_color: u.user_metadata?.profileColor || '',
+        }, { onConflict: 'id' }).then(() => {});
+      }
     } else {
       setUser(null);
     }
@@ -321,6 +320,10 @@ const App = () => {
                       <Route
                         path="/stueckzahlen"
                         element={<Stueckzahlen machinelist={machinelist} areas={areas} />}
+                      />
+                      <Route
+                        path="/fertige-maschinen"
+                        element={<FertigeMaschinen globalTags={globalTags} />}
                       />
                       <Route path="*" element={<div>Seite nicht gefunden</div>} />
                     </Routes>

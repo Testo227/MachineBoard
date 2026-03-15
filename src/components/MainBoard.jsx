@@ -144,29 +144,12 @@ const MainBoard = ({ machinelist, setmachinelist, finishedMachines, setFinishedM
     const mentionMatch = !filters.mentionHandle ||
       (m.kommentare || []).some(k => k.text?.includes(filters.mentionHandle));
 
-    const { selectedArea, selectedType, selectedType2, from, till } = filters.sequenzFilter || {};
-    if (!selectedArea && !selectedType && !selectedType2 && !from && !till) {
-      return searchMatch && typMatch && typBezeichnungMatch && tagMatch && mentionMatch;
-    }
+    const wlwMatch = !filters.wlw?.trim() ||
+      (m.WLW || '').toLowerCase().includes(filters.wlw.toLowerCase());
+    const dateFromMatch = !filters.dateFrom || !m.end_date || m.end_date >= filters.dateFrom;
+    const dateTillMatch = !filters.dateTill || !m.start_date || m.start_date <= filters.dateTill;
 
-    const sequenzMatch = m.sequenzen.some((seq) => {
-      const areaOk = !selectedArea || seq.bereich.toLowerCase() === selectedArea.toLowerCase();
-      const typesToCheck = selectedType ? [selectedType.toLowerCase()] : ["plan", "ist"];
-      const startEndToCheck = selectedType2 ? [selectedType2.toLowerCase()] : ["start", "ende"];
-      const dateFields = [];
-      typesToCheck.forEach((t) => startEndToCheck.forEach((se) => dateFields.push(`${t}${se.charAt(0).toUpperCase() + se.slice(1)}`)));
-      const fromDate = from ? new Date(from) : null;
-      const tillDate = till ? new Date(till) : null;
-      const anyDateOk = dateFields.some((field) => {
-        const dateValue = seq[field];
-        if (!dateValue) return false;
-        const seqDate = new Date(dateValue);
-        return (!fromDate || seqDate >= fromDate) && (!tillDate || seqDate <= tillDate);
-      });
-      return areaOk && (from || till ? anyDateOk : true);
-    });
-
-    return searchMatch && typMatch && typBezeichnungMatch && tagMatch && mentionMatch && sequenzMatch;
+    return searchMatch && typMatch && typBezeichnungMatch && tagMatch && mentionMatch && wlwMatch && dateFromMatch && dateTillMatch;
   });
 
   if (!areas || areas.length === 0) return <div>Lade Bereiche...</div>;

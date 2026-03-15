@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Search, LogOut, KeyRound, HelpCircle, ChevronDown, AtSign } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import FiltersPanel from "./FiltersPanel";
 
@@ -207,6 +207,7 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser, onlineUsers })
   const menuRef    = useRef(null);
   const filterRef  = useRef(null);
   const navigate   = useNavigate();
+  const location = useLocation();
 
   // Close user menu on outside click
   useEffect(() => {
@@ -230,11 +231,8 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser, onlineUsers })
 
   const clearAllFilters = () => {
     setFilters({
-      search: "", tags: [], typ: "", typBezeichung: "", wlw: "", mentionHandle: "",
-      sequenzFilter: {
-        area: ["PPM1","PPM2","PUMI","Dock","Prüffeld Pumpe","Prüffeld Mast","Lackierung","Endmontage","PDI","Konservieren","Optimieren","BSA Linie","BSA Dock"],
-        type: ["Plan", "Ist"], type2: ["start","ende"], from: "", till: "",
-      },
+      search: "", tags: [], typ: "", typBezeichung: "", wlw: "",
+      mentionHandle: "", dateFrom: "", dateTill: "",
     });
   };
 
@@ -246,20 +244,19 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser, onlineUsers })
 
   // Mention filter
   const mentionHandle = (user?.firstName && user?.lastName)
-    ? `@${user.firstName}.${user.lastName}` : null;
+    ? `@${user.firstName}.${user.lastName}`
+    : user?.email ? `@${user.email.split('@')[0]}` : null;
   const isMentionActive = Boolean(filters.mentionHandle);
   const toggleMentionFilter = () => {
     if (!mentionHandle) return;
     setFilters(prev => ({ ...prev, mentionHandle: isMentionActive ? "" : mentionHandle }));
   };
 
-  const sf = filters.sequenzFilter || {};
   const isAnyFilterActive =
     Boolean(filters.search?.trim()) || (filters.tags?.length > 0) ||
     Boolean(filters.typ?.trim()) || Boolean(filters.typBezeichung?.trim()) ||
-    Boolean(sf.selectedArea?.trim()) || Boolean(sf.selectedType?.trim()) ||
-    Boolean(sf.selectedType2?.trim()) || Boolean(sf.from) || Boolean(sf.till) ||
-    Boolean(filters.mentionHandle);
+    Boolean(filters.wlw?.trim()) || Boolean(filters.dateFrom) ||
+    Boolean(filters.dateTill) || Boolean(filters.mentionHandle);
 
   // Avatar
   const initials = [user?.firstName?.[0], user?.lastName?.[0]].filter(Boolean).join("").toUpperCase()
@@ -333,6 +330,18 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser, onlineUsers })
 
           {/* Online users */}
           <OnlineUsers onlineUsers={onlineUsers} />
+
+          {/* Nav: Fertige Maschinen */}
+          <Link
+            to="/fertige-maschinen"
+            className={`text-xs font-semibold px-2 py-0.5 rounded transition whitespace-nowrap ${
+              location.pathname === '/fertige-maschinen'
+                ? 'bg-[rgb(70,75,82)] text-white'
+                : 'text-[rgb(85,90,90)] hover:bg-black/10'
+            }`}
+          >
+            Fertige Maschinen
+          </Link>
         </div>
 
         {/* ── Title (centered) ── */}
@@ -344,14 +353,16 @@ const Topbar = ({ filters, setFilters, globalTags, user, setUser, onlineUsers })
         <div className="flex items-center gap-2 ml-auto">
 
           {/* @ Mention filter button */}
-          {mentionHandle && (
+          {user && (
             <button
               onClick={toggleMentionFilter}
-              title="Nur Maschinen zeigen, in denen ich erwähnt wurde"
-              className={`flex items-center justify-center w-6 h-6 rounded shadow-sm border text-xs font-bold transition-all duration-200 cursor-pointer ${
+              disabled={!mentionHandle}
+              title={mentionHandle ? "Nur Maschinen zeigen, in denen ich erwähnt wurde" : "Vor- und Nachname im Profil erforderlich"}
+              className={`flex items-center justify-center w-6 h-6 rounded shadow-sm border text-xs font-bold transition-all duration-200 ${
+                !mentionHandle ? "opacity-40 cursor-not-allowed bg-white border-gray-300 text-gray-400" :
                 isMentionActive
-                  ? "bg-[rgb(70,75,82)] border-[rgb(70,75,82)] text-[rgb(255,204,0)]"
-                  : "bg-white border-gray-300 text-gray-500 hover:bg-gray-100"
+                  ? "bg-[rgb(70,75,82)] border-[rgb(70,75,82)] text-[rgb(255,204,0)] cursor-pointer"
+                  : "bg-white border-gray-300 text-gray-500 hover:bg-gray-100 cursor-pointer"
               }`}
             >
               <AtSign size={11} />
