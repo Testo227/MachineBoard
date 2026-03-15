@@ -1,5 +1,7 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, closestCenter } from '@dnd-kit/core';
+import { supabase } from '../supabaseClient';
+import { useToast } from './ToastContext';
 
 import PPM1_Pool from './PPM1/PPM1_Pool';
 import PPM1_Line from './PPM1/PPM1_Line';
@@ -46,6 +48,30 @@ import Konservieren_Nacharbeit from './Konservieren/Konservieren_Nacharbeit';
 
 import '../styles/style.css';
 
+const TYPE_COLORS = {
+  BSF: '#22c55e', PUMI: '#FFCC00', BSA: '#f97316',
+  Prototyp: '#94a3b8', 'E-Mischer': '#3b82f6',
+};
+
+// Floating card shown under the cursor while dragging
+const CardPreview = ({ machine }) => {
+  const typeColor = TYPE_COLORS[machine.Typ] || '#e2e8f0';
+  const isYellow = machine.Typ === 'PUMI';
+  return (
+    <div className="w-28 bg-white rounded-lg shadow-2xl opacity-95 overflow-hidden rotate-2 pointer-events-none" style={{ borderLeft: `3px solid ${typeColor}` }}>
+      <div className="px-1.5 pt-1">
+        <span className="font-bold rounded-full inline-block px-1.5 py-0.5" style={{ fontSize: '8px', backgroundColor: typeColor, color: isYellow ? '#555A5A' : 'white' }}>
+          {machine.Typ || 'Kein Typ'}
+        </span>
+      </div>
+      <div className="px-1.5 mt-0.5 pb-1.5">
+        <div className="font-bold text-[rgb(85,90,90)] text-xs truncate">{machine.kunde || '—'}</div>
+        <div className="text-gray-400 text-xs truncate">{machine.kNummer || '—'}</div>
+      </div>
+    </div>
+  );
+};
+
 // Reusable area header + content wrapper
 const Area = ({ name, flex, children }) => (
   <div style={{ flex }} className='flex flex-col min-w-0 min-h-0'>
@@ -59,6 +85,52 @@ const Area = ({ name, flex, children }) => (
 );
 
 const MainBoard = ({ machinelist, setmachinelist, finishedMachines, setFinishedMachines, areas, setAreas, filters, globalTags, setGlobalTags }) => {
+  const { addToast } = useToast();
+  const [activeMachine, setActiveMachine] = useState(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
+  const handleDragStart = ({ active }) => {
+    setActiveMachine(active.data.current.machine);
+  };
+
+  const handleDragEnd = async ({ active, over }) => {
+    setActiveMachine(null);
+    if (!over) return;
+
+    const draggedMachine = active.data.current.machine;
+    const { areaName: toArea, slotName: toSlot, occupant } = over.data.current;
+    const fromArea = draggedMachine.area;
+    const fromSlot = draggedMachine.position;
+
+    if (fromArea === toArea && fromSlot === toSlot) return;
+
+    const snapshot = machinelist;
+
+    // Optimistic update
+    setmachinelist(prev => prev.map(m => {
+      if (m.id === draggedMachine.id) return { ...m, area: toArea, position: toSlot };
+      if (occupant && m.id === occupant.id) return { ...m, area: fromArea, position: fromSlot };
+      return m;
+    }));
+
+    try {
+      const updates = [
+        supabase.from('machines').update({ area: toArea, position: toSlot }).eq('id', draggedMachine.id),
+      ];
+      if (occupant) {
+        updates.push(supabase.from('machines').update({ area: fromArea, position: fromSlot }).eq('id', occupant.id));
+      }
+      const results = await Promise.all(updates);
+      if (results.some(r => r.error)) throw new Error('DB update failed');
+      addToast('✅ Maschine verschoben', 'success');
+    } catch {
+      setmachinelist(snapshot);
+      addToast('❌ Fehler beim Verschieben', 'error');
+    }
+  };
 
   const filteredMachines = machinelist.filter((m) => {
     const searchValue = filters.search?.toLowerCase() || "";
@@ -105,6 +177,7 @@ const MainBoard = ({ machinelist, setmachinelist, finishedMachines, setFinishedM
   });
 
   return (
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
     <div className='flex gap-1 h-full w-full'>
 
       {/* ── LEFT GROUP: PPM1 / PPM2 / PUMI / Dock / BSA ── flex-[8] */}
@@ -200,6 +273,10 @@ const MainBoard = ({ machinelist, setmachinelist, finishedMachines, setFinishedM
 
       </div>
     </div>
+    <DragOverlay dropAnimation={null}>
+      {activeMachine ? <CardPreview machine={activeMachine} /> : null}
+    </DragOverlay>
+    </DndContext>
   );
 };
 

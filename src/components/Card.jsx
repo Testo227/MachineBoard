@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../styles/style.css';
 import Modal from './Modal';
 import TagCircles from './TagCircles';
+import { useDraggable } from '@dnd-kit/core';
 
 const TYPE_COLORS = {
   BSF: '#22c55e',
@@ -24,6 +25,11 @@ const Card = ({
   dimmed
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: currentMachine.id,
+    data: { machine: currentMachine },
+  });
 
   const typeColor = TYPE_COLORS[currentMachine.Typ] || '#e2e8f0';
   const isYellow = currentMachine.Typ === 'PUMI';
@@ -49,11 +55,14 @@ const Card = ({
 
   if (currentMachine.Typ === 'Leerslot') {
     return (
-      <div className="w-full" style={{ opacity: dimmed ? 0.3 : 1, pointerEvents: dimmed ? 'none' : 'auto' }}>
+      <div className="w-full" style={{ opacity: dimmed ? 0.3 : isDragging ? 0.3 : 1, pointerEvents: dimmed ? 'none' : 'auto' }}>
         {modal}
         <div
+          ref={setNodeRef}
+          {...listeners}
+          {...attributes}
           onClick={() => setIsOpen(true)}
-          className="mx-1 my-1 bg-[rgb(85,90,90)] rounded-lg flex items-center justify-center cursor-pointer hover:brightness-110 transition py-6"
+          className="mx-1 my-1 bg-[rgb(85,90,90)] rounded-lg flex items-center justify-center cursor-grab active:cursor-grabbing hover:brightness-110 transition py-6"
         >
           <span className="text-[rgb(255,204,0)] font-bold rotate-45 select-none" style={{ fontSize: 'clamp(6px, 0.6vw, 10px)' }}>Leerslot</span>
         </div>
@@ -62,11 +71,14 @@ const Card = ({
   }
 
   return (
-    <div className="w-full" style={{ opacity: dimmed ? 0.3 : 1, pointerEvents: dimmed ? 'none' : 'auto' }}>
+    <div className="w-full" style={{ opacity: dimmed ? 0.3 : isDragging ? 0.3 : 1, pointerEvents: dimmed ? 'none' : 'auto' }}>
       {modal}
       <div
+        ref={setNodeRef}
+        {...listeners}
+        {...attributes}
         onClick={() => setIsOpen(true)}
-        className="mx-1.5 my-1.5 bg-white rounded-lg shadow-sm flex flex-col overflow-hidden cursor-pointer hover:shadow-md hover:brightness-[0.98] transition-all duration-150 pb-1"
+        className="mx-1.5 my-1.5 bg-white rounded-lg shadow-sm flex flex-col overflow-hidden cursor-grab active:cursor-grabbing hover:shadow-md hover:brightness-[0.98] transition-all duration-150 pb-1"
         style={{ borderLeft: `3px solid ${typeColor}` }}
       >
         {/* Type badge */}

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { supabase } from '../supabaseClient';
 import Card from './Card';
 import { useToast } from "./ToastContext";
+import { useDroppable } from '@dnd-kit/core';
 
 
 const Slot = ({
@@ -22,10 +23,15 @@ const Slot = ({
   const { addToast } = useToast();
   const [showModal, setShowModal] = useState(false);
 
-  // 🔹 currentMachine jetzt aus dem State ableiten
+  // 🔹 currentMachine aus dem State ableiten
   const [currentMachine, setCurrentMachine] = useState(
     machinelist.find(m => m.position === slotName && m.area === thisarea.name) || null
   );
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: `${thisarea.name}||${slotName}`,
+    data: { areaName: thisarea.name, slotName, occupant: currentMachine },
+  });
 
   const isFilteredIn = filteredMachines?.some(
     m => m.id === currentMachine?.id
@@ -122,7 +128,12 @@ const Slot = ({
   };
 
   return (
-    <div className="flex flex-col bg-white/40 border border-white/60 rounded-xl relative backdrop-blur-sm w-full h-full min-w-0 min-h-0 overflow-hidden">
+    <div
+      ref={setNodeRef}
+      className={`flex flex-col border rounded-xl relative backdrop-blur-sm w-full h-full min-w-0 min-h-0 overflow-hidden transition-colors duration-150 ${
+        isOver ? 'bg-[rgb(255,204,0)]/30 border-[rgb(255,204,0)]/80' : 'bg-white/40 border-white/60'
+      }`}
+    >
       <span className="absolute top-0.5 left-1 font-bold text-[rgb(85,90,90)]/70 leading-none select-none z-10" style={{ fontSize: 'clamp(6px, 0.55vw, 9px)' }}>
         {slotName}
       </span>
