@@ -47,7 +47,7 @@ export const ToastProvider = ({ children }) => {
 
               {/* Message */}
               <span className="text-white text-xs font-medium py-2.5 pr-3 leading-tight">
-                {message}
+                {toast.message}
               </span>
             </div>
           );
